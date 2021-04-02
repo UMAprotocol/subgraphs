@@ -2,8 +2,6 @@
 
 ## Install dependencies
 `yarn`
-## Build
-`yarn bootstrap`
 ## Voting Events:
 These are subgraphs related to the core Oracle contracts. The code can be found in `packages/voting`
 - Kovan: https://thegraph.com/explorer/subgraph/nicholaspai/mainnet-voting-staging
