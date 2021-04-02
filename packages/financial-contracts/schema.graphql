@@ -1,0 +1,354 @@
+type FinancialContract @entity {
+  "Blockchain address of the contract"
+  id: ID!
+
+  "Factory contract used to create this contract"
+  creator: ContractCreator
+
+  "Address that deployed the contract"
+  deployer: Bytes
+
+  "Address of the contract"
+  address: Bytes!
+
+  "Token used as collateral for this contract"
+  collateralToken: Token
+
+  "Synthetic token for this contract"
+  syntheticToken: Token
+
+  "Minimum required collateral for proper collateralization"
+  collateralRequirement: BigDecimal
+
+  "Expiration timestamp of the financial contract."
+  expirationTimestamp: BigInt
+
+  totalTokensOutstanding: BigDecimal
+
+  rawTotalPositionCollateral: BigDecimal
+
+  totalPositionCollateral: BigDecimal
+
+  rawLiquidationCollateral: BigDecimal
+
+  cumulativeFeeMultiplier: BigDecimal
+
+  globalCollateralizationRatio: BigDecimal
+
+  totalSyntheticTokensCreated: BigDecimal!
+
+  totalSyntheticTokensBurned: BigDecimal!
+
+  totalCollateralDeposited: BigDecimal!
+
+  totalCollateralWithdrawn: BigDecimal!
+
+  positionManagerEvents: [PositionManagerEvent!]! @derivedFrom(field: "contract")
+
+  positions: [SponsorPosition!]! @derivedFrom(field: "contract")
+
+  liquidations: [Liquidation!]! @derivedFrom(field: "contract")
+}
+
+type Sponsor @entity {
+  "A token sponsor is someone who holds positions on financial contracts."
+  id: ID!
+
+  positions: [SponsorPosition!]! @derivedFrom(field: "sponsor")
+
+  liquidations: [Liquidation!]! @derivedFrom(field: "sponsor")
+}
+
+type SponsorPosition @entity {
+  "Sponsor ID + FinancialContract ID"
+  id: ID!
+
+  "Contract where the sponsor has a position"
+  contract: FinancialContract!
+
+  "Sponsor who has the position"
+  sponsor: Sponsor!
+
+  "Token used as collateral"
+  collateralToken: Token
+
+  "Synthetic token"
+  syntheticToken: Token
+
+  "Liquidations for this position"
+  liquidations: [Liquidation!]! @derivedFrom(field: "position")
+
+  "Collateral used to back the position"
+  rawCollateral: BigDecimal!
+
+  collateral: BigDecimal!
+
+  "Synthetic token outstanding"
+  tokensOutstanding: BigDecimal!
+
+  "Depicts whether the position has been ended or not"
+  isEnded: Boolean!
+
+  withdrawalRequestPassTimestamp: BigInt
+
+  withdrawalRequestAmount: BigDecimal
+
+  transferPositionRequestPassTimestamp: BigInt
+}
+
+interface PositionManagerEvent {
+  id: ID!
+
+  contract: FinancialContract!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+}
+
+type PositionCreatedEvent implements PositionManagerEvent @entity {
+  id: ID!
+
+  contract: FinancialContract!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  sponsor: Sponsor!
+
+  collateralAmount: BigInt!
+
+  tokenAmount: BigInt!
+}
+
+type SettleExpiredPositionEvent implements PositionManagerEvent @entity {
+  id: ID!
+
+  contract: FinancialContract!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  caller: Bytes!
+
+  collateralReturned: BigInt!
+
+  tokensBurned: BigInt!
+}
+
+type RedeemEvent implements PositionManagerEvent @entity {
+  id: ID!
+
+  contract: FinancialContract!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  sponsor: Sponsor!
+
+  collateralAmount: BigInt!
+
+  tokenAmount: BigInt!
+}
+
+type DepositEvent implements PositionManagerEvent @entity {
+  id: ID!
+
+  contract: FinancialContract!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  sponsor: Sponsor!
+
+  collateralAmount: BigInt!
+}
+
+type WithdrawalEvent implements PositionManagerEvent @entity {
+  id: ID!
+
+  contract: FinancialContract!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  sponsor: Sponsor!
+
+  collateralAmount: BigInt!
+
+  wasRequested: Boolean!
+}
+
+type ContractCreator @entity {
+  "This entity represent a single contract creator. The id is the blockchain address of the Creator"
+  id: ID!
+
+  "List of all the contracts created from this Creator"
+  contractsCreated: [FinancialContract!]! @derivedFrom(field: "creator")
+}
+
+type Token @entity {
+  id: ID!
+
+  address: Bytes!
+
+  decimals: Int!
+
+  name: String!
+
+  symbol: String!
+
+  "Depicts whether this token is whitelisted in the AddressWhitelist contract"
+  isOnWhitelist: Boolean!
+
+  "Depicts whether this token is being indexed by the subgraph as a CollateralToken for at least one FinancialContract"
+  indexingAsCollateral: Boolean!
+}
+
+enum LiquidationStatus {
+  PreDispute
+  PendingDispute
+  DisputeSucceeded
+  DisputeFailed
+}
+
+type Liquidation @entity {
+  "Liquidation ID is a combination of the Sponsor ID + the internal liquidation id"
+  id: ID!
+
+  "Current status of the liquidation"
+  status: LiquidationStatus!
+
+  "Sponsor who is having its position liquidated"
+  sponsor: Sponsor!
+
+  "Sponsor who is having its position liquidated"
+  position: SponsorPosition!
+
+  "Sponsor who is having its position liquidated"
+  contract: FinancialContract!
+
+  "User who is liquidating the position"
+  liquidator: Bytes!
+
+  "User who is disputing the liquidation"
+  disputer: Bytes
+
+  "Internal ID of the liquidationData"
+  liquidationId: BigInt!
+
+  tokensLiquidated: BigDecimal!
+
+  lockedCollateral: BigDecimal!
+
+  liquidatedCollateral: BigDecimal!
+
+  disputeBondAmount: BigDecimal
+
+  disputeSucceeded: Boolean
+
+  amountWithdrawn: BigDecimal
+
+  events: [LiquidationEvent!]! @derivedFrom(field: "liquidation")
+}
+
+interface LiquidationEvent {
+  id: ID!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  liquidation: Liquidation!
+
+  sponsor: Bytes!
+}
+
+type LiquidationCreatedEvent implements LiquidationEvent @entity {
+  id: ID!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  liquidation: Liquidation!
+
+  sponsor: Bytes!
+
+  liquidator: Bytes!
+
+  liquidationId: BigInt!
+
+  tokensLiquidated: BigInt!
+
+  lockedCollateral: BigInt!
+
+  liquidatedCollateral: BigInt!
+}
+
+type LiquidationDisputedEvent implements LiquidationEvent @entity {
+  id: ID!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  liquidation: Liquidation!
+
+  sponsor: Bytes!
+
+  liquidator: Bytes!
+
+  disputer: Bytes!
+
+  liquidationId: BigInt!
+
+  disputeBondAmount: BigInt!
+}
+
+type LiquidationDisputeSettledEvent implements LiquidationEvent @entity {
+  id: ID!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  liquidation: Liquidation!
+
+  caller: Bytes!
+
+  sponsor: Bytes!
+
+  liquidator: Bytes!
+
+  disputer: Bytes!
+
+  liquidationId: BigInt!
+
+  disputeSucceeded: Boolean!
+}

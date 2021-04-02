@@ -1,0 +1,27 @@
+{
+    "name": "subgraphs",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Monorepo for UMA related subgraphs",
+    "homepage": "http://umaproject.org",
+    "license": "AGPL-3.0-or-later",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/UMAprotocol/subgraphs.git"
+    },
+    "scripts": {
+      "bootstrap": "npx lerna bootstrap"
+    },
+    "bugs": {
+      "url": "https://github.com/UMAprotocol/subgraphs/issues"
+    },
+    "workspaces": [
+        "packages/**"
+    ],
+    "devDependencies": {
+        "ganache-cli": "^6.12.2",
+        "lerna": "^3.22.1",
+        "truffle": "^5.2.5"
+    }
+  }
+  

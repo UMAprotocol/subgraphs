@@ -1,0 +1,18 @@
+{
+  "name": "financial-contracts-subgraph",
+  "version": "0.1.0",
+  "scripts": {
+    "ganache": "ganache-cli -h 0.0.0.0",
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml && yarn codegen && yarn build",
+    "prepare:kovan": "mustache config/kovan.json subgraph.template.yaml > subgraph.yaml && yarn codegen && yarn build",
+    "deploy:kovan": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ nicholaspai/kovan-contracts-staging",
+    "deploy:mainnet": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ nicholaspai/mainnet-contracts-staging"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.20.0",
+    "@graphprotocol/graph-ts": "0.20.0",
+    "mustache": "^4.2.0"
+  }
+}
