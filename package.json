@@ -9,9 +9,7 @@
       "type": "git",
       "url": "git+https://github.com/UMAprotocol/subgraphs.git"
     },
-    "scripts": {
-      "bootstrap": "npx lerna bootstrap"
-    },
+    "scripts": {},
     "bugs": {
       "url": "https://github.com/UMAprotocol/subgraphs/issues"
     },
