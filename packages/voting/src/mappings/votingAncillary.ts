@@ -1,4 +1,5 @@
 import {
+    PriceRequestAdded,
     PriceResolved,
     VoteCommitted,
     VoteRevealed,
@@ -26,23 +27,67 @@ import {
   
   import { log, BigInt, BigDecimal } from "@graphprotocol/graph-ts";
   
+// - event: PriceRequestAdded(indexed uint256,indexed bytes32,uint256)
+//   handler: handlePriceRequestAdded
+//  event PriceRequestAdded(uint256 indexed roundId, bytes32 indexed identifier, uint256 time);
+
+export function handlePriceRequestAdded(event: PriceRequestAdded): void {
+  let requestId = event.params.identifier
+    .toString()
+    .concat("-")
+    .concat(event.params.time.toString());
+  let request = getOrCreatePriceRequest(requestId);
+  let requestRound = getOrCreatePriceRequestRound(
+    requestId.concat("-").concat(event.params.roundId.toString())
+  );
+
+  request.identifier = event.params.identifier.toString();
+  request.latestRound = requestRound.id;
+  request.time = event.params.time;
+
+  requestRound.request = request.id;
+  requestRound.identifier = event.params.identifier.toString();
+  requestRound.time = event.params.time;
+  requestRound.roundId = event.params.roundId;
+
+  log.warning(
+    `(ancillary) New Price Request Saved: {},{},{}`, 
+    [
+      request.time.toString(),
+      request.latestRound,
+      request.identifier
+    ]
+  );      
+  requestRound.save();
+  request.save();
+}
+
   // - event: PriceResolved(indexed uint256,indexed bytes32,uint256,int256)
   //   handler: handlePriceResolved
   //  event PriceResolved(uint256 indexed roundId, bytes32 indexed identifier, uint256 time, int256 price);
   
   export function handlePriceResolved(event: PriceResolved): void {
     log.warning(
-      `(ancillary) Price Resolved params: {}{}{}`, 
+      `(ancillary) Price Resolved params: {},{},{}`, 
       [
         event.params.time.toString(),
         event.params.identifier.toString(),
         event.params.roundId.toString()
       ]
-    );    let requestId = event.params.identifier
+    );    
+    let requestId = event.params.identifier
       .toString()
       .concat("-")
       .concat(event.params.time.toString());
     let request = getOrCreatePriceRequest(requestId);
+    log.warning(
+      `(ancillary) Fetched Price Request Entity: {},{},{}`, 
+      [
+        request.time.toString(),
+        request.latestRound,
+        request.identifier
+      ]
+    );
     let requestRound = getOrCreatePriceRequestRound(
       requestId.concat("-").concat(event.params.roundId.toString())
     );

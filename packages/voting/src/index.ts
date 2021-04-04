@@ -9,6 +9,7 @@ export {
 } from "./mappings/voting";
 
 export {
+  handlePriceRequestAdded as handlePriceRequestAddedAncillary,
   handleVoteRevealed as handleVoteRevealedAncillary,
   handleVoteCommitted as handleVoteCommittedAncillary,
   handlePriceResolved as handlePriceResolvedAncillary,
