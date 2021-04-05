@@ -7,8 +7,10 @@
     "build": "graph build",
     "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml && yarn codegen && yarn build",
     "prepare:kovan": "mustache config/kovan.json subgraph.template.yaml > subgraph.yaml && yarn codegen && yarn build",
-    "deploy:kovan": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ nicholaspai/kovan-contracts-staging",
-    "deploy:mainnet": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ nicholaspai/mainnet-contracts-staging"
+    "deploy:kovan": "env STAGING=true scripts/deploy.sh kovan",
+    "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",
+    "deploy-prod:kovan": "scripts/deploy.sh kovan",
+    "deploy-prod:mainnet": "scripts/deploy.sh mainnet"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.20.0",
