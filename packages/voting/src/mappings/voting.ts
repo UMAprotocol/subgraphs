@@ -50,6 +50,15 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   requestRound.time = event.params.time;
   requestRound.roundId = event.params.roundId;
 
+  log.warning(
+    `New Price Request Saved: {},{},{}`, 
+    [
+      request.time.toString(),
+      request.latestRound,
+      request.identifier
+    ]
+  );
+
   requestRound.save();
   request.save();
 }
@@ -60,7 +69,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
 
 export function handlePriceResolved(event: PriceResolved): void {
   log.warning(
-    `Price Resolved params: {}{}{}`, 
+    `Price Resolved params: {},{},{}`, 
     [
       event.params.time.toString(),
       event.params.identifier.toString(),
@@ -72,6 +81,15 @@ export function handlePriceResolved(event: PriceResolved): void {
     .concat("-")
     .concat(event.params.time.toString());
   let request = getOrCreatePriceRequest(requestId);
+
+  log.warning(
+    `Fetched Price Request Entity: {},{},{}`, 
+    [
+      request.time.toString(),
+      request.latestRound,
+      request.identifier
+    ]
+  );
   let requestRound = getOrCreatePriceRequestRound(
     requestId.concat("-").concat(event.params.roundId.toString())
   );

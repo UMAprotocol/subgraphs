@@ -18,15 +18,13 @@
       - PriceIdentifier
       - Store
     abis:
-      - name: Voting
-        file: ./abis/Voting.json
       - name: VotingAncillary
         file: ./abis/VotingAncillary.json
       - name: VotingToken
         file: ./abis/VotingToken.json
     eventHandlers:
       - event: PriceRequestAdded(indexed uint256,indexed bytes32,uint256)
-        handler: handlePriceRequestAdded
+        handler: handlePriceRequestAddedAncillary
       - event: PriceResolved(indexed uint256,indexed bytes32,uint256,int256,bytes)
         handler: handlePriceResolvedAncillary
       - event: RewardsRetrieved(indexed address,indexed uint256,indexed bytes32,uint256,bytes,uint256)
