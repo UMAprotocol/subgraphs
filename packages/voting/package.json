@@ -8,8 +8,10 @@
     "build": "graph build",
     "prepare:mainnet": "scripts/build-manifest.sh mainnet && yarn codegen && yarn build",
     "prepare:kovan": "scripts/build-manifest.sh kovan && yarn codegen && yarn build",
-    "deploy:kovan": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ nicholaspai/kovan-voting-staging",
-    "deploy:mainnet": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ nicholaspai/mainnet-voting-staging"
+    "deploy:kovan": "env STAGING=true scripts/deploy.sh kovan",
+    "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",
+    "deploy-prod:kovan": "scripts/deploy.sh kovan",
+    "deploy-prod:mainnet": "scripts/deploy.sh mainnet"
   },
   "repository": {
     "type": "git",
