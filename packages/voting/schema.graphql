@@ -53,7 +53,7 @@ type PriceRequest @entity {
   "PriceIdentifier for the request"
   identifier: PriceIdentifier!
 
-  ancillaryData: Bytes
+  ancillaryData: String
 
   "Transaction where the resolution of the request took place"
   resolutionTransaction: Bytes
@@ -85,7 +85,7 @@ type PriceRequestRound @entity {
 
   identifier: PriceIdentifier!
 
-  ancillaryData: Bytes
+  ancillaryData: String
 
   time: BigInt!
 
@@ -175,7 +175,7 @@ type CommittedVote @entity {
 
   identifier: PriceIdentifier!
 
-  ancillaryData: Bytes
+  ancillaryData: String
 
   request: PriceRequest!
 
@@ -191,7 +191,7 @@ type RevealedVote @entity {
 
   identifier: PriceIdentifier!
 
-  ancillaryData: Bytes
+  ancillaryData: String
 
   request: PriceRequest!
 
@@ -213,7 +213,7 @@ type RewardsClaimed @entity {
 
   identifier: PriceIdentifier!
 
-  ancillaryData: Bytes
+  ancillaryData: String
 
   request: PriceRequest!
 

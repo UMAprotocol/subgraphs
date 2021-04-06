@@ -67,7 +67,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
     let requestRound = getOrCreatePriceRequestRound(
       requestId
         .concat("-").concat(event.params.roundId.toString())
-        .concat("-").concat(event.params.ancillaryData.toString())
+        .concat("-").concat(event.params.ancillaryData.toHex())
     );
     let groupId = requestRound.id
       .concat("-")
@@ -77,6 +77,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
     let roundInfo = votingContract.try_rounds(event.params.roundId);
 
     request.latestRound = requestRound.id;
+    request.ancillaryData = event.params.ancillaryData.toHex();
     request.price = event.params.price;
     request.resolutionTransaction = event.transaction.hash;
     request.resolutionTimestamp = event.block.timestamp;
@@ -87,7 +88,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   
     requestRound.request = request.id;
     requestRound.identifier = event.params.identifier.toString();
-    requestRound.ancillaryData = event.params.ancillaryData;
+    requestRound.ancillaryData = event.params.ancillaryData.toHex();
     requestRound.time = event.params.time;
     requestRound.roundId = event.params.roundId;
     requestRound.votersEligibleForRewardsRatio =
@@ -132,7 +133,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
       .concat("-")
       .concat(event.params.roundId.toString())
       .concat("-")
-      .concat(event.params.ancillaryData.toString());
+      .concat(event.params.ancillaryData.toHex());
     let rewardClaimed = getOrCreateRewardsClaimed(rewardClaimedId);
     let claimer = getOrCreateUser(event.params.voter);
     let requestId = event.params.identifier
@@ -142,7 +143,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
     let requestRound = getOrCreatePriceRequestRound(
       requestId
         .concat("-").concat(event.params.roundId.toString())
-        .concat("-").concat(event.params.ancillaryData.toString())
+        .concat("-").concat(event.params.ancillaryData.toHex())
     );
     let winnerGroup: VoterGroup | null =
       requestRound.winnerGroup != null
@@ -153,13 +154,13 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
     rewardClaimed.round = requestRound.id;
     rewardClaimed.request = requestId;
     rewardClaimed.identifier = event.params.identifier.toString();
-    rewardClaimed.ancillaryData = event.params.ancillaryData;
+    rewardClaimed.ancillaryData = event.params.ancillaryData.toHex();
     rewardClaimed.time = event.params.time;
     rewardClaimed.numTokens = event.params.numTokens;
   
     requestRound.request = requestId;
     requestRound.identifier = event.params.identifier.toString();
-    requestRound.ancillaryData = event.params.ancillaryData;
+    requestRound.ancillaryData = event.params.ancillaryData.toHex();
     requestRound.time = event.params.time;
     requestRound.roundId = event.params.roundId;
     requestRound.totalRewardsClaimed =
@@ -204,7 +205,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
         event.params.time.toString(),
         event.params.identifier.toString(),
         event.params.roundId.toString(),
-        event.params.ancillaryData.toString()
+        event.params.ancillaryData.toHex()
       ]
     );    
 
@@ -217,7 +218,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
       .concat("-")
       .concat(event.params.roundId.toString())
       .concat("-")
-      .concat(event.params.ancillaryData.toString());
+      .concat(event.params.ancillaryData.toHex());
     let vote = getOrCreateCommittedVote(voteId);
     let voter = getOrCreateUser(event.params.voter);
     let requestId = event.params.identifier
@@ -227,19 +228,19 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
     let requestRound = getOrCreatePriceRequestRound(
       requestId
         .concat("-").concat(event.params.roundId.toString())
-        .concat("-").concat(event.params.ancillaryData.toString())
+        .concat("-").concat(event.params.ancillaryData.toHex())
     );
   
     vote.voter = voter.id;
     vote.request = requestId;
     vote.identifier = event.params.identifier.toString();
-    vote.ancillaryData = event.params.ancillaryData;
+    vote.ancillaryData = event.params.ancillaryData.toHex();
     vote.time = event.params.time;
     vote.round = requestRound.id;
   
     requestRound.request = requestId;
     requestRound.identifier = event.params.identifier.toString();
-    requestRound.ancillaryData = event.params.ancillaryData;
+    requestRound.ancillaryData = event.params.ancillaryData.toHex();
     requestRound.time = event.params.time;
     requestRound.roundId = event.params.roundId;
   
@@ -270,7 +271,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
       .concat("-")
       .concat(event.params.roundId.toString())
       .concat("-")
-      .concat(event.params.ancillaryData.toString());
+      .concat(event.params.ancillaryData.toHex());
     let vote = getOrCreateRevealedVote(voteId);
     let voter = getOrCreateUser(event.params.voter);
     let requestId = event.params.identifier
@@ -280,7 +281,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
     let requestRound = getOrCreatePriceRequestRound(
       requestId
         .concat("-").concat(event.params.roundId.toString())
-        .concat("-").concat(event.params.ancillaryData.toString())
+        .concat("-").concat(event.params.ancillaryData.toHex())
     );
     let groupId = requestRound.id
       .concat("-")
@@ -293,7 +294,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
     vote.round = requestRound.id;
     vote.request = requestId;
     vote.identifier = event.params.identifier.toString();
-    vote.ancillaryData = event.params.ancillaryData;
+    vote.ancillaryData = event.params.ancillaryData.toHex();
     vote.time = event.params.time;
     vote.price = event.params.price;
     vote.numTokens = event.params.numTokens;
@@ -307,7 +308,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   
     requestRound.request = requestId;
     requestRound.identifier = event.params.identifier.toString();
-    requestRound.ancillaryData = event.params.ancillaryData;
+    requestRound.ancillaryData = event.params.ancillaryData.toHex();
     requestRound.time = event.params.time;
     requestRound.roundId = event.params.roundId;
     requestRound.totalVotesRevealed =
