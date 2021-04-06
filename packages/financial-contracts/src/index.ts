@@ -38,5 +38,6 @@ export {
   handleCollateralTransfer as handleCollateralTransferPerp,
   handleRequestWithdrawal as handleRequestWithdrawalPerp,
   handleRequestWithdrawalCanceled as handleRequestWithdrawalCanceledPerp,
-  handleRequestWithdrawalExecuted as handleRequestWithdrawalExecutedPerp
+  handleRequestWithdrawalExecuted as handleRequestWithdrawalExecutedPerp,
+  handleFundingRateUpdated
 } from "./mappings/perpetual";

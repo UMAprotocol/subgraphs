@@ -13,7 +13,11 @@ fi
 
 echo 'Loading graph access token from .env'
 export $(cat .env)
-API_KEY=$PROD_KEY
+if [ "$STAGING" ]; then
+  API_KEY=$STAGING_KEY
+else 
+  API_KEY=$PROD_KEY
+fi
 
 # Require $GRAPHKEY to be set
 if [[ -z "${API_KEY}" ]]; then

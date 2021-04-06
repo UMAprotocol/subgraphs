@@ -10,6 +10,7 @@ export {
   getOrCreatePositionCreatedEvent,
   getOrCreateSettleExpiredPositionEvent,
   getOrCreateRedeemEvent,
+  getOrCreateFundingRateUpdatedEvent,
   getOrCreateDepositEvent,
   getOrCreateWithdrawalEvent,
   getOrCreateSponsor,

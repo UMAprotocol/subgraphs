@@ -2,6 +2,7 @@ import {
     Withdrawal,
     Deposit,
     Redeem,
+    FundingRateUpdated,
     PositionCreated,
     NewSponsor,
     EndedSponsorPosition,
@@ -19,6 +20,7 @@ import {
     getOrCreatePerpetualContract,
     getOrCreatePositionCreatedEvent,
     getOrCreateRedeemEvent,
+    getOrCreateFundingRateUpdatedEvent,
     getOrCreateDepositEvent,
     getOrCreateWithdrawalEvent,
     getOrCreateSponsor,
@@ -35,7 +37,8 @@ import {
     LIQUIDATION_PRE_DISPUTE,
     LIQUIDATION_PENDING_DISPUTE,
     LIQUIDATION_DISPUTE_SUCCEEDED,
-    LIQUIDATION_DISPUTE_FAILED
+    LIQUIDATION_DISPUTE_FAILED,
+    log
   } from "../utils/constants";
   
   function updateSponsorPositionAndPerp(
@@ -81,6 +84,7 @@ import {
     let perp = getOrCreatePerpetualContract(perpAddress.toHexString());
     let perpContract = Perpetual.bind(perpAddress);
     let feeMultiplier = perpContract.try_cumulativeFeeMultiplier();
+    let fundingRateData = perpContract.try_fundingRate();
     let outstanding = perpContract.try_totalTokensOutstanding();
     let rawCollateral = perpContract.try_rawTotalPositionCollateral();
     let rawLiquidation = perpContract.try_rawLiquidationCollateral();
@@ -105,7 +109,15 @@ import {
     perp.cumulativeFeeMultiplier = feeMultiplier.reverted
       ? perp.cumulativeFeeMultiplier
       : toDecimal(feeMultiplier.value);
-  
+    log.warn("Fetched CFRM: {}", [
+      fundingRateData.value.value0.rawValue.toString(),
+      fundingRateData.value.value1.toString(),
+      fundingRateData.value.value2.rawValue.toString()
+    ]);
+    perp.cumulativeFundingRateMultiplier = fundingRateData.reverted
+      ? perp.cumulativeFundingRateMultiplier
+      : toDecimal(fundingRateData.value.value2.rawValue);
+
     perp.globalCollateralizationRatio = calculateGCR(
       perp.rawTotalPositionCollateral,
       perp.cumulativeFeeMultiplier,
@@ -177,6 +189,22 @@ import {
     positionEvent.collateralAmount = event.params.collateralAmount;
   
     positionEvent.save();
+  }
+
+  // - event: FundingRateUpdated(int256,indexed uint256,uint256)
+  //   handler: handleFundingRateUpdated
+  // event FundingRateUpdated(int256 newFundingRate, uint256 indexed updateTime, uint256 reward);
+  
+  export function handleFundingRateUpdated(event: FundingRateUpdated): void {
+    updatePerp(event.address);
+  
+    let fundingRateUpdatedEvent = getOrCreateFundingRateUpdatedEvent(event);
+  
+    fundingRateUpdatedEvent.newFundingRate = event.params.newFundingRate;
+    fundingRateUpdatedEvent.updateTime = event.params.updateTime;
+    fundingRateUpdatedEvent.reward = event.params.reward;
+  
+    fundingRateUpdatedEvent.save();
   }
   
   // - event: Withdrawal(indexed address,indexed uint256)

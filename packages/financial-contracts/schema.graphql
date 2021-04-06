@@ -33,6 +33,8 @@ type FinancialContract @entity {
 
   cumulativeFeeMultiplier: BigDecimal
 
+  cumulativeFundingRateMultiplier: BigDecimal
+
   globalCollateralizationRatio: BigDecimal
 
   totalSyntheticTokensCreated: BigDecimal!
@@ -142,6 +144,24 @@ type SettleExpiredPositionEvent implements PositionManagerEvent @entity {
   collateralReturned: BigInt!
 
   tokensBurned: BigInt!
+}
+
+type FundingRateUpdatedEvent implements PositionManagerEvent @entity {
+  id: ID!
+
+  contract: FinancialContract!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  newFundingRate: BigInt!
+
+  updateTime: BigInt!
+
+  reward: BigInt!
 }
 
 type RedeemEvent implements PositionManagerEvent @entity {
