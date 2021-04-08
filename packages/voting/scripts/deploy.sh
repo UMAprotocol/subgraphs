@@ -13,7 +13,12 @@ fi
 
 echo 'Loading graph access token from .env'
 export $(cat .env)
-API_KEY=$PROD_KEY
+if [ "$STAGING" ]; then
+  API_KEY=$STAGING_KEY
+else 
+  API_KEY=$PROD_KEY
+fi
+
 
 # Require $GRAPHKEY to be set
 if [[ -z "${API_KEY}" ]]; then
@@ -21,4 +26,5 @@ if [[ -z "${API_KEY}" ]]; then
 exit 1
 fi
 
+echo "$NAMESPACE/$SUBGRAPH_NAME"
 graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ $NAMESPACE/$SUBGRAPH_NAME --access-token $API_KEY

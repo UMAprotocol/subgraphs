@@ -31,24 +31,6 @@ dataSources:
         - event: NewContractRegistered(indexed address,indexed address,address[])
           handler: handleNewContractRegistered
 templates:
-  - name: CollateralERC20
-    kind: ethereum/contract
-    network: {{network}}
-    source:
-      abi: ERC20
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: ./src/index.ts
-      entities:
-        - FinancialContract
-      abis:
-        - name: ERC20
-          file: ./abis/ERC20.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleCollateralTransfer
   - name: PerpetualCreator
     kind: ethereum/contract
     network: {{network}}
@@ -94,10 +76,14 @@ templates:
           handler: handlePositionCreatedPerp
         - event: Redeem(indexed address,indexed uint256,indexed uint256)
           handler: handleRedeemPerp
+        - event: FundingRateUpdated(int256,indexed uint256,uint256)
+          handler: handleFundingRateUpdated
         - event: Deposit(indexed address,indexed uint256)
           handler: handleDepositPerp
         - event: Withdrawal(indexed address,indexed uint256)
           handler: handleWithdrawalPerp
+        - event: FinalFeesPaid(indexed uint256)
+          handler: handleFinalFeesPaidPerp
         - event: NewSponsor(indexed address)
           handler: handleNewSponsorPerp
         - event: EndedSponsorPosition(indexed address)
@@ -163,6 +149,8 @@ templates:
           handler: handleDeposit
         - event: Withdrawal(indexed address,indexed uint256)
           handler: handleWithdrawal
+        - event: FinalFeesPaid(indexed uint256)
+          handler: handleFinalFeesPaid
         - event: NewSponsor(indexed address)
           handler: handleNewSponsor
         - event: EndedSponsorPosition(indexed address)

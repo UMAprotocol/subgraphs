@@ -5,6 +5,8 @@ type FinancialContract @entity {
   "Factory contract used to create this contract"
   creator: ContractCreator
 
+  deploymentTimestamp: BigInt 
+
   "Address that deployed the contract"
   deployer: Bytes
 
@@ -33,15 +35,9 @@ type FinancialContract @entity {
 
   cumulativeFeeMultiplier: BigDecimal
 
+  cumulativeFundingRateMultiplier: BigDecimal
+
   globalCollateralizationRatio: BigDecimal
-
-  totalSyntheticTokensCreated: BigDecimal!
-
-  totalSyntheticTokensBurned: BigDecimal!
-
-  totalCollateralDeposited: BigDecimal!
-
-  totalCollateralWithdrawn: BigDecimal!
 
   positionManagerEvents: [PositionManagerEvent!]! @derivedFrom(field: "contract")
 
@@ -144,6 +140,38 @@ type SettleExpiredPositionEvent implements PositionManagerEvent @entity {
   tokensBurned: BigInt!
 }
 
+type FundingRateUpdatedEvent implements PositionManagerEvent @entity {
+  id: ID!
+
+  contract: FinancialContract!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  newFundingRate: BigInt!
+
+  updateTime: BigInt!
+
+  reward: BigInt!
+}
+
+type FinalFeesPaidEvent implements PositionManagerEvent @entity {
+  id: ID!
+
+  contract: FinancialContract!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  amount: BigInt!
+}
+
 type RedeemEvent implements PositionManagerEvent @entity {
   id: ID!
 
@@ -214,9 +242,6 @@ type Token @entity {
   name: String!
 
   symbol: String!
-
-  "Depicts whether this token is whitelisted in the AddressWhitelist contract"
-  isOnWhitelist: Boolean!
 
   "Depicts whether this token is being indexed by the subgraph as a CollateralToken for at least one FinancialContract"
   indexingAsCollateral: Boolean!

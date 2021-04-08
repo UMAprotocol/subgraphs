@@ -1,5 +1,3 @@
-export { handleTransferVotingToken } from "./mappings/votingToken";
-
 export {
   handleVoteRevealed,
   handleVoteCommitted,

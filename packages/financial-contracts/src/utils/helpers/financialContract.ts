@@ -2,6 +2,8 @@ import {
   PositionCreatedEvent,
   SettleExpiredPositionEvent,
   RedeemEvent,
+  FundingRateUpdatedEvent,
+  FinalFeesPaidEvent,
   DepositEvent,
   WithdrawalEvent,
   Sponsor,
@@ -60,6 +62,38 @@ export function getOrCreateRedeemEvent(
   event.timestamp = ethereumEvent.block.timestamp;
 
   return event as RedeemEvent;
+}
+
+export function getOrCreateFundingRateUpdatedEvent(
+  ethereumEvent: ethereum.Event
+): FundingRateUpdatedEvent {
+  let id = ethereumEvent.transaction.hash
+    .toHexString()
+    .concat("-")
+    .concat(ethereumEvent.logIndex.toString());
+
+  let event = new FundingRateUpdatedEvent(id);
+  event.tx_hash = ethereumEvent.transaction.hash.toHexString();
+  event.block = ethereumEvent.block.number;
+  event.timestamp = ethereumEvent.block.timestamp;
+
+  return event as FundingRateUpdatedEvent;
+}
+
+export function getOrCreateFinalFeesPaidEvent(
+  ethereumEvent: ethereum.Event
+): FinalFeesPaidEvent {
+  let id = ethereumEvent.transaction.hash
+    .toHexString()
+    .concat("-")
+    .concat(ethereumEvent.logIndex.toString());
+
+  let event = new FinalFeesPaidEvent(id);
+  event.tx_hash = ethereumEvent.transaction.hash.toHexString();
+  event.block = ethereumEvent.block.number;
+  event.timestamp = ethereumEvent.block.timestamp;
+
+  return event as FinalFeesPaidEvent;
 }
 
 export function getOrCreateDepositEvent(

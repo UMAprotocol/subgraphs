@@ -4,7 +4,6 @@ import {
   Token
 } from "../../../generated/schema";
 import {
-  CollateralERC20,
   ExpiringMultiParty,
   ExpiringMultiPartyCreator,
   Perpetual,
@@ -13,7 +12,7 @@ import {
 import { ERC20 } from "../../../generated/templates/ExpiringMultiPartyCreator/ERC20";
 import { Address } from "@graphprotocol/graph-ts";
 import { DEFAULT_DECIMALS } from "../decimals";
-import { BIGDECIMAL_ZERO, BIGDECIMAL_ONE } from "../constants";
+import { BIGDECIMAL_ONE } from "../constants";
 
 export function getOrCreateFinancialContract(
   id: String,
@@ -23,10 +22,6 @@ export function getOrCreateFinancialContract(
 
   if (contract == null && createIfNotFound) {
     contract = new FinancialContract(id);
-    contract.totalSyntheticTokensCreated = BIGDECIMAL_ZERO;
-    contract.totalSyntheticTokensBurned = BIGDECIMAL_ZERO;
-    contract.totalCollateralDeposited = BIGDECIMAL_ZERO;
-    contract.totalCollateralWithdrawn = BIGDECIMAL_ZERO;
     contract.cumulativeFeeMultiplier = BIGDECIMAL_ONE; // Hardcoded in the contract
 
     ExpiringMultiParty.create(Address.fromString(id));
@@ -43,10 +38,6 @@ export function getOrCreatePerpetualContract(
 
   if (contract == null && createIfNotFound) {
     contract = new FinancialContract(id);
-    contract.totalSyntheticTokensCreated = BIGDECIMAL_ZERO;
-    contract.totalSyntheticTokensBurned = BIGDECIMAL_ZERO;
-    contract.totalCollateralDeposited = BIGDECIMAL_ZERO;
-    contract.totalCollateralWithdrawn = BIGDECIMAL_ZERO;
     contract.cumulativeFeeMultiplier = BIGDECIMAL_ONE; // Hardcoded in the contract
 
     Perpetual.create(Address.fromString(id));
@@ -111,10 +102,8 @@ export function getOrCreateToken(
     token.name = !tokenName.reverted ? tokenName.value : "";
     token.symbol = !tokenSymbol.reverted ? tokenSymbol.value : "";
     token.indexingAsCollateral = false;
-    token.isOnWhitelist = false;
 
     if (indexAsCollateral) {
-      CollateralERC20.create(tokenAddress);
       token.indexingAsCollateral = true;
     }
 
@@ -124,7 +113,6 @@ export function getOrCreateToken(
   }
 
   if (indexAsCollateral && !token.indexingAsCollateral) {
-    CollateralERC20.create(tokenAddress);
     token.indexingAsCollateral = true;
     token.save();
   }
