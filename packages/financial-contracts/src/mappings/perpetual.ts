@@ -129,26 +129,13 @@ import {
   export function handlePositionCreated(event: PositionCreated): void {
     updateSponsorPositionAndPerp(event.address, event.params.sponsor);
   
-    let perp = getOrCreatePerpetualContract(event.address.toHexString());
     let positionEvent = getOrCreatePositionCreatedEvent(event);
-    let syntheticToken = getOrCreateToken(Address.fromString(perp.syntheticToken));
-    let collateralToken = getOrCreateToken(Address.fromString(perp.collateralToken));
-
-    perp.totalSyntheticTokensCreated =
-      perp.totalSyntheticTokensCreated +
-      toDecimal(event.params.tokenAmount, syntheticToken.decimals);
-  
-    perp.totalCollateralDeposited =
-      perp.totalCollateralDeposited +
-      toDecimal(event.params.collateralAmount, collateralToken.decimals);
-  
     positionEvent.contract = event.address.toHexString();
     positionEvent.sponsor = event.params.sponsor.toHexString();
     positionEvent.collateralAmount = event.params.collateralAmount;
     positionEvent.tokenAmount = event.params.tokenAmount;
   
     positionEvent.save();
-    perp.save();
   }
   
   // - event: Redeem(indexed address,indexed uint256,indexed uint256)
@@ -158,26 +145,13 @@ import {
   export function handleRedeem(event: Redeem): void {
     updateSponsorPositionAndPerp(event.address, event.params.sponsor);
   
-    let perp = getOrCreatePerpetualContract(event.address.toHexString());
     let positionEvent = getOrCreateRedeemEvent(event);
-    let syntheticToken = getOrCreateToken(Address.fromString(perp.syntheticToken));
-    let collateralToken = getOrCreateToken(Address.fromString(perp.collateralToken));
-
-    perp.totalSyntheticTokensBurned =
-      perp.totalSyntheticTokensBurned +
-      toDecimal(event.params.tokenAmount, syntheticToken.decimals);
-  
-    perp.totalCollateralWithdrawn =
-      perp.totalCollateralWithdrawn +
-      toDecimal(event.params.collateralAmount, collateralToken.decimals);
-
     positionEvent.contract = event.address.toHexString();
     positionEvent.sponsor = event.params.sponsor.toHexString();
     positionEvent.collateralAmount = event.params.collateralAmount;
     positionEvent.tokenAmount = event.params.tokenAmount;
   
     positionEvent.save();
-    perp.save();
   }
   
   // - event: Deposit(indexed address,indexed uint256)
@@ -187,14 +161,7 @@ import {
   export function handleDeposit(event: Deposit): void {
     updateSponsorPositionAndPerp(event.address, event.params.sponsor);
   
-    let perp = getOrCreatePerpetualContract(event.address.toHexString());
     let positionEvent = getOrCreateDepositEvent(event);
-    let collateralToken = getOrCreateToken(Address.fromString(perp.collateralToken));
-
-    perp.totalCollateralDeposited =
-      perp.totalCollateralDeposited +
-      toDecimal(event.params.collateralAmount, collateralToken.decimals);
-
     positionEvent.contract = event.address.toHexString();
     positionEvent.sponsor = event.params.sponsor.toHexString();
     positionEvent.collateralAmount = event.params.collateralAmount;
@@ -222,14 +189,7 @@ export function handleFinalFeesPaid(event: FinalFeesPaid): void {
   export function handleFundingRateUpdated(event: FundingRateUpdated): void {
     updatePerp(event.address);
   
-    let perp = getOrCreatePerpetualContract(event.address.toHexString());
-    let collateralToken = getOrCreateToken(Address.fromString(perp.collateralToken));
     let fundingRateUpdatedEvent = getOrCreateFundingRateUpdatedEvent(event);
-  
-    perp.totalCollateralWithdrawn =
-      perp.totalCollateralWithdrawn +
-      toDecimal(event.params.reward, collateralToken.decimals);
-
     fundingRateUpdatedEvent.contract = event.address.toHexString();
     fundingRateUpdatedEvent.newFundingRate = event.params.newFundingRate;
     fundingRateUpdatedEvent.updateTime = event.params.updateTime;
@@ -245,14 +205,7 @@ export function handleFinalFeesPaid(event: FinalFeesPaid): void {
   export function handleWithdrawal(event: Withdrawal): void {
     updateSponsorPositionAndPerp(event.address, event.params.sponsor);
   
-    let perp = getOrCreatePerpetualContract(event.address.toHexString());
     let positionEvent = getOrCreateWithdrawalEvent(event);
-    let collateralToken = getOrCreateToken(Address.fromString(perp.collateralToken));
-
-    perp.totalCollateralWithdrawn =
-      perp.totalCollateralWithdrawn +
-      toDecimal(event.params.collateralAmount, collateralToken.decimals);
-
     positionEvent.contract = event.address.toHexString();
     positionEvent.sponsor = event.params.sponsor.toHexString();
     positionEvent.collateralAmount = event.params.collateralAmount;
@@ -326,14 +279,7 @@ export function handleFinalFeesPaid(event: FinalFeesPaid): void {
   ): void {
     updateSponsorPositionAndPerp(event.address, event.params.sponsor);
   
-    let perp = getOrCreatePerpetualContract(event.address.toHexString());
     let positionEvent = getOrCreateWithdrawalEvent(event);
-    let collateralToken = getOrCreateToken(Address.fromString(perp.collateralToken));
-
-    perp.totalCollateralWithdrawn =
-      perp.totalCollateralWithdrawn +
-      toDecimal(event.params.collateralAmount, collateralToken.decimals);
-
     positionEvent.contract = event.address.toHexString();
     positionEvent.sponsor = event.params.sponsor.toHexString();
     positionEvent.collateralAmount = event.params.collateralAmount;
@@ -367,16 +313,7 @@ export function handleFinalFeesPaid(event: FinalFeesPaid): void {
     let syntheticToken = getOrCreateToken(Address.fromString(perp.syntheticToken));
     let collateralToken = getOrCreateToken(
       Address.fromString(perp.collateralToken)
-    );
-  
-    perp.totalSyntheticTokensBurned =
-      perp.totalSyntheticTokensBurned +
-        toDecimal(event.params.tokensOutstanding, syntheticToken.decimals);
-  
-    perp.totalCollateralWithdrawn =
-      perp.totalCollateralWithdrawn +
-      toDecimal(event.params.lockedCollateral, collateralToken.decimals);
-  
+    );  
     liquidationEvent.tx_hash = event.transaction.hash.toHexString();
     liquidationEvent.block = event.block.number;
     liquidationEvent.timestamp = event.block.timestamp;
@@ -410,7 +347,6 @@ export function handleFinalFeesPaid(event: FinalFeesPaid): void {
   
     liquidationEvent.save();
     liquidation.save();
-    perp.save();
   }
   
   // - event: LiquidationDisputed(indexed address,indexed address,indexed address,uint256,uint256)

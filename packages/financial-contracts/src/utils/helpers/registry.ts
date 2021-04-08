@@ -12,7 +12,7 @@ import {
 import { ERC20 } from "../../../generated/templates/ExpiringMultiPartyCreator/ERC20";
 import { Address } from "@graphprotocol/graph-ts";
 import { DEFAULT_DECIMALS } from "../decimals";
-import { BIGDECIMAL_ZERO, BIGDECIMAL_ONE } from "../constants";
+import { BIGDECIMAL_ONE } from "../constants";
 
 export function getOrCreateFinancialContract(
   id: String,
@@ -22,10 +22,6 @@ export function getOrCreateFinancialContract(
 
   if (contract == null && createIfNotFound) {
     contract = new FinancialContract(id);
-    contract.totalSyntheticTokensCreated = BIGDECIMAL_ZERO;
-    contract.totalSyntheticTokensBurned = BIGDECIMAL_ZERO;
-    contract.totalCollateralDeposited = BIGDECIMAL_ZERO;
-    contract.totalCollateralWithdrawn = BIGDECIMAL_ZERO;
     contract.cumulativeFeeMultiplier = BIGDECIMAL_ONE; // Hardcoded in the contract
 
     ExpiringMultiParty.create(Address.fromString(id));
@@ -42,10 +38,6 @@ export function getOrCreatePerpetualContract(
 
   if (contract == null && createIfNotFound) {
     contract = new FinancialContract(id);
-    contract.totalSyntheticTokensCreated = BIGDECIMAL_ZERO;
-    contract.totalSyntheticTokensBurned = BIGDECIMAL_ZERO;
-    contract.totalCollateralDeposited = BIGDECIMAL_ZERO;
-    contract.totalCollateralWithdrawn = BIGDECIMAL_ZERO;
     contract.cumulativeFeeMultiplier = BIGDECIMAL_ONE; // Hardcoded in the contract
 
     Perpetual.create(Address.fromString(id));

@@ -39,14 +39,6 @@ type FinancialContract @entity {
 
   globalCollateralizationRatio: BigDecimal
 
-  totalSyntheticTokensCreated: BigDecimal!
-
-  totalSyntheticTokensBurned: BigDecimal!
-
-  totalCollateralDeposited: BigDecimal!
-
-  totalCollateralWithdrawn: BigDecimal!
-
   positionManagerEvents: [PositionManagerEvent!]! @derivedFrom(field: "contract")
 
   positions: [SponsorPosition!]! @derivedFrom(field: "contract")
