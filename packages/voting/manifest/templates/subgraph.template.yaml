@@ -11,26 +11,6 @@ dataSources:
   {{> VotingAncillary.template.yaml}}
 {{/VotingAncillaryDataSources}}
   - kind: ethereum/contract
-    name: VotingToken
-    network: {{network}}
-    source:
-      address: "{{votingTokenAddress}}"
-      abi: VotingToken
-      startBlock: {{votingTokenStartBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: ./src/index.ts
-      entities:
-        - User
-      abis:
-        - name: VotingToken
-          file: ./abis/VotingToken.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransferVotingToken
-  - kind: ethereum/contract
     name: IdentifierWhitelist
     network: {{network}}
     source:

@@ -107,6 +107,7 @@ export function handleCreatedExpiringMultiParty(
       contract.syntheticToken = syntheticToken.id;
     }
 
+    contract.deploymentTimestamp = event.block.timestamp;
     contract.deployer = event.params.deployerAddress;
     contract.address = event.params.expiringMultiPartyAddress;
     contract.collateralRequirement = requirement.reverted
@@ -156,6 +157,7 @@ export function handleCreatedPerpetual(
     let requirement = perpetualContract.try_collateralRequirement();
     let totalOutstanding = perpetualContract.try_totalTokensOutstanding();
     let feeMultiplier = perpetualContract.try_cumulativeFeeMultiplier();
+    let fundingRateData = perpetualContract.try_fundingRate();
     let rawCollateral = perpetualContract.try_rawTotalPositionCollateral();
 
     if (!collateral.reverted) {
@@ -172,6 +174,7 @@ export function handleCreatedPerpetual(
       contract.syntheticToken = syntheticToken.id;
     }
 
+    contract.deploymentTimestamp = event.block.timestamp;
     contract.deployer = event.params.deployerAddress;
     contract.address = event.params.perpetualAddress;
     contract.collateralRequirement = requirement.reverted
@@ -183,6 +186,9 @@ export function handleCreatedPerpetual(
     contract.cumulativeFeeMultiplier = feeMultiplier.reverted
       ? null
       : toDecimal(feeMultiplier.value);
+    contract.cumulativeFundingRateMultiplier = fundingRateData.reverted
+      ? null
+      : toDecimal(fundingRateData.value.value2.rawValue);
     contract.rawTotalPositionCollateral = rawCollateral.reverted
       ? null
       : toDecimal(rawCollateral.value);

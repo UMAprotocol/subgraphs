@@ -4,23 +4,9 @@ type User @entity {
 
   address: Bytes!
 
-  "Reference to the related entity that tracks voting token balance. If null then this user is not a token holder"
-  votingTokenHolder: VotingTokenHolder
-
   votesCommited: [CommittedVote!]! @derivedFrom(field: "voter")
 
   votesRevealed: [RevealedVote!]! @derivedFrom(field: "voter")
-}
-
-type VotingTokenHolder @entity {
-  "ID = Ethereum address"
-  id:ID!
-
-  address: Bytes!
-
-  votingTokenBalance: BigDecimal!
-
-  votingTokenBalanceRaw: BigInt!
 }
 
 type PriceIdentifier @entity {

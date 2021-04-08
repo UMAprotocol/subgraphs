@@ -1,7 +1,6 @@
 export {
   getOrCreateUser,
-  getTokenContract,
-  getOrCreateVotingTokenHolder
+  getTokenContract
 } from "./votingToken";
 
 export {

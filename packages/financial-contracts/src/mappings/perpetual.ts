@@ -5,6 +5,7 @@ import {
     FundingRateUpdated,
     PositionCreated,
     NewSponsor,
+    FinalFeesPaid,
     EndedSponsorPosition,
     Perpetual,
     LiquidationCreated,
@@ -14,12 +15,12 @@ import {
     RequestWithdrawalCanceled,
     RequestWithdrawal
   } from "../../generated/templates/Perpetual/Perpetual";
-  import { Transfer } from "../../generated/templates/CollateralERC20/ERC20";
   import {
     getOrCreateToken,
     getOrCreatePerpetualContract,
     getOrCreatePositionCreatedEvent,
     getOrCreateRedeemEvent,
+    getOrCreateFinalFeesPaidEvent,
     getOrCreateFundingRateUpdatedEvent,
     getOrCreateDepositEvent,
     getOrCreateWithdrawalEvent,
@@ -31,14 +32,13 @@ import {
     getOrCreateLiquidationDisputeSettledEvent,
     calculateGCR
   } from "../utils/helpers";
-  import { Address } from "@graphprotocol/graph-ts";
+  import { Address, log, BigInt } from "@graphprotocol/graph-ts";
   import { toDecimal } from "../utils/decimals";
   import {
     LIQUIDATION_PRE_DISPUTE,
     LIQUIDATION_PENDING_DISPUTE,
     LIQUIDATION_DISPUTE_SUCCEEDED,
-    LIQUIDATION_DISPUTE_FAILED,
-    log
+    LIQUIDATION_DISPUTE_FAILED
   } from "../utils/constants";
   
   function updateSponsorPositionAndPerp(
@@ -109,11 +109,6 @@ import {
     perp.cumulativeFeeMultiplier = feeMultiplier.reverted
       ? perp.cumulativeFeeMultiplier
       : toDecimal(feeMultiplier.value);
-    log.warn("Fetched CFRM: {}", [
-      fundingRateData.value.value0.rawValue.toString(),
-      fundingRateData.value.value1.toString(),
-      fundingRateData.value.value2.rawValue.toString()
-    ]);
     perp.cumulativeFundingRateMultiplier = fundingRateData.reverted
       ? perp.cumulativeFundingRateMultiplier
       : toDecimal(fundingRateData.value.value2.rawValue);
@@ -137,10 +132,15 @@ import {
     let perp = getOrCreatePerpetualContract(event.address.toHexString());
     let positionEvent = getOrCreatePositionCreatedEvent(event);
     let syntheticToken = getOrCreateToken(Address.fromString(perp.syntheticToken));
-  
+    let collateralToken = getOrCreateToken(Address.fromString(perp.collateralToken));
+
     perp.totalSyntheticTokensCreated =
       perp.totalSyntheticTokensCreated +
       toDecimal(event.params.tokenAmount, syntheticToken.decimals);
+  
+    perp.totalCollateralDeposited =
+      perp.totalCollateralDeposited +
+      toDecimal(event.params.collateralAmount, collateralToken.decimals);
   
     positionEvent.contract = event.address.toHexString();
     positionEvent.sponsor = event.params.sponsor.toHexString();
@@ -161,11 +161,16 @@ import {
     let perp = getOrCreatePerpetualContract(event.address.toHexString());
     let positionEvent = getOrCreateRedeemEvent(event);
     let syntheticToken = getOrCreateToken(Address.fromString(perp.syntheticToken));
-  
+    let collateralToken = getOrCreateToken(Address.fromString(perp.collateralToken));
+
     perp.totalSyntheticTokensBurned =
       perp.totalSyntheticTokensBurned +
       toDecimal(event.params.tokenAmount, syntheticToken.decimals);
   
+    perp.totalCollateralWithdrawn =
+      perp.totalCollateralWithdrawn +
+      toDecimal(event.params.collateralAmount, collateralToken.decimals);
+
     positionEvent.contract = event.address.toHexString();
     positionEvent.sponsor = event.params.sponsor.toHexString();
     positionEvent.collateralAmount = event.params.collateralAmount;
@@ -182,14 +187,33 @@ import {
   export function handleDeposit(event: Deposit): void {
     updateSponsorPositionAndPerp(event.address, event.params.sponsor);
   
+    let perp = getOrCreatePerpetualContract(event.address.toHexString());
     let positionEvent = getOrCreateDepositEvent(event);
-  
+    let collateralToken = getOrCreateToken(Address.fromString(perp.collateralToken));
+
+    perp.totalCollateralDeposited =
+      perp.totalCollateralDeposited +
+      toDecimal(event.params.collateralAmount, collateralToken.decimals);
+
     positionEvent.contract = event.address.toHexString();
     positionEvent.sponsor = event.params.sponsor.toHexString();
     positionEvent.collateralAmount = event.params.collateralAmount;
   
     positionEvent.save();
   }
+
+// - event: FinalFeesPaid(indexed uint256)
+//   handler: handleFinalFeesPaid
+// event FinalFeesPaid(uint256 indexed amount);
+
+export function handleFinalFeesPaid(event: FinalFeesPaid): void {
+  let finalFeesPaidEvent = getOrCreateFinalFeesPaidEvent(event);
+
+  finalFeesPaidEvent.contract = event.address.toHexString();
+  finalFeesPaidEvent.amount = event.params.amount;
+
+  finalFeesPaidEvent.save();
+}
 
   // - event: FundingRateUpdated(int256,indexed uint256,uint256)
   //   handler: handleFundingRateUpdated
@@ -198,8 +222,15 @@ import {
   export function handleFundingRateUpdated(event: FundingRateUpdated): void {
     updatePerp(event.address);
   
+    let perp = getOrCreatePerpetualContract(event.address.toHexString());
+    let collateralToken = getOrCreateToken(Address.fromString(perp.collateralToken));
     let fundingRateUpdatedEvent = getOrCreateFundingRateUpdatedEvent(event);
   
+    perp.totalCollateralWithdrawn =
+      perp.totalCollateralWithdrawn +
+      toDecimal(event.params.reward, collateralToken.decimals);
+
+    fundingRateUpdatedEvent.contract = event.address.toHexString();
     fundingRateUpdatedEvent.newFundingRate = event.params.newFundingRate;
     fundingRateUpdatedEvent.updateTime = event.params.updateTime;
     fundingRateUpdatedEvent.reward = event.params.reward;
@@ -214,8 +245,14 @@ import {
   export function handleWithdrawal(event: Withdrawal): void {
     updateSponsorPositionAndPerp(event.address, event.params.sponsor);
   
+    let perp = getOrCreatePerpetualContract(event.address.toHexString());
     let positionEvent = getOrCreateWithdrawalEvent(event);
-  
+    let collateralToken = getOrCreateToken(Address.fromString(perp.collateralToken));
+
+    perp.totalCollateralWithdrawn =
+      perp.totalCollateralWithdrawn +
+      toDecimal(event.params.collateralAmount, collateralToken.decimals);
+
     positionEvent.contract = event.address.toHexString();
     positionEvent.sponsor = event.params.sponsor.toHexString();
     positionEvent.collateralAmount = event.params.collateralAmount;
@@ -289,8 +326,14 @@ import {
   ): void {
     updateSponsorPositionAndPerp(event.address, event.params.sponsor);
   
+    let perp = getOrCreatePerpetualContract(event.address.toHexString());
     let positionEvent = getOrCreateWithdrawalEvent(event);
-  
+    let collateralToken = getOrCreateToken(Address.fromString(perp.collateralToken));
+
+    perp.totalCollateralWithdrawn =
+      perp.totalCollateralWithdrawn +
+      toDecimal(event.params.collateralAmount, collateralToken.decimals);
+
     positionEvent.contract = event.address.toHexString();
     positionEvent.sponsor = event.params.sponsor.toHexString();
     positionEvent.collateralAmount = event.params.collateralAmount;
@@ -327,8 +370,12 @@ import {
     );
   
     perp.totalSyntheticTokensBurned =
-    perp.totalSyntheticTokensBurned +
-      toDecimal(event.params.tokensOutstanding, syntheticToken.decimals);
+      perp.totalSyntheticTokensBurned +
+        toDecimal(event.params.tokensOutstanding, syntheticToken.decimals);
+  
+    perp.totalCollateralWithdrawn =
+      perp.totalCollateralWithdrawn +
+      toDecimal(event.params.lockedCollateral, collateralToken.decimals);
   
     liquidationEvent.tx_hash = event.transaction.hash.toHexString();
     liquidationEvent.block = event.block.number;
@@ -445,39 +492,5 @@ import {
     liquidationEvent.save();
     liquidation.save();
   }
-  
-  // - event: Transfer(indexed address,indexed address,uint256)
-  //   handler: handleCollateralTransfer
-  
-  export function handleCollateralTransfer(event: Transfer): void {
-    let token = getOrCreateToken(event.address);
-    let fromContract = getOrCreatePerpetualContract(
-      event.params.from.toHexString(),
-      false
-    );
-    let toContract = getOrCreatePerpetualContract(
-      event.params.to.toHexString(),
-      false
-    );
-  
-    if (
-      fromContract != null &&
-      event.address.toHexString() == fromContract.collateralToken
-    ) {
-      fromContract.totalCollateralWithdrawn =
-        fromContract.totalCollateralWithdrawn +
-        toDecimal(event.params.value, token.decimals);
-      fromContract.save();
-    }
-  
-    if (
-      toContract != null &&
-      event.address.toHexString() == toContract.collateralToken
-    ) {
-      toContract.totalCollateralDeposited =
-        toContract.totalCollateralDeposited +
-        toDecimal(event.params.value, token.decimals);
-      toContract.save();
-    }
-  }
+
   

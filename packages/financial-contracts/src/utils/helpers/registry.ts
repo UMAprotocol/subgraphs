@@ -4,7 +4,6 @@ import {
   Token
 } from "../../../generated/schema";
 import {
-  CollateralERC20,
   ExpiringMultiParty,
   ExpiringMultiPartyCreator,
   Perpetual,
@@ -111,10 +110,8 @@ export function getOrCreateToken(
     token.name = !tokenName.reverted ? tokenName.value : "";
     token.symbol = !tokenSymbol.reverted ? tokenSymbol.value : "";
     token.indexingAsCollateral = false;
-    token.isOnWhitelist = false;
 
     if (indexAsCollateral) {
-      CollateralERC20.create(tokenAddress);
       token.indexingAsCollateral = true;
     }
 
@@ -124,7 +121,6 @@ export function getOrCreateToken(
   }
 
   if (indexAsCollateral && !token.indexingAsCollateral) {
-    CollateralERC20.create(tokenAddress);
     token.indexingAsCollateral = true;
     token.save();
   }
