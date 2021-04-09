@@ -15,17 +15,6 @@ type User @entity {
   votesRevealed: [RevealedVote!]! @derivedFrom(field: "voter")
 }
 
-type VotingTokenHolder @entity {
-  "ID = Ethereum address"
-  id:ID!
-
-  address: Bytes!
-
-  votingTokenBalance: BigDecimal!
-
-  votingTokenBalanceRaw: BigInt!
-}
-
 type PriceIdentifier @entity {
   id: ID!
 
@@ -48,13 +37,15 @@ type PriceRequest @entity {
   price: BigInt
 
   "PriceRequestRound entity corresponding to the last round of voting"
-  latestRound: PriceRequestRound!
+  latestRound: PriceRequestRound
 
   "Timestamp when the PriceRequest was requested"
   time: BigInt!
 
   "PriceIdentifier for the request"
   identifier: PriceIdentifier!
+
+  ancillaryData: String
 
   "Transaction where the resolution of the request took place"
   resolutionTransaction: Bytes
@@ -79,12 +70,14 @@ type PriceRequest @entity {
 }
 
 type PriceRequestRound @entity {
-  "ID is the PriceIdentifier ID + the timestamp + the roundId"
+  "ID is the PriceIdentifier ID + the timestamp + the roundId + ancillaryData (if available)"
   id: ID!
 
   request: PriceRequest!
 
   identifier: PriceIdentifier!
+
+  ancillaryData: String
 
   time: BigInt!
 
@@ -174,6 +167,8 @@ type CommittedVote @entity {
 
   identifier: PriceIdentifier!
 
+  ancillaryData: String
+
   request: PriceRequest!
 
   time: BigInt!
@@ -187,6 +182,8 @@ type RevealedVote @entity {
   id: ID!
 
   identifier: PriceIdentifier!
+
+  ancillaryData: String
 
   request: PriceRequest!
 
@@ -207,6 +204,8 @@ type RewardsClaimed @entity {
   id: ID!
 
   identifier: PriceIdentifier!
+
+  ancillaryData: String
 
   request: PriceRequest!
 
