@@ -245,6 +245,9 @@ type Token @entity {
 
   "Depicts whether this token is being indexed by the subgraph as a CollateralToken for at least one FinancialContract"
   indexingAsCollateral: Boolean!
+
+  "Is token whitelisted as collateral"
+  isOnWhitelist: Boolean!
 }
 
 enum LiquidationStatus {

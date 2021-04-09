@@ -1,5 +1,7 @@
 {
     "network": "mainnet",
     "registryAddress": "0x3e532e6222afe9bcf02dcb87216802c75d5113ae",
-    "registryStartBlock": 9937650
+    "registryStartBlock": 9937650,
+    "addressWhitelistAddress": "0xdbf90434df0b98219f87d112f37d74b1d90758c7",
+    "addressWhitelistStartBlock": 10484890
 }

@@ -5,6 +5,11 @@ export {
 } from "./mappings/registry";
 
 export {
+  handleAddedToWhitelist,
+  handleRemovedFromWhitelist
+} from "./mappings/addressWhitelist";
+
+export {
   handlePositionCreated,
   handleSettleExpiredPosition,
   handleWithdrawal,
