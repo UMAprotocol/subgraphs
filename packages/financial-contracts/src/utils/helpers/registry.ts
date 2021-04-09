@@ -80,7 +80,8 @@ export function getOrCreatePerpetualCreator(
 export function getOrCreateToken(
   tokenAddress: Address,
   persist: boolean = true,
-  indexAsCollateral: boolean = false
+  indexAsCollateral: boolean = false,
+  isOnWhitelist: boolean = false
 ): Token {
   let addressString = tokenAddress.toHexString();
 
@@ -102,9 +103,13 @@ export function getOrCreateToken(
     token.name = !tokenName.reverted ? tokenName.value : "";
     token.symbol = !tokenSymbol.reverted ? tokenSymbol.value : "";
     token.indexingAsCollateral = false;
+    token.isOnWhitelist =  false;
 
     if (indexAsCollateral) {
       token.indexingAsCollateral = true;
+    }
+    if (isOnWhitelist) {
+      token.isOnWhitelist = true;
     }
 
     if (persist) {
@@ -114,6 +119,11 @@ export function getOrCreateToken(
 
   if (indexAsCollateral && !token.indexingAsCollateral) {
     token.indexingAsCollateral = true;
+    token.save();
+  }
+
+  if (isOnWhitelist && !token.isOnWhitelist) {
+    token.isOnWhitelist = true;
     token.save();
   }
 

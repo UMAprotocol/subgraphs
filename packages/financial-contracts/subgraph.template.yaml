@@ -5,6 +5,30 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
+    name: AddressWhitelist
+    network: {{network}}
+    source:
+      address: "{{addressWhitelistAddress}}"
+      abi: AddressWhitelist
+      startBlock: {{addressWhitelistStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/index.ts
+      entities:
+        - PriceIdentifier
+      abis:
+        - name: AddressWhitelist
+          file: ./abis/AddressWhitelist.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: AddedToWhitelist(indexed address)
+          handler: handleAddedToWhitelist
+        - event: RemovedFromWhitelist(indexed address)
+          handler: handleRemovedFromWhitelist
+  - kind: ethereum/contract
     name: Registry
     network: {{network}}
     source:

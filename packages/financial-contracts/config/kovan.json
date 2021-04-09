@@ -1,5 +1,7 @@
 {
     "network": "kovan",
     "registryAddress": "0x7b1c04D2826B140779e2B97d5783AF05cf00Fbab",
-    "registryStartBlock": 20185622
+    "registryStartBlock": 20185622,
+    "addressWhitelistAddress": "0xf8bdab5d675f76ed863ff9fa35b129a6e43e71ca",
+    "addressWhitelistStartBlock": 20185676
 }
