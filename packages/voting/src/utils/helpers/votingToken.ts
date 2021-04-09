@@ -1,9 +1,8 @@
 import { User, VotingTokenHolder } from "../../../generated/schema";
 import { VotingToken } from "../../../generated/VotingToken/VotingToken";
 import {
-  BIGINT_ZERO,
-  BIGDECIMAL_ZERO,
-  VOTING_TOKEN_ADDRESS
+  VOTING_TOKEN_ADDRESS,
+  BIGINT_ZERO
 } from "../constants";
 import { Address } from "@graphprotocol/graph-ts";
 
@@ -16,7 +15,8 @@ export function getOrCreateUser(
   if (user == null && createIfNotFound) {
     user = new User(id.toHexString());
     user.address = id;
-    user.votingTokenHolder = user.id; // If a token holder with that ID hasn't been created it will just return null on queries
+    user.countReveals = BIGINT_ZERO;
+    user.countCorrectVotes = BIGINT_ZERO;
 
     user.save();
   }

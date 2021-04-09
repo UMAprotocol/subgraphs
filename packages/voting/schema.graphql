@@ -4,8 +4,11 @@ type User @entity {
 
   address: Bytes!
 
-  "Reference to the related entity that tracks voting token balance. If null then this user is not a token holder"
-  votingTokenHolder: VotingTokenHolder
+  "Number of price requests that this user has revealed a vote for, and therefore participated in as a voter"
+  countReveals: BigInt
+
+  "Number of votes that user voted for correctly and therefore earned a reward."
+  countCorrectVotes: BigInt
 
   votesCommited: [CommittedVote!]! @derivedFrom(field: "voter")
 
