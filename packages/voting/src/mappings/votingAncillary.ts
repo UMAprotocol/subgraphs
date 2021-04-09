@@ -22,7 +22,8 @@ import {
     BIGDECIMAL_HUNDRED,
     BIGDECIMAL_ONE,
     BIGDECIMAL_ZERO,
-    BIGINT_ZERO
+    BIGINT_ZERO,
+    BIGINT_ONE
   } from "../utils/constants";
   
   import { log, BigInt, BigDecimal } from "@graphprotocol/graph-ts";
@@ -158,6 +159,11 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
     rewardClaimed.time = event.params.time;
     rewardClaimed.numTokens = event.params.numTokens;
   
+    // If rewards > 0, then voter correctly voted for this round.
+    if (event.params.numTokens > BIGINT_ZERO) {
+      claimer.countRetrievals = claimer.countRetrievals + BIGINT_ONE;
+    }
+
     requestRound.request = requestId;
     requestRound.identifier = event.params.identifier.toString();
     requestRound.ancillaryData = event.params.ancillaryData.toHex();
@@ -300,6 +306,8 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
     vote.numTokens = event.params.numTokens;
     vote.group = voterGroup.id;
   
+    voter.countReveals = voter.countReveals + BIGINT_ONE;
+
     voterGroup.price = event.params.price;
     voterGroup.round = requestRound.id;
     voterGroup.totalVoteAmount =

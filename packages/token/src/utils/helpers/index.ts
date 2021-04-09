@@ -1,0 +1,3 @@
+export {
+  getOrCreateUser
+} from "./votingToken";

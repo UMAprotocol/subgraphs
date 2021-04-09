@@ -4,6 +4,12 @@ type User @entity {
 
   address: Bytes!
 
+  "Number of price requests that this user has revealed a vote for, and therefore participated in as a voter"
+  countReveals: BigInt
+
+  "Provides a lower-bound on # of votes that user has correctly voted for. User may not have retrieved rewards for all of their correct votes."
+  countRetrievals: BigInt
+
   votesCommited: [CommittedVote!]! @derivedFrom(field: "voter")
 
   votesRevealed: [RevealedVote!]! @derivedFrom(field: "voter")
