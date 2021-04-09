@@ -161,7 +161,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   
     // If rewards > 0, then voter correctly voted for this round.
     if (event.params.numTokens > BIGINT_ZERO) {
-      claimer.countCorrectVotes = claimer.countCorrectVotes + BIGINT_ONE;
+      claimer.countRetrievals = claimer.countRetrievals + BIGINT_ONE;
     }
 
     requestRound.request = requestId;
