@@ -98,6 +98,18 @@
               }
             ],
             "internalType": "struct FixedPoint.Unsigned",
+            "name": "disputeBondPercentage",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "rawValue",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct FixedPoint.Unsigned",
             "name": "sponsorDisputeRewardPct",
             "type": "tuple"
           },
@@ -110,7 +122,31 @@
               }
             ],
             "internalType": "struct FixedPoint.Unsigned",
+            "name": "sponsorDisputeRewardPercentage",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "rawValue",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct FixedPoint.Unsigned",
             "name": "disputerDisputeRewardPct",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "rawValue",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct FixedPoint.Unsigned",
+            "name": "disputerDisputeRewardPercentage",
             "type": "tuple"
           }
         ],
@@ -854,7 +890,25 @@
   },
   {
     "inputs": [],
+    "name": "disputeBondPercentage",
+    "outputs": [
+      { "internalType": "uint256", "name": "rawValue", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "disputerDisputeRewardPct",
+    "outputs": [
+      { "internalType": "uint256", "name": "rawValue", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "disputerDisputeRewardPercentage",
     "outputs": [
       { "internalType": "uint256", "name": "rawValue", "type": "uint256" }
     ],
@@ -1305,6 +1359,15 @@
   {
     "inputs": [],
     "name": "sponsorDisputeRewardPct",
+    "outputs": [
+      { "internalType": "uint256", "name": "rawValue", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "sponsorDisputeRewardPercentage",
     "outputs": [
       { "internalType": "uint256", "name": "rawValue", "type": "uint256" }
     ],
