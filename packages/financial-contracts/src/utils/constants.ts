@@ -22,6 +22,7 @@ export let PERP_CREATORS = new Array<String>();
 // Kovan:
 EMP_CREATORS.push("0xf763d367e1302a16716b6c40783a17c1ac754f2e")
 EMP_CREATORS.push("0x8f6e999530787492c62cfa5a8c937a4be5886a13")
+EMP_CREATORS.push("0x9a689bfd9f3a963b20d5ba4ed7ed0b7be16cfccb")
 PERP_CREATORS.push("0x211aab73c56fef9314fb0889e4f045b5f27cdb3f")
 PERP_CREATORS.push("0x6b876861d2f15616a6c8ed8a3e3bad071ead3dde")
 // Mainnet:

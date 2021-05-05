@@ -92,6 +92,17 @@ export function handleCreatedExpiringMultiParty(
     let totalOutstanding = empContract.try_totalTokensOutstanding();
     let feeMultiplier = empContract.try_cumulativeFeeMultiplier();
     let rawCollateral = empContract.try_rawTotalPositionCollateral();
+    let priceIdentifier = empContract.try_priceIdentifier();
+    let minSponsorTokens = empContract.try_minSponsorTokens();
+    let disputeBondPercentage = empContract.try_disputeBondPercentage();
+    let sponsorDisputeRewardPercentage = empContract.try_sponsorDisputeRewardPercentage();
+    let disputerDisputeRewardPercentage = empContract.try_disputerDisputeRewardPercentage();
+    // Note: These three methods are named differently in old EMPs:
+    let disputeBondPct = empContract.try_disputeBondPct();
+    let sponsorDisputeRewardPct = empContract.try_sponsorDisputeRewardPct();
+    let disputerDisputeRewardPct = empContract.try_disputerDisputeRewardPct();
+    let withdrawalLiveness = empContract.try_withdrawalLiveness();
+    let liquidationLiveness = empContract.try_liquidationLiveness();
 
     if (!collateral.reverted) {
       let collateralToken = getOrCreateToken(
@@ -110,6 +121,25 @@ export function handleCreatedExpiringMultiParty(
     contract.deploymentTimestamp = event.block.timestamp;
     contract.deployer = event.params.deployerAddress;
     contract.address = event.params.expiringMultiPartyAddress;
+    contract.priceIdentifier = priceIdentifier.reverted ? null : priceIdentifier.value.toString();
+    contract.minSponsorTokens = minSponsorTokens.reverted
+      ? null
+      : toDecimal(minSponsorTokens.value);
+    contract.disputeBondPercentage = disputeBondPercentage.reverted
+      ? (disputeBondPct.reverted ? null : toDecimal(disputeBondPct.value))
+      : toDecimal(disputeBondPercentage.value);
+    contract.sponsorDisputeRewardPercentage = sponsorDisputeRewardPercentage.reverted
+      ? (sponsorDisputeRewardPct.reverted ? null : toDecimal(sponsorDisputeRewardPct.value))
+      : toDecimal(sponsorDisputeRewardPercentage.value);
+    contract.disputerDisputeRewardPercentage = disputerDisputeRewardPercentage.reverted
+      ? (disputerDisputeRewardPct.reverted ? null : toDecimal(disputerDisputeRewardPct.value))
+      : toDecimal(disputerDisputeRewardPercentage.value);
+    contract.withdrawalLiveness = withdrawalLiveness.reverted
+      ? null
+      : withdrawalLiveness.value;
+    contract.liquidationLiveness = liquidationLiveness.reverted
+      ? null
+      : liquidationLiveness.value;
     contract.collateralRequirement = requirement.reverted
       ? null
       : toDecimal(requirement.value);
@@ -159,6 +189,13 @@ export function handleCreatedPerpetual(
     let feeMultiplier = perpetualContract.try_cumulativeFeeMultiplier();
     let fundingRateData = perpetualContract.try_fundingRate();
     let rawCollateral = perpetualContract.try_rawTotalPositionCollateral();
+    let priceIdentifier = perpetualContract.try_priceIdentifier();
+    let minSponsorTokens = perpetualContract.try_minSponsorTokens();
+    let disputeBondPercentage = perpetualContract.try_disputeBondPercentage();
+    let sponsorDisputeRewardPercentage = perpetualContract.try_sponsorDisputeRewardPercentage();
+    let disputerDisputeRewardPercentage = perpetualContract.try_disputerDisputeRewardPercentage();
+    let withdrawalLiveness = perpetualContract.try_withdrawalLiveness();
+    let liquidationLiveness = perpetualContract.try_liquidationLiveness();
 
     if (!collateral.reverted) {
       let collateralToken = getOrCreateToken(
@@ -177,6 +214,25 @@ export function handleCreatedPerpetual(
     contract.deploymentTimestamp = event.block.timestamp;
     contract.deployer = event.params.deployerAddress;
     contract.address = event.params.perpetualAddress;
+    contract.priceIdentifier = priceIdentifier.reverted ? null : priceIdentifier.value.toString();
+    contract.minSponsorTokens = minSponsorTokens.reverted
+      ? null
+      : toDecimal(minSponsorTokens.value);
+    contract.disputeBondPercentage = disputeBondPercentage.reverted
+      ? null
+      : toDecimal(disputeBondPercentage.value);
+    contract.sponsorDisputeRewardPercentage = sponsorDisputeRewardPercentage.reverted
+      ? null
+      : toDecimal(sponsorDisputeRewardPercentage.value);
+    contract.disputerDisputeRewardPercentage = disputerDisputeRewardPercentage.reverted
+      ? null
+      : toDecimal(disputerDisputeRewardPercentage.value);
+    contract.withdrawalLiveness = withdrawalLiveness.reverted
+      ? null
+      : withdrawalLiveness.value;
+    contract.liquidationLiveness = liquidationLiveness.reverted
+      ? null
+      : liquidationLiveness.value;
     contract.collateralRequirement = requirement.reverted
       ? null
       : toDecimal(requirement.value);

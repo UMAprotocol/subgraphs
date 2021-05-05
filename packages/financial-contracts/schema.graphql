@@ -2,6 +2,8 @@ type FinancialContract @entity {
   "Blockchain address of the contract"
   id: ID!
 
+  priceIdentifier: String
+
   "Factory contract used to create this contract"
   creator: ContractCreator
 
@@ -38,6 +40,18 @@ type FinancialContract @entity {
   cumulativeFundingRateMultiplier: BigDecimal
 
   globalCollateralizationRatio: BigDecimal
+
+  minSponsorTokens: BigDecimal
+  
+  disputeBondPercentage: BigDecimal
+
+  sponsorDisputeRewardPercentage: BigDecimal
+
+  disputerDisputeRewardPercentage: BigDecimal
+
+  withdrawalLiveness: BigInt
+
+  liquidationLiveness: BigInt
 
   positionManagerEvents: [PositionManagerEvent!]! @derivedFrom(field: "contract")
 
