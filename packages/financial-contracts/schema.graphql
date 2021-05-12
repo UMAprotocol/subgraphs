@@ -308,6 +308,8 @@ type Liquidation @entity {
 
   amountWithdrawn: BigDecimal
 
+  liquidationTime: BigInt
+
   events: [LiquidationEvent!]! @derivedFrom(field: "liquidation")
 }
 
