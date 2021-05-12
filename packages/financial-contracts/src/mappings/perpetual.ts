@@ -332,6 +332,7 @@ export function handleFinalFeesPaid(event: FinalFeesPaid): void {
     liquidation.contract = event.address.toHexString();
     liquidation.liquidator = event.params.liquidator;
     liquidation.liquidationId = event.params.liquidationId;
+    liquidation.liquidationTime = event.block.timestamp;
     liquidation.tokensLiquidated = toDecimal(
       event.params.tokensOutstanding,
       syntheticToken.decimals
