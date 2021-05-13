@@ -262,6 +262,8 @@ type Token @entity {
 
   "Is token whitelisted as collateral"
   isOnWhitelist: Boolean!
+
+  finalFee: BigDecimal!
 }
 
 enum LiquidationStatus {

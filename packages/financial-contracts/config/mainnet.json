@@ -3,5 +3,7 @@
     "registryAddress": "0x3e532e6222afe9bcf02dcb87216802c75d5113ae",
     "registryStartBlock": 9937650,
     "addressWhitelistAddress": "0xdbf90434df0b98219f87d112f37d74b1d90758c7",
-    "addressWhitelistStartBlock": 10484890
+    "addressWhitelistStartBlock": 10484890,
+    "storeAddress": "0x54f44ea3d2e7aa0ac089c4d8f7c93c27844057bf",
+    "storeStartBlock": 9937562 
 }

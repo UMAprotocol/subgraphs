@@ -12,7 +12,7 @@ import {
 import { ERC20 } from "../../../generated/templates/ExpiringMultiPartyCreator/ERC20";
 import { Address } from "@graphprotocol/graph-ts";
 import { DEFAULT_DECIMALS } from "../decimals";
-import { BIGDECIMAL_ONE } from "../constants";
+import { BIGDECIMAL_ONE, BIGDECIMAL_ZERO } from "../constants";
 
 export function getOrCreateFinancialContract(
   id: String,
@@ -104,6 +104,7 @@ export function getOrCreateToken(
     token.symbol = !tokenSymbol.reverted ? tokenSymbol.value : "";
     token.indexingAsCollateral = false;
     token.isOnWhitelist =  false;
+    token.finalFee = BIGDECIMAL_ZERO;
 
     if (indexAsCollateral) {
       token.indexingAsCollateral = true;
