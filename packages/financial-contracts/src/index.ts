@@ -5,6 +5,10 @@ export {
 } from "./mappings/registry";
 
 export {
+  handleSetFinalFee
+} from "./mappings/store";
+
+export {
   handleAddedToWhitelist,
   handleRemovedFromWhitelist
 } from "./mappings/addressWhitelist";
