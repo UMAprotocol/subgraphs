@@ -2,8 +2,8 @@
     "network": "kovan",
     "votingTokenAddress": "0x489Bf230d4Ab5c2083556E394a28276C22c3B580",
     "votingTokenStartBlock": 20185622,
-    "identifierWhitelistAddress": "0xeF9c374b7976941fCAf5e501eaB531E430463fC6",
-    "identifierWhitelistStartBlock": 20185622,
+    "identifierWhitelistAddress": "0x7b3c4D3B6a4eB3259DAfc8416981131E870f85a7",
+    "identifierWhitelistStartBlock": 25189527,
     "VotingDataSources": [
         {
             "name": "Voting",
