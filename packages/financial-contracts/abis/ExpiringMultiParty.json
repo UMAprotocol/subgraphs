@@ -557,6 +557,31 @@
       {
         "indexed": true,
         "internalType": "address",
+        "name": "sponsor",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "numTokensRepaid",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "newTokenCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "Repay",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "oldSponsor",
         "type": "address"
       }
@@ -1304,6 +1329,26 @@
   {
     "inputs": [],
     "name": "remargin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "rawValue",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct FixedPoint.Unsigned",
+        "name": "numTokens",
+        "type": "tuple"
+      }
+    ],
+    "name": "repay",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

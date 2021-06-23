@@ -2,6 +2,7 @@ import {
     Withdrawal,
     Deposit,
     Redeem,
+    Repay,
     FundingRateUpdated,
     PositionCreated,
     NewSponsor,
@@ -20,6 +21,7 @@ import {
     getOrCreatePerpetualContract,
     getOrCreatePositionCreatedEvent,
     getOrCreateRedeemEvent,
+    getOrCreateRepayEvent,
     getOrCreateFinalFeesPaidEvent,
     getOrCreateFundingRateUpdatedEvent,
     getOrCreateDepositEvent,
@@ -154,6 +156,21 @@ import {
     positionEvent.save();
   }
   
+// - event: Repay(indexed address,indexed uint256,indexed uint256)
+//   handler: handleRepay
+// event Repay(address indexed sponsor, uint256 indexed numTokensRepaid, uint256 indexed newTokenCount);
+
+export function handleRepay(event: Repay): void {
+  updateSponsorPositionAndPerp(event.address, event.params.sponsor);
+
+  let positionEvent = getOrCreateRepayEvent(event);
+  positionEvent.contract = event.address.toHexString();
+  positionEvent.sponsor = event.params.sponsor.toHexString();
+  positionEvent.numTokensRepaid = event.params.numTokensRepaid;
+
+  positionEvent.save();
+}
+
   // - event: Deposit(indexed address,indexed uint256)
   //   handler: handleDeposit
   // event Deposit(address indexed sponsor, uint256 indexed collateralAmount);
