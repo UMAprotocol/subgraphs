@@ -2,6 +2,7 @@ import {
   PositionCreatedEvent,
   SettleExpiredPositionEvent,
   RedeemEvent,
+  RepayEvent,
   FundingRateUpdatedEvent,
   FinalFeesPaidEvent,
   DepositEvent,
@@ -62,6 +63,22 @@ export function getOrCreateRedeemEvent(
   event.timestamp = ethereumEvent.block.timestamp;
 
   return event as RedeemEvent;
+}
+
+export function getOrCreateRepayEvent(
+  ethereumEvent: ethereum.Event
+): RepayEvent {
+  let id = ethereumEvent.transaction.hash
+    .toHexString()
+    .concat("-")
+    .concat(ethereumEvent.logIndex.toString());
+
+  let event = new RepayEvent(id);
+  event.tx_hash = ethereumEvent.transaction.hash.toHexString();
+  event.block = ethereumEvent.block.number;
+  event.timestamp = ethereumEvent.block.timestamp;
+
+  return event as RepayEvent;
 }
 
 export function getOrCreateFundingRateUpdatedEvent(

@@ -204,6 +204,23 @@ type RedeemEvent implements PositionManagerEvent @entity {
   tokenAmount: BigInt!
 }
 
+type RepayEvent implements PositionManagerEvent @entity {
+  id: ID!
+
+  contract: FinancialContract!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  sponsor: Sponsor!
+
+  numTokensRepaid: BigInt!
+}
+
+
 type DepositEvent implements PositionManagerEvent @entity {
   id: ID!
 
