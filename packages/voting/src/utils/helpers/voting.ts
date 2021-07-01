@@ -4,14 +4,11 @@ import {
   CommittedVote,
   RevealedVote,
   RewardsClaimed,
-  VoterGroup
+  VoterGroup,
 } from "../../../generated/schema";
 import { BIGDECIMAL_ZERO } from "../constants";
 
-export function getOrCreatePriceRequest(
-  id: String,
-  createIfNotFound: boolean = true
-): PriceRequest {
+export function getOrCreatePriceRequest(id: String, createIfNotFound: boolean = true): PriceRequest {
   let request = PriceRequest.load(id);
 
   if (request == null && createIfNotFound) {
@@ -22,10 +19,7 @@ export function getOrCreatePriceRequest(
   return request as PriceRequest;
 }
 
-export function getOrCreatePriceRequestRound(
-  id: String,
-  createIfNotFound: boolean = true
-): PriceRequestRound {
+export function getOrCreatePriceRequestRound(id: String, createIfNotFound: boolean = true): PriceRequestRound {
   let requestRound = PriceRequestRound.load(id);
 
   if (requestRound == null && createIfNotFound) {
@@ -40,10 +34,7 @@ export function getOrCreatePriceRequestRound(
   return requestRound as PriceRequestRound;
 }
 
-export function getOrCreateCommittedVote(
-  id: String,
-  createIfNotFound: boolean = true
-): CommittedVote {
+export function getOrCreateCommittedVote(id: String, createIfNotFound: boolean = true): CommittedVote {
   let vote = CommittedVote.load(id);
 
   if (vote == null && createIfNotFound) {
@@ -53,10 +44,7 @@ export function getOrCreateCommittedVote(
   return vote as CommittedVote;
 }
 
-export function getOrCreateRevealedVote(
-  id: String,
-  createIfNotFound: boolean = true
-): RevealedVote {
+export function getOrCreateRevealedVote(id: String, createIfNotFound: boolean = true): RevealedVote {
   let vote = RevealedVote.load(id);
 
   if (vote == null && createIfNotFound) {
@@ -66,10 +54,7 @@ export function getOrCreateRevealedVote(
   return vote as RevealedVote;
 }
 
-export function getOrCreateRewardsClaimed(
-  id: String,
-  createIfNotFound: boolean = true
-): RewardsClaimed {
+export function getOrCreateRewardsClaimed(id: String, createIfNotFound: boolean = true): RewardsClaimed {
   let rewards = RewardsClaimed.load(id);
 
   if (rewards == null && createIfNotFound) {
@@ -79,10 +64,7 @@ export function getOrCreateRewardsClaimed(
   return rewards as RewardsClaimed;
 }
 
-export function getOrCreateVoterGroup(
-  id: String,
-  createIfNotFound: boolean = true
-): VoterGroup {
+export function getOrCreateVoterGroup(id: String, createIfNotFound: boolean = true): VoterGroup {
   let group = VoterGroup.load(id);
 
   if (group == null && createIfNotFound) {

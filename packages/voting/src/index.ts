@@ -3,7 +3,7 @@ export {
   handleVoteCommitted,
   handlePriceRequestAdded,
   handlePriceResolved,
-  handleRewardsRetrieved
+  handleRewardsRetrieved,
 } from "./mappings/voting";
 
 export {
@@ -11,10 +11,7 @@ export {
   handleVoteRevealed as handleVoteRevealedAncillary,
   handleVoteCommitted as handleVoteCommittedAncillary,
   handlePriceResolved as handlePriceResolvedAncillary,
-  handleRewardsRetrieved as handleRewardsRetrievedAncillary
+  handleRewardsRetrieved as handleRewardsRetrievedAncillary,
 } from "./mappings/votingAncillary";
 
-export {
-  handleSupportedIdentifierAdded,
-  handleSupportedIdentifierRemoved
-} from "./mappings/identifierWhitelist";
+export { handleSupportedIdentifierAdded, handleSupportedIdentifierRemoved } from "./mappings/identifierWhitelist";

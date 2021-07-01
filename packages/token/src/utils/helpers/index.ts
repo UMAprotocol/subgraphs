@@ -1,3 +1,1 @@
-export {
-  getOrCreateUser
-} from "./votingToken";
+export { getOrCreateUser } from "./votingToken";

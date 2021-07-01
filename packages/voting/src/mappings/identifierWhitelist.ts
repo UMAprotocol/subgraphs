@@ -1,11 +1,14 @@
-import { SupportedIdentifierAdded, SupportedIdentifierRemoved } from "../../generated/IdentifierWhitelist/IdentifierWhitelist";
+import {
+  SupportedIdentifierAdded,
+  SupportedIdentifierRemoved,
+} from "../../generated/IdentifierWhitelist/IdentifierWhitelist";
 import { getOrCreatePriceIdentifier } from "../utils/helpers";
 
 // - event: SupportedIdentifierAdded(indexed bytes32)
 //   handler: handleSupportedIdentifierAdded
 
 export function handleSupportedIdentifierAdded(event: SupportedIdentifierAdded): void {
-  let identifier = getOrCreatePriceIdentifier(event.params.identifier.toString())
+  let identifier = getOrCreatePriceIdentifier(event.params.identifier.toString());
 
   identifier.isSupported = true;
 
@@ -16,7 +19,7 @@ export function handleSupportedIdentifierAdded(event: SupportedIdentifierAdded):
 //   handler: handleSupportedIdentifierRemoved
 
 export function handleSupportedIdentifierRemoved(event: SupportedIdentifierRemoved): void {
-  let identifier = getOrCreatePriceIdentifier(event.params.identifier.toString())
+  let identifier = getOrCreatePriceIdentifier(event.params.identifier.toString());
 
   identifier.isSupported = false;
 

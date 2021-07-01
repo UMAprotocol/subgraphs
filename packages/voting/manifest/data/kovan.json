@@ -1,31 +1,31 @@
 {
-    "network": "kovan",
-    "votingTokenAddress": "0x489Bf230d4Ab5c2083556E394a28276C22c3B580",
-    "votingTokenStartBlock": 20185622,
-    "identifierWhitelistAddress": "0x7b3c4D3B6a4eB3259DAfc8416981131E870f85a7",
-    "identifierWhitelistStartBlock": 25189527,
-    "VotingDataSources": [
-        {
-            "name": "Voting",
-            "address": "0x10E241725178991417E65fadE965Ca1F07852283",
-            "startBlock": 20185622
-        },
-        {
-            "name": "NewVoting",
-            "address": "0x03fe668862a0BFa9d3706A0ebA18007464343FdD",
-            "startBlock": 20185622
-        }
-    ],
-    "VotingAncillaryDataSources": [
-        {
-            "name": "VotingAncillary",
-            "address": "0x08f5728338de40a7b6fc35d30b0ca7cc622be6f3",
-            "startBlock": 23214682
-        },
-        {
-            "name": "VotingAncillary2",
-            "address": "0x0740c93a3d2b6088d0e345da47c3b412b9874562",
-            "startBlock": 23650227
-        }
-    ]
+  "network": "kovan",
+  "votingTokenAddress": "0x489Bf230d4Ab5c2083556E394a28276C22c3B580",
+  "votingTokenStartBlock": 20185622,
+  "identifierWhitelistAddress": "0x7b3c4D3B6a4eB3259DAfc8416981131E870f85a7",
+  "identifierWhitelistStartBlock": 25189527,
+  "VotingDataSources": [
+    {
+      "name": "Voting",
+      "address": "0x10E241725178991417E65fadE965Ca1F07852283",
+      "startBlock": 20185622
+    },
+    {
+      "name": "NewVoting",
+      "address": "0x03fe668862a0BFa9d3706A0ebA18007464343FdD",
+      "startBlock": 20185622
+    }
+  ],
+  "VotingAncillaryDataSources": [
+    {
+      "name": "VotingAncillary",
+      "address": "0x08f5728338de40a7b6fc35d30b0ca7cc622be6f3",
+      "startBlock": 23214682
+    },
+    {
+      "name": "VotingAncillary2",
+      "address": "0x0740c93a3d2b6088d0e345da47c3b412b9874562",
+      "startBlock": 23650227
+    }
+  ]
 }

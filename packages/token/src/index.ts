@@ -1,3 +1,1 @@
-export {
-  handleTransferVotingToken
-} from "./mappings/votingToken"
+export { handleTransferVotingToken } from "./mappings/votingToken";

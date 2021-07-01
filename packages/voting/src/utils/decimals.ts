@@ -16,10 +16,7 @@ export function pow(base: BigDecimal, exponent: number): BigDecimal {
   return result;
 }
 
-export function toDecimal(
-  value: BigInt,
-  decimals: number = DEFAULT_DECIMALS
-): BigDecimal {
+export function toDecimal(value: BigInt, decimals: number = DEFAULT_DECIMALS): BigDecimal {
   let precision = BigInt.fromI32(10)
     .pow(<u8>decimals)
     .toBigDecimal();
