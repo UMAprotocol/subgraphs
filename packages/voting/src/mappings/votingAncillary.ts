@@ -44,14 +44,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
 
   // PriceRequestAdded currently does not include `ancillaryData` so we cannot create the PriceRequestRound entity 
   // until we detect the ancillaryData from the first VoteCommitted event.
-
-  log.warning(
-    `(ancillary) New Price Request Saved: {},{}`, 
-    [
-      request.time.toString(),
-      request.identifier
-    ]
-  );      
+    
   request.save();
 }
 
@@ -205,16 +198,6 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   //  event VoteCommitted(address indexed voter, uint256 indexed roundId, bytes32 indexed identifier, uint256 time, bytes ancillaryData);
   
   export function handleVoteCommitted(event: VoteCommitted): void {
-    log.warning(
-      `(ancillary) Price Committed params: {},{},{},{}`, 
-      [
-        event.params.time.toString(),
-        event.params.identifier.toString(),
-        event.params.roundId.toString(),
-        event.params.ancillaryData.toHex()
-      ]
-    );    
-
     let voteId = event.params.voter
       .toHexString()
       .concat("-")
