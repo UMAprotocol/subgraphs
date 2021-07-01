@@ -27,5 +27,12 @@
             "address": "0x0740c93a3d2b6088d0e345da47c3b412b9874562",
             "startBlock": 23650227
         }
+    ],
+    "OptimisticOracleDataSources": [
+        {
+            "name": "OptimisticOracle",
+            "address": "0xb1d3a89333bbc3f5e98a991d6d4c1910802986bc",
+            "startBlock": 23601486
+        }
     ]
 }

@@ -10,6 +10,9 @@ dataSources:
 {{#VotingAncillaryDataSources}}
   {{> VotingAncillary.template.yaml}}
 {{/VotingAncillaryDataSources}}
+{{#OptimisticOracleDataSources}}
+  {{> OptimisticOracle.template.yaml}}
+{{/OptimisticOracleDataSources}}
   - kind: ethereum/contract
     name: IdentifierWhitelist
     network: {{network}}

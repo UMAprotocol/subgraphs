@@ -14,3 +14,4 @@ export {
 
 export { getOrCreatePriceIdentifier } from "./identifierWhitelist";
 
+export { getOrCreateOptimisticPriceRequest } from "./optimisticOracle";

@@ -18,3 +18,10 @@ export {
   handleSupportedIdentifierAdded,
   handleSupportedIdentifierRemoved
 } from "./mappings/identifierWhitelist";
+
+export {
+  handleOptimisticRequestPrice,
+  handleOptimisticProposePrice,
+  handleOptimisticDisputePrice,
+  handleOptimisticSettlePrice
+} from "./mappings/optimisticOracle";
