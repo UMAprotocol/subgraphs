@@ -1,17 +1,12 @@
 export {
   handleNewContractRegistered,
   handleCreatedExpiringMultiParty,
-  handleCreatedPerpetual
+  handleCreatedPerpetual,
 } from "./mappings/registry";
 
-export {
-  handleSetFinalFee
-} from "./mappings/store";
+export { handleSetFinalFee } from "./mappings/store";
 
-export {
-  handleAddedToWhitelist,
-  handleRemovedFromWhitelist
-} from "./mappings/addressWhitelist";
+export { handleAddedToWhitelist, handleRemovedFromWhitelist } from "./mappings/addressWhitelist";
 
 export {
   handlePositionCreated,
@@ -32,7 +27,7 @@ export {
   handleRequestTransferPositionExecuted,
   handleRequestWithdrawal,
   handleRequestWithdrawalCanceled,
-  handleRequestWithdrawalExecuted
+  handleRequestWithdrawalExecuted,
 } from "./mappings/expiringMultiParty";
 
 export {
@@ -50,5 +45,5 @@ export {
   handleRequestWithdrawal as handleRequestWithdrawalPerp,
   handleRequestWithdrawalCanceled as handleRequestWithdrawalCanceledPerp,
   handleRequestWithdrawalExecuted as handleRequestWithdrawalExecutedPerp,
-  handleFundingRateUpdated
+  handleFundingRateUpdated,
 } from "./mappings/perpetual";

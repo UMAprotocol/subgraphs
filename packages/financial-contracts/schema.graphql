@@ -7,7 +7,7 @@ type FinancialContract @entity {
   "Factory contract used to create this contract"
   creator: ContractCreator
 
-  deploymentTimestamp: BigInt 
+  deploymentTimestamp: BigInt
 
   "Address that deployed the contract"
   deployer: Bytes
@@ -42,7 +42,7 @@ type FinancialContract @entity {
   globalCollateralizationRatio: BigDecimal
 
   minSponsorTokens: BigDecimal
-  
+
   disputeBondPercentage: BigDecimal
 
   sponsorDisputeRewardPercentage: BigDecimal
@@ -219,7 +219,6 @@ type RepayEvent implements PositionManagerEvent @entity {
 
   numTokensRepaid: BigInt!
 }
-
 
 type DepositEvent implements PositionManagerEvent @entity {
   id: ID!

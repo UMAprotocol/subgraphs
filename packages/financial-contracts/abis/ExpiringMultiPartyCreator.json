@@ -175,9 +175,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "uint256", "name": "time", "type": "uint256" }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "time", "type": "uint256" }],
     "name": "setCurrentTime",
     "outputs": [],
     "stateMutability": "nonpayable",

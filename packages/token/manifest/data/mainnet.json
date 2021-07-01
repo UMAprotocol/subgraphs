@@ -1,5 +1,5 @@
 {
-    "network": "mainnet",
-    "votingTokenAddress": "0x04fa0d235c4abf4bcf4787af4cf447de572ef828",
-    "votingTokenStartBlock": 9247089
+  "network": "mainnet",
+  "votingTokenAddress": "0x04fa0d235c4abf4bcf4787af4cf447de572ef828",
+  "votingTokenStartBlock": 9247089
 }

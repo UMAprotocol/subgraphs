@@ -1,15 +1,9 @@
 import { User } from "../../../generated/schema";
 import { VotingToken } from "../../../generated/VotingToken/VotingToken";
-import {
-  VOTING_TOKEN_ADDRESS,
-  BIGINT_ZERO
-} from "../constants";
+import { VOTING_TOKEN_ADDRESS, BIGINT_ZERO } from "../constants";
 import { Address } from "@graphprotocol/graph-ts";
 
-export function getOrCreateUser(
-  id: Address,
-  createIfNotFound: boolean = true
-): User {
+export function getOrCreateUser(id: Address, createIfNotFound: boolean = true): User {
   let user = User.load(id.toHexString());
 
   if (user == null && createIfNotFound) {

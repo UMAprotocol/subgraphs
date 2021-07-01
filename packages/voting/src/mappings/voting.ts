@@ -4,7 +4,7 @@ import {
   VoteCommitted,
   VoteRevealed,
   RewardsRetrieved,
-  Voting
+  Voting,
 } from "../../generated/Voting/Voting";
 import { VoterGroup } from "../../generated/schema";
 import {
@@ -15,16 +15,10 @@ import {
   getOrCreateRewardsClaimed,
   getOrCreatePriceRequestRound,
   getTokenContract,
-  getOrCreateVoterGroup
+  getOrCreateVoterGroup,
 } from "../utils/helpers";
 import { toDecimal } from "../utils/decimals";
-import {
-  BIGDECIMAL_HUNDRED,
-  BIGDECIMAL_ONE,
-  BIGDECIMAL_ZERO,
-  BIGINT_ONE,
-  BIGINT_ZERO
-} from "../utils/constants";
+import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE, BIGINT_ZERO } from "../utils/constants";
 
 import { log, BigInt, BigDecimal } from "@graphprotocol/graph-ts";
 
@@ -33,14 +27,9 @@ import { log, BigInt, BigDecimal } from "@graphprotocol/graph-ts";
 //  event PriceRequestAdded(uint256 indexed roundId, bytes32 indexed identifier, uint256 time);
 
 export function handlePriceRequestAdded(event: PriceRequestAdded): void {
-  let requestId = event.params.identifier
-    .toString()
-    .concat("-")
-    .concat(event.params.time.toString());
+  let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
   let request = getOrCreatePriceRequest(requestId);
-  let requestRound = getOrCreatePriceRequestRound(
-    requestId.concat("-").concat(event.params.roundId.toString())
-  );
+  let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
 
   request.identifier = event.params.identifier.toString();
   request.latestRound = requestRound.id;
@@ -51,14 +40,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   requestRound.time = event.params.time;
   requestRound.roundId = event.params.roundId;
 
-  log.warning(
-    `New Price Request Saved: {},{},{}`, 
-    [
-      request.time.toString(),
-      request.latestRound,
-      request.identifier
-    ]
-  );
+  log.warning(`New Price Request Saved: {},{},{}`, [request.time.toString(), request.latestRound, request.identifier]);
 
   requestRound.save();
   request.save();
@@ -69,34 +51,21 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
 //  event PriceResolved(uint256 indexed roundId, bytes32 indexed identifier, uint256 time, int256 price);
 
 export function handlePriceResolved(event: PriceResolved): void {
-  log.warning(
-    `Price Resolved params: {},{},{}`, 
-    [
-      event.params.time.toString(),
-      event.params.identifier.toString(),
-      event.params.roundId.toString()
-    ]
-  );
-  let requestId = event.params.identifier
-    .toString()
-    .concat("-")
-    .concat(event.params.time.toString());
+  log.warning(`Price Resolved params: {},{},{}`, [
+    event.params.time.toString(),
+    event.params.identifier.toString(),
+    event.params.roundId.toString(),
+  ]);
+  let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
   let request = getOrCreatePriceRequest(requestId);
 
-  log.warning(
-    `Fetched Price Request Entity: {},{},{}`, 
-    [
-      request.time.toString(),
-      request.latestRound,
-      request.identifier
-    ]
-  );
-  let requestRound = getOrCreatePriceRequestRound(
-    requestId.concat("-").concat(event.params.roundId.toString())
-  );
-  let groupId = requestRound.id
-    .concat("-")
-    .concat(event.params.price.toString());
+  log.warning(`Fetched Price Request Entity: {},{},{}`, [
+    request.time.toString(),
+    request.latestRound,
+    request.identifier,
+  ]);
+  let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
+  let groupId = requestRound.id.concat("-").concat(event.params.price.toString());
   let voterGroup = getOrCreateVoterGroup(groupId);
   let votingContract = Voting.bind(event.address);
   let roundInfo = votingContract.try_rounds(event.params.roundId);
@@ -114,10 +83,8 @@ export function handlePriceResolved(event: PriceResolved): void {
   requestRound.identifier = event.params.identifier.toString();
   requestRound.time = event.params.time;
   requestRound.roundId = event.params.roundId;
-  requestRound.votersEligibleForRewardsRatio =
-    voterGroup.votersAmount / requestRound.votersAmount;
-  requestRound.votersEligibleForRewardsPercentage =
-    requestRound.votersEligibleForRewardsRatio * BIGDECIMAL_HUNDRED;
+  requestRound.votersEligibleForRewardsRatio = voterGroup.votersAmount / requestRound.votersAmount;
+  requestRound.votersEligibleForRewardsPercentage = requestRound.votersEligibleForRewardsRatio * BIGDECIMAL_HUNDRED;
   requestRound.winnerGroup = voterGroup.id;
   requestRound.inflationRateRaw = roundInfo.reverted
     ? requestRound.inflationRateRaw
@@ -125,10 +92,8 @@ export function handlePriceResolved(event: PriceResolved): void {
   requestRound.gatPercentageRaw = roundInfo.reverted
     ? requestRound.gatPercentageRaw
     : toDecimal(roundInfo.value.value2.rawValue);
-  requestRound.inflationRate =
-    requestRound.inflationRateRaw * BIGDECIMAL_HUNDRED;
-  requestRound.gatPercentage =
-    requestRound.gatPercentageRaw * BIGDECIMAL_HUNDRED;
+  requestRound.inflationRate = requestRound.inflationRateRaw * BIGDECIMAL_HUNDRED;
+  requestRound.gatPercentage = requestRound.gatPercentageRaw * BIGDECIMAL_HUNDRED;
 
   requestRound.save();
   request.save();
@@ -156,17 +121,10 @@ export function handleRewardsRetrieved(event: RewardsRetrieved): void {
     .concat(event.params.roundId.toString());
   let rewardClaimed = getOrCreateRewardsClaimed(rewardClaimedId);
   let claimer = getOrCreateUser(event.params.voter);
-  let requestId = event.params.identifier
-    .toString()
-    .concat("-")
-    .concat(event.params.time.toString());
-  let requestRound = getOrCreatePriceRequestRound(
-    requestId.concat("-").concat(event.params.roundId.toString())
-  );
+  let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
+  let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
   let winnerGroup: VoterGroup | null =
-    requestRound.winnerGroup != null
-      ? getOrCreateVoterGroup(requestRound.winnerGroup)
-      : null;
+    requestRound.winnerGroup != null ? getOrCreateVoterGroup(requestRound.winnerGroup) : null;
 
   rewardClaimed.claimer = claimer.id;
   rewardClaimed.round = requestRound.id;
@@ -184,30 +142,24 @@ export function handleRewardsRetrieved(event: RewardsRetrieved): void {
   requestRound.identifier = event.params.identifier.toString();
   requestRound.time = event.params.time;
   requestRound.roundId = event.params.roundId;
-  requestRound.totalRewardsClaimed =
-    requestRound.totalRewardsClaimed + toDecimal(rewardClaimed.numTokens);
+  requestRound.totalRewardsClaimed = requestRound.totalRewardsClaimed + toDecimal(rewardClaimed.numTokens);
   if (
-    rewardClaimed.numTokens > BIGINT_ZERO && 
-    winnerGroup.votersAmount > BIGDECIMAL_ZERO && 
+    rewardClaimed.numTokens > BIGINT_ZERO &&
+    winnerGroup.votersAmount > BIGDECIMAL_ZERO &&
     requestRound.totalSupplyAtSnapshot > BIGDECIMAL_ZERO
-  ) {    
-    requestRound.votersClaimedAmount =
-      requestRound.votersClaimedAmount + BIGDECIMAL_ONE;
+  ) {
+    requestRound.votersClaimedAmount = requestRound.votersClaimedAmount + BIGDECIMAL_ONE;
     requestRound.votersClaimedRatio =
       winnerGroup != null && winnerGroup.votersAmount != BIGDECIMAL_ZERO
         ? requestRound.votersClaimedAmount / winnerGroup.votersAmount
         : requestRound.votersClaimedRatio;
-    requestRound.votersClaimedPercentage =
-      requestRound.votersClaimedRatio * BIGDECIMAL_HUNDRED;
+    requestRound.votersClaimedPercentage = requestRound.votersClaimedRatio * BIGDECIMAL_HUNDRED;
     requestRound.tokensClaimedRatio =
-      requestRound.inflationRateRaw != null &&
-      requestRound.inflationRateRaw != BIGDECIMAL_ZERO
+      requestRound.inflationRateRaw != null && requestRound.inflationRateRaw != BIGDECIMAL_ZERO
         ? requestRound.totalRewardsClaimed /
-          (requestRound.totalSupplyAtSnapshot *
-            <BigDecimal>requestRound.inflationRateRaw)
+          (requestRound.totalSupplyAtSnapshot * <BigDecimal>requestRound.inflationRateRaw)
         : requestRound.tokensClaimedRatio;
-    requestRound.tokensClaimedPercentage =
-      requestRound.tokensClaimedRatio * BIGDECIMAL_HUNDRED;
+    requestRound.tokensClaimedPercentage = requestRound.tokensClaimedRatio * BIGDECIMAL_HUNDRED;
   }
 
   requestRound.save();
@@ -230,13 +182,8 @@ export function handleVoteCommitted(event: VoteCommitted): void {
     .concat(event.params.roundId.toString());
   let vote = getOrCreateCommittedVote(voteId);
   let voter = getOrCreateUser(event.params.voter);
-  let requestId = event.params.identifier
-    .toString()
-    .concat("-")
-    .concat(event.params.time.toString());
-  let requestRound = getOrCreatePriceRequestRound(
-    requestId.concat("-").concat(event.params.roundId.toString())
-  );
+  let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
+  let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
 
   vote.voter = voter.id;
   vote.request = requestId;
@@ -276,16 +223,9 @@ export function handleVoteRevealed(event: VoteRevealed): void {
     .concat(event.params.roundId.toString());
   let vote = getOrCreateRevealedVote(voteId);
   let voter = getOrCreateUser(event.params.voter);
-  let requestId = event.params.identifier
-    .toString()
-    .concat("-")
-    .concat(event.params.time.toString());
-  let requestRound = getOrCreatePriceRequestRound(
-    requestId.concat("-").concat(event.params.roundId.toString())
-  );
-  let groupId = requestRound.id
-    .concat("-")
-    .concat(event.params.price.toString());
+  let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
+  let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
+  let groupId = requestRound.id.concat("-").concat(event.params.price.toString());
   let voterGroup = getOrCreateVoterGroup(groupId);
   let votingContract = Voting.bind(event.address);
   let roundInfo = votingContract.try_rounds(event.params.roundId);
@@ -303,36 +243,25 @@ export function handleVoteRevealed(event: VoteRevealed): void {
 
   voterGroup.price = event.params.price;
   voterGroup.round = requestRound.id;
-  voterGroup.totalVoteAmount =
-    voterGroup.totalVoteAmount + toDecimal(vote.numTokens);
+  voterGroup.totalVoteAmount = voterGroup.totalVoteAmount + toDecimal(vote.numTokens);
   voterGroup.votersAmount = voterGroup.votersAmount + BIGDECIMAL_ONE;
 
   requestRound.request = requestId;
   requestRound.identifier = event.params.identifier.toString();
   requestRound.time = event.params.time;
   requestRound.roundId = event.params.roundId;
-  requestRound.totalVotesRevealed =
-    requestRound.totalVotesRevealed + toDecimal(vote.numTokens);
+  requestRound.totalVotesRevealed = requestRound.totalVotesRevealed + toDecimal(vote.numTokens);
   requestRound.votersAmount = requestRound.votersAmount + BIGDECIMAL_ONE;
   requestRound.snapshotId = roundInfo.reverted ? null : roundInfo.value.value0;
-  if (
-    requestRound.snapshotId != null &&
-    requestRound.totalSupplyAtSnapshot == null
-  ) {
-    let supply = getTokenContract().try_totalSupplyAt(
-      <BigInt>requestRound.snapshotId
-    );
-    requestRound.totalSupplyAtSnapshot = supply.reverted
-      ? null
-      : toDecimal(supply.value as BigInt);
+  if (requestRound.snapshotId != null && requestRound.totalSupplyAtSnapshot == null) {
+    let supply = getTokenContract().try_totalSupplyAt(<BigInt>requestRound.snapshotId);
+    requestRound.totalSupplyAtSnapshot = supply.reverted ? null : toDecimal(supply.value as BigInt);
   }
   requestRound.tokenVoteParticipationRatio =
     requestRound.totalSupplyAtSnapshot != null
-      ? requestRound.totalVotesRevealed /
-        <BigDecimal>requestRound.totalSupplyAtSnapshot
+      ? requestRound.totalVotesRevealed / <BigDecimal>requestRound.totalSupplyAtSnapshot
       : null;
-  requestRound.tokenVoteParticipationPercentage =
-    requestRound.tokenVoteParticipationRatio * BIGDECIMAL_HUNDRED;
+  requestRound.tokenVoteParticipationPercentage = requestRound.tokenVoteParticipationRatio * BIGDECIMAL_HUNDRED;
 
   requestRound.save();
   vote.save();
