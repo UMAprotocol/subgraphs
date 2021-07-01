@@ -1,9 +1,6 @@
 import { PriceIdentifier } from "../../../generated/schema";
 
-export function getOrCreatePriceIdentifier(
-  id: String,
-  createIfNotFound: boolean = true
-): PriceIdentifier {
+export function getOrCreatePriceIdentifier(id: String, createIfNotFound: boolean = true): PriceIdentifier {
   let identifier = PriceIdentifier.load(id);
 
   if (identifier == null && createIfNotFound) {

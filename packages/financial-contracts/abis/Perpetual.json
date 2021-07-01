@@ -1904,9 +1904,7 @@
   "ast": {
     "absolutePath": "/Users/nicholaspai/UMA/protocol/packages/core/contracts/financial-templates/perpetual-multiparty/Perpetual.sol",
     "exportedSymbols": {
-      "Perpetual": [
-        13071
-      ]
+      "Perpetual": [13071]
     },
     "id": 13072,
     "license": "AGPL-3.0-only",
@@ -1914,21 +1912,13 @@
     "nodes": [
       {
         "id": 13055,
-        "literals": [
-          "solidity",
-          "^",
-          "0.6",
-          ".0"
-        ],
+        "literals": ["solidity", "^", "0.6", ".0"],
         "nodeType": "PragmaDirective",
         "src": "42:23:50"
       },
       {
         "id": 13056,
-        "literals": [
-          "experimental",
-          "ABIEncoderV2"
-        ],
+        "literals": ["experimental", "ABIEncoderV2"],
         "nodeType": "PragmaDirective",
         "src": "66:33:50"
       },
@@ -1965,16 +1955,7 @@
             "src": "259:21:50"
           }
         ],
-        "contractDependencies": [
-          2434,
-          3114,
-          5730,
-          6434,
-          7105,
-          14770,
-          16393,
-          24140
-        ],
+        "contractDependencies": [2434, 3114, 5730, 6434, 7105, 14770, 16393, 24140],
         "contractKind": "contract",
         "documentation": {
           "id": 13058,
@@ -1984,17 +1965,7 @@
         },
         "fullyImplemented": true,
         "id": 13071,
-        "linearizedBaseContracts": [
-          13071,
-          14770,
-          16393,
-          7105,
-          6434,
-          2434,
-          3114,
-          24140,
-          5730
-        ],
+        "linearizedBaseContracts": [13071, 14770, 16393, 7105, 6434, 2434, 3114, 24140, 5730],
         "name": "Perpetual",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -2112,21 +2083,14 @@
     "attributes": {
       "absolutePath": "/Users/nicholaspai/UMA/protocol/packages/core/contracts/financial-templates/perpetual-multiparty/Perpetual.sol",
       "exportedSymbols": {
-        "Perpetual": [
-          13071
-        ]
+        "Perpetual": [13071]
       },
       "license": "AGPL-3.0-only"
     },
     "children": [
       {
         "attributes": {
-          "literals": [
-            "solidity",
-            "^",
-            "0.6",
-            ".0"
-          ]
+          "literals": ["solidity", "^", "0.6", ".0"]
         },
         "id": 13055,
         "name": "PragmaDirective",
@@ -2134,10 +2098,7 @@
       },
       {
         "attributes": {
-          "literals": [
-            "experimental",
-            "ABIEncoderV2"
-          ]
+          "literals": ["experimental", "ABIEncoderV2"]
         },
         "id": 13056,
         "name": "PragmaDirective",
@@ -2149,9 +2110,7 @@
           "absolutePath": "/Users/nicholaspai/UMA/protocol/packages/core/contracts/financial-templates/perpetual-multiparty/PerpetualLiquidatable.sol",
           "file": "./PerpetualLiquidatable.sol",
           "scope": 13072,
-          "symbolAliases": [
-            null
-          ],
+          "symbolAliases": [null],
           "unitAlias": ""
         },
         "id": 13057,
@@ -2161,29 +2120,10 @@
       {
         "attributes": {
           "abstract": false,
-          "contractDependencies": [
-            2434,
-            3114,
-            5730,
-            6434,
-            7105,
-            14770,
-            16393,
-            24140
-          ],
+          "contractDependencies": [2434, 3114, 5730, 6434, 7105, 14770, 16393, 24140],
           "contractKind": "contract",
           "fullyImplemented": true,
-          "linearizedBaseContracts": [
-            13071,
-            14770,
-            16393,
-            7105,
-            6434,
-            2434,
-            3114,
-            24140,
-            5730
-          ],
+          "linearizedBaseContracts": [13071, 14770, 16393, 7105, 6434, 2434, 3114, 24140, 5730],
           "name": "Perpetual",
           "scope": 13072
         },
@@ -2277,9 +2217,7 @@
               },
               {
                 "attributes": {
-                  "parameters": [
-                    null
-                  ]
+                  "parameters": [null]
                 },
                 "children": [],
                 "id": 13068,
@@ -2291,9 +2229,7 @@
                   {
                     "attributes": {
                       "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
+                      "overloadedDeclarations": [null],
                       "referencedDeclaration": 14770,
                       "type": "type(contract PerpetualLiquidatable)",
                       "value": "PerpetualLiquidatable"
@@ -2305,9 +2241,7 @@
                   {
                     "attributes": {
                       "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
+                      "overloadedDeclarations": [null],
                       "referencedDeclaration": 13063,
                       "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                       "value": "params"
@@ -2323,9 +2257,7 @@
               },
               {
                 "attributes": {
-                  "statements": [
-                    null
-                  ]
+                  "statements": [null]
                 },
                 "children": [],
                 "id": 13069,

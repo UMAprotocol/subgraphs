@@ -25,7 +25,6 @@ type PriceIdentifier @entity {
   priceRequests: [PriceRequest!]! @derivedFrom(field: "identifier")
 }
 
-
 type PriceRequest @entity {
   "ID is the PriceIdentifier ID + the timestamp"
   id: ID!

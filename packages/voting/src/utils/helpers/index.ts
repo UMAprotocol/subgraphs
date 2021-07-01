@@ -1,7 +1,4 @@
-export {
-  getOrCreateUser,
-  getTokenContract
-} from "./votingToken";
+export { getOrCreateUser, getTokenContract } from "./votingToken";
 
 export {
   getOrCreateCommittedVote,
@@ -9,7 +6,7 @@ export {
   getOrCreatePriceRequestRound,
   getOrCreateRevealedVote,
   getOrCreateRewardsClaimed,
-  getOrCreateVoterGroup
+  getOrCreateVoterGroup,
 } from "./voting";
 
 export { getOrCreatePriceIdentifier } from "./identifierWhitelist";

@@ -3,7 +3,7 @@ export {
   getOrCreateContractCreator,
   getOrCreateToken,
   getOrCreatePerpetualContract,
-  getOrCreatePerpetualCreator
+  getOrCreatePerpetualCreator,
 } from "./registry";
 
 export {
@@ -21,6 +21,5 @@ export {
   getOrCreateLiquidationCreatedEvent,
   getOrCreateLiquidationDisputedEvent,
   getOrCreateLiquidationDisputeSettledEvent,
-  calculateGCR
+  calculateGCR,
 } from "./financialContract";
-

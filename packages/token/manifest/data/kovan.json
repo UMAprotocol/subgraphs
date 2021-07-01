@@ -1,5 +1,5 @@
 {
-    "network": "kovan",
-    "votingTokenAddress": "0x489Bf230d4Ab5c2083556E394a28276C22c3B580",
-    "votingTokenStartBlock": 20185622
+  "network": "kovan",
+  "votingTokenAddress": "0x489Bf230d4Ab5c2083556E394a28276C22c3B580",
+  "votingTokenStartBlock": 20185622
 }

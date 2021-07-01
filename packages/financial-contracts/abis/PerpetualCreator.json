@@ -340,9 +340,7 @@
   "ast": {
     "absolutePath": "/Users/nicholaspai/UMA/protocol/packages/core/contracts/financial-templates/perpetual-multiparty/PerpetualCreator.sol",
     "exportedSymbols": {
-      "PerpetualCreator": [
-        13505
-      ]
+      "PerpetualCreator": [13505]
     },
     "id": 13506,
     "license": "AGPL-3.0-only",
@@ -350,21 +348,13 @@
     "nodes": [
       {
         "id": 13073,
-        "literals": [
-          "solidity",
-          "^",
-          "0.6",
-          ".0"
-        ],
+        "literals": ["solidity", "^", "0.6", ".0"],
         "nodeType": "PragmaDirective",
         "src": "42:23:51"
       },
       {
         "id": 13074,
-        "literals": [
-          "experimental",
-          "ABIEncoderV2"
-        ],
+        "literals": ["experimental", "ABIEncoderV2"],
         "nodeType": "PragmaDirective",
         "src": "66:33:51"
       },
@@ -536,12 +526,7 @@
             "src": "1347:8:51"
           }
         ],
-        "contractDependencies": [
-          2434,
-          3114,
-          13030,
-          17380
-        ],
+        "contractDependencies": [2434, 3114, 13030, 17380],
         "contractKind": "contract",
         "documentation": {
           "id": 13085,
@@ -551,12 +536,7 @@
         },
         "fullyImplemented": true,
         "id": 13505,
-        "linearizedBaseContracts": [
-          13505,
-          2434,
-          3114,
-          17380
-        ],
+        "linearizedBaseContracts": [13505, 2434, 3114, 17380],
         "name": "PerpetualCreator",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -1589,10 +1569,7 @@
                       "id": 13170,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "3487:7:51",
                       "typeDescriptions": {
@@ -1786,10 +1763,7 @@
                       "id": 13182,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "3571:7:51",
                       "typeDescriptions": {
@@ -1817,9 +1791,7 @@
                   "src": "3571:78:51"
                 },
                 {
-                  "assignments": [
-                    13195
-                  ],
+                  "assignments": [13195],
                   "declarations": [
                     {
                       "constant": false,
@@ -2178,9 +2150,7 @@
                   "src": "3891:66:51"
                 },
                 {
-                  "assignments": [
-                    13220
-                  ],
+                  "assignments": [13220],
                   "declarations": [
                     {
                       "constant": false,
@@ -2268,9 +2238,7 @@
                   "src": "4026:51:51"
                 },
                 {
-                  "assignments": [
-                    13226
-                  ],
+                  "assignments": [13226],
                   "declarations": [
                     {
                       "constant": false,
@@ -2372,9 +2340,7 @@
                   "src": "4256:73:51"
                 },
                 {
-                  "assignments": [
-                    13233
-                  ],
+                  "assignments": [13233],
                   "declarations": [
                     {
                       "constant": false,
@@ -2544,9 +2510,7 @@
                   "src": "4339:110:51"
                 },
                 {
-                  "assignments": [
-                    13244
-                  ],
+                  "assignments": [13244],
                   "declarations": [
                     {
                       "constant": false,
@@ -3601,10 +3565,7 @@
                       "id": 13316,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "5566:7:51",
                       "typeDescriptions": {
@@ -3734,10 +3695,7 @@
                       "id": 13324,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "5650:7:51",
                       "typeDescriptions": {
@@ -3938,10 +3896,7 @@
                       "id": 13337,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "6273:7:51",
                       "typeDescriptions": {
@@ -4071,10 +4026,7 @@
                       "id": 13345,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "6363:7:51",
                       "typeDescriptions": {
@@ -4102,9 +4054,7 @@
                   "src": "6363:82:51"
                 },
                 {
-                  "assignments": [
-                    13356
-                  ],
+                  "assignments": [13356],
                   "declarations": [
                     {
                       "constant": false,
@@ -4213,9 +4163,7 @@
                   "src": "6566:64:51"
                 },
                 {
-                  "assignments": [
-                    13365
-                  ],
+                  "assignments": [13365],
                   "declarations": [
                     {
                       "constant": false,
@@ -4543,10 +4491,7 @@
                       "id": 13371,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "6732:7:51",
                       "typeDescriptions": {
@@ -6053,21 +5998,14 @@
     "attributes": {
       "absolutePath": "/Users/nicholaspai/UMA/protocol/packages/core/contracts/financial-templates/perpetual-multiparty/PerpetualCreator.sol",
       "exportedSymbols": {
-        "PerpetualCreator": [
-          13505
-        ]
+        "PerpetualCreator": [13505]
       },
       "license": "AGPL-3.0-only"
     },
     "children": [
       {
         "attributes": {
-          "literals": [
-            "solidity",
-            "^",
-            "0.6",
-            ".0"
-          ]
+          "literals": ["solidity", "^", "0.6", ".0"]
         },
         "id": 13073,
         "name": "PragmaDirective",
@@ -6075,10 +6013,7 @@
       },
       {
         "attributes": {
-          "literals": [
-            "experimental",
-            "ABIEncoderV2"
-          ]
+          "literals": ["experimental", "ABIEncoderV2"]
         },
         "id": 13074,
         "name": "PragmaDirective",
@@ -6090,9 +6025,7 @@
           "absolutePath": "/Users/nicholaspai/UMA/protocol/packages/core/contracts/common/interfaces/ExpandedIERC20.sol",
           "file": "../../common/interfaces/ExpandedIERC20.sol",
           "scope": 13506,
-          "symbolAliases": [
-            null
-          ],
+          "symbolAliases": [null],
           "unitAlias": ""
         },
         "id": 13075,
@@ -6105,9 +6038,7 @@
           "absolutePath": "/Users/nicholaspai/UMA/protocol/packages/core/contracts/common/interfaces/IERC20Standard.sol",
           "file": "../../common/interfaces/IERC20Standard.sol",
           "scope": 13506,
-          "symbolAliases": [
-            null
-          ],
+          "symbolAliases": [null],
           "unitAlias": ""
         },
         "id": 13076,
@@ -6120,9 +6051,7 @@
           "absolutePath": "/Users/nicholaspai/UMA/protocol/packages/core/contracts/oracle/implementation/ContractCreator.sol",
           "file": "../../oracle/implementation/ContractCreator.sol",
           "scope": 13506,
-          "symbolAliases": [
-            null
-          ],
+          "symbolAliases": [null],
           "unitAlias": ""
         },
         "id": 13077,
@@ -6135,9 +6064,7 @@
           "absolutePath": "/Users/nicholaspai/UMA/protocol/packages/core/contracts/common/implementation/Testable.sol",
           "file": "../../common/implementation/Testable.sol",
           "scope": 13506,
-          "symbolAliases": [
-            null
-          ],
+          "symbolAliases": [null],
           "unitAlias": ""
         },
         "id": 13078,
@@ -6150,9 +6077,7 @@
           "absolutePath": "/Users/nicholaspai/UMA/protocol/packages/core/contracts/common/implementation/AddressWhitelist.sol",
           "file": "../../common/implementation/AddressWhitelist.sol",
           "scope": 13506,
-          "symbolAliases": [
-            null
-          ],
+          "symbolAliases": [null],
           "unitAlias": ""
         },
         "id": 13079,
@@ -6165,9 +6090,7 @@
           "absolutePath": "/Users/nicholaspai/UMA/protocol/packages/core/contracts/common/implementation/Lockable.sol",
           "file": "../../common/implementation/Lockable.sol",
           "scope": 13506,
-          "symbolAliases": [
-            null
-          ],
+          "symbolAliases": [null],
           "unitAlias": ""
         },
         "id": 13080,
@@ -6180,9 +6103,7 @@
           "absolutePath": "/Users/nicholaspai/UMA/protocol/packages/core/contracts/financial-templates/common/TokenFactory.sol",
           "file": "../common/TokenFactory.sol",
           "scope": 13506,
-          "symbolAliases": [
-            null
-          ],
+          "symbolAliases": [null],
           "unitAlias": ""
         },
         "id": 13081,
@@ -6195,9 +6116,7 @@
           "absolutePath": "/Users/nicholaspai/UMA/protocol/packages/core/contracts/financial-templates/common/SyntheticToken.sol",
           "file": "../common/SyntheticToken.sol",
           "scope": 13506,
-          "symbolAliases": [
-            null
-          ],
+          "symbolAliases": [null],
           "unitAlias": ""
         },
         "id": 13082,
@@ -6210,9 +6129,7 @@
           "absolutePath": "/Users/nicholaspai/UMA/protocol/packages/core/contracts/financial-templates/perpetual-multiparty/PerpetualLib.sol",
           "file": "./PerpetualLib.sol",
           "scope": 13506,
-          "symbolAliases": [
-            null
-          ],
+          "symbolAliases": [null],
           "unitAlias": ""
         },
         "id": 13083,
@@ -6225,9 +6142,7 @@
           "absolutePath": "/Users/nicholaspai/UMA/protocol/packages/core/contracts/financial-templates/perpetual-multiparty/ConfigStore.sol",
           "file": "./ConfigStore.sol",
           "scope": 13506,
-          "symbolAliases": [
-            null
-          ],
+          "symbolAliases": [null],
           "unitAlias": ""
         },
         "id": 13084,
@@ -6237,20 +6152,10 @@
       {
         "attributes": {
           "abstract": false,
-          "contractDependencies": [
-            2434,
-            3114,
-            13030,
-            17380
-          ],
+          "contractDependencies": [2434, 3114, 13030, 17380],
           "contractKind": "contract",
           "fullyImplemented": true,
-          "linearizedBaseContracts": [
-            13505,
-            2434,
-            3114,
-            17380
-          ],
+          "linearizedBaseContracts": [13505, 2434, 3114, 17380],
           "name": "PerpetualCreator",
           "scope": 13506
         },
@@ -7050,9 +6955,7 @@
               },
               {
                 "attributes": {
-                  "parameters": [
-                    null
-                  ]
+                  "parameters": [null]
                 },
                 "children": [],
                 "id": 13152,
@@ -7064,9 +6967,7 @@
                   {
                     "attributes": {
                       "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
+                      "overloadedDeclarations": [null],
                       "referencedDeclaration": 17380,
                       "type": "type(contract ContractCreator)",
                       "value": "ContractCreator"
@@ -7078,9 +6979,7 @@
                   {
                     "attributes": {
                       "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
+                      "overloadedDeclarations": [null],
                       "referencedDeclaration": 13138,
                       "type": "address",
                       "value": "_finderAddress"
@@ -7099,9 +6998,7 @@
                   {
                     "attributes": {
                       "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
+                      "overloadedDeclarations": [null],
                       "referencedDeclaration": 3114,
                       "type": "type(contract Testable)",
                       "value": "Testable"
@@ -7113,9 +7010,7 @@
                   {
                     "attributes": {
                       "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
+                      "overloadedDeclarations": [null],
                       "referencedDeclaration": 13142,
                       "type": "address",
                       "value": "_timerAddress"
@@ -7131,17 +7026,13 @@
               },
               {
                 "attributes": {
-                  "arguments": [
-                    null
-                  ]
+                  "arguments": [null]
                 },
                 "children": [
                   {
                     "attributes": {
                       "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
+                      "overloadedDeclarations": [null],
                       "referencedDeclaration": 2400,
                       "type": "modifier ()",
                       "value": "nonReentrant"
@@ -7173,9 +7064,7 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 13123,
                               "type": "address",
                               "value": "tokenFactoryAddress"
@@ -7187,9 +7076,7 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 13140,
                               "type": "address",
                               "value": "_tokenFactoryAddress"
@@ -7345,17 +7232,13 @@
               },
               {
                 "attributes": {
-                  "arguments": [
-                    null
-                  ]
+                  "arguments": [null]
                 },
                 "children": [
                   {
                     "attributes": {
                       "argumentTypes": null,
-                      "overloadedDeclarations": [
-                        null
-                      ],
+                      "overloadedDeclarations": [null],
                       "referencedDeclaration": 2400,
                       "type": "modifier ()",
                       "value": "nonReentrant"
@@ -7381,9 +7264,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -7401,10 +7282,7 @@
                                   "typeString": "literal_string \"Missing synthetic name\""
                                 }
                               ],
-                              "overloadedDeclarations": [
-                                -18,
-                                -18
-                              ],
+                              "overloadedDeclarations": [-18, -18],
                               "referencedDeclaration": -18,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
@@ -7448,9 +7326,7 @@
                                       "isPure": false,
                                       "isStructConstructorCall": false,
                                       "lValueRequested": false,
-                                      "names": [
-                                        null
-                                      ],
+                                      "names": [null],
                                       "tryCall": false,
                                       "type": "bytes memory",
                                       "type_conversion": true
@@ -7500,9 +7376,7 @@
                                           {
                                             "attributes": {
                                               "argumentTypes": null,
-                                              "overloadedDeclarations": [
-                                                null
-                                              ],
+                                              "overloadedDeclarations": [null],
                                               "referencedDeclaration": 13161,
                                               "type": "struct PerpetualCreator.Params memory",
                                               "value": "params"
@@ -7585,9 +7459,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -7605,10 +7477,7 @@
                                   "typeString": "literal_string \"Missing synthetic symbol\""
                                 }
                               ],
-                              "overloadedDeclarations": [
-                                -18,
-                                -18
-                              ],
+                              "overloadedDeclarations": [-18, -18],
                               "referencedDeclaration": -18,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
@@ -7652,9 +7521,7 @@
                                       "isPure": false,
                                       "isStructConstructorCall": false,
                                       "lValueRequested": false,
-                                      "names": [
-                                        null
-                                      ],
+                                      "names": [null],
                                       "tryCall": false,
                                       "type": "bytes memory",
                                       "type_conversion": true
@@ -7704,9 +7571,7 @@
                                           {
                                             "attributes": {
                                               "argumentTypes": null,
-                                              "overloadedDeclarations": [
-                                                null
-                                              ],
+                                              "overloadedDeclarations": [null],
                                               "referencedDeclaration": 13161,
                                               "type": "struct PerpetualCreator.Params memory",
                                               "value": "params"
@@ -7781,9 +7646,7 @@
                   },
                   {
                     "attributes": {
-                      "assignments": [
-                        13195
-                      ]
+                      "assignments": [13195]
                     },
                     "children": [
                       {
@@ -7824,9 +7687,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "contract ConfigStore",
                           "type_conversion": false
@@ -7870,9 +7731,7 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 13163,
                               "type": "struct ConfigStoreInterface.ConfigSettings memory",
                               "value": "configSettings"
@@ -7884,9 +7743,7 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 3048,
                               "type": "address",
                               "value": "timerAddress"
@@ -7915,9 +7772,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -7943,9 +7798,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13195,
                                   "type": "contract ConfigStore",
                                   "value": "configStore"
@@ -7974,9 +7827,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": -15,
                                   "type": "msg",
                                   "value": "msg"
@@ -8010,9 +7861,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -8030,9 +7879,7 @@
                                   "typeString": "address"
                                 }
                               ],
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 13135,
                               "type": "function (address,address)",
                               "value": "CreatedConfigStore"
@@ -8049,9 +7896,7 @@
                               "isPure": false,
                               "isStructConstructorCall": false,
                               "lValueRequested": false,
-                              "names": [
-                                null
-                              ],
+                              "names": [null],
                               "tryCall": false,
                               "type": "address",
                               "type_conversion": true
@@ -8089,9 +7934,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13195,
                                   "type": "contract ConfigStore",
                                   "value": "configStore"
@@ -8108,17 +7951,13 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "arguments": [
-                                null
-                              ],
+                              "arguments": [null],
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
                               "isStructConstructorCall": false,
                               "lValueRequested": false,
-                              "names": [
-                                null
-                              ],
+                              "names": [null],
                               "tryCall": false,
                               "type": "address",
                               "type_conversion": false
@@ -8126,9 +7965,7 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "argumentTypes": [
-                                    null
-                                  ],
+                                  "argumentTypes": [null],
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": false,
@@ -8141,9 +7978,7 @@
                                   {
                                     "attributes": {
                                       "argumentTypes": null,
-                                      "overloadedDeclarations": [
-                                        null
-                                      ],
+                                      "overloadedDeclarations": [null],
                                       "referencedDeclaration": 13195,
                                       "type": "contract ConfigStore",
                                       "value": "configStore"
@@ -8174,9 +8009,7 @@
                   },
                   {
                     "attributes": {
-                      "assignments": [
-                        13220
-                      ]
+                      "assignments": [13220]
                     },
                     "children": [
                       {
@@ -8217,9 +8050,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "contract TokenFactory",
                           "type_conversion": true
@@ -8233,9 +8064,7 @@
                                   "typeString": "address"
                                 }
                               ],
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 7329,
                               "type": "type(contract TokenFactory)",
                               "value": "TokenFactory"
@@ -8247,9 +8076,7 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 13123,
                               "type": "address",
                               "value": "tokenFactoryAddress"
@@ -8270,9 +8097,7 @@
                   },
                   {
                     "attributes": {
-                      "assignments": [
-                        13226
-                      ]
+                      "assignments": [13226]
                     },
                     "children": [
                       {
@@ -8311,9 +8136,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "uint8",
                           "type_conversion": false
@@ -8327,9 +8150,7 @@
                                   "typeString": "address"
                                 }
                               ],
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 13504,
                               "type": "function (address) view returns (uint8)",
                               "value": "_getSyntheticDecimals"
@@ -8353,9 +8174,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13161,
                                   "type": "struct PerpetualCreator.Params memory",
                                   "value": "params"
@@ -8381,9 +8200,7 @@
                   },
                   {
                     "attributes": {
-                      "assignments": [
-                        13233
-                      ]
+                      "assignments": [13233]
                     },
                     "children": [
                       {
@@ -8424,9 +8241,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "contract ExpandedIERC20",
                           "type_conversion": false
@@ -8460,9 +8275,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13220,
                                   "type": "contract TokenFactory",
                                   "value": "tf"
@@ -8491,9 +8304,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13161,
                                   "type": "struct PerpetualCreator.Params memory",
                                   "value": "params"
@@ -8522,9 +8333,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13161,
                                   "type": "struct PerpetualCreator.Params memory",
                                   "value": "params"
@@ -8541,9 +8350,7 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 13226,
                               "type": "uint8",
                               "value": "syntheticDecimals"
@@ -8564,9 +8371,7 @@
                   },
                   {
                     "attributes": {
-                      "assignments": [
-                        13244
-                      ]
+                      "assignments": [13244]
                     },
                     "children": [
                       {
@@ -8606,9 +8411,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "address",
                           "type_conversion": false
@@ -8634,9 +8437,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13532,
                                   "type": "type(library PerpetualLib)",
                                   "value": "PerpetualLib"
@@ -8658,9 +8459,7 @@
                               "isPure": false,
                               "isStructConstructorCall": false,
                               "lValueRequested": false,
-                              "names": [
-                                null
-                              ],
+                              "names": [null],
                               "tryCall": false,
                               "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                               "type_conversion": false
@@ -8682,9 +8481,7 @@
                                       "typeString": "address"
                                     }
                                   ],
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13479,
                                   "type": "function (struct PerpetualCreator.Params memory,contract ExpandedIERC20,address) view returns (struct PerpetualLiquidatable.ConstructorParams memory)",
                                   "value": "_convertParams"
@@ -8696,9 +8493,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13161,
                                   "type": "struct PerpetualCreator.Params memory",
                                   "value": "params"
@@ -8710,9 +8505,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13233,
                                   "type": "contract ExpandedIERC20",
                                   "value": "tokenCurrency"
@@ -8729,9 +8522,7 @@
                                   "isPure": false,
                                   "isStructConstructorCall": false,
                                   "lValueRequested": false,
-                                  "names": [
-                                    null
-                                  ],
+                                  "names": [null],
                                   "tryCall": false,
                                   "type": "address",
                                   "type_conversion": true
@@ -8769,9 +8560,7 @@
                                   {
                                     "attributes": {
                                       "argumentTypes": null,
-                                      "overloadedDeclarations": [
-                                        null
-                                      ],
+                                      "overloadedDeclarations": [null],
                                       "referencedDeclaration": 13195,
                                       "type": "contract ConfigStore",
                                       "value": "configStore"
@@ -8810,9 +8599,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -8838,9 +8625,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13233,
                                   "type": "contract ExpandedIERC20",
                                   "value": "tokenCurrency"
@@ -8857,9 +8642,7 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 13244,
                               "type": "address",
                               "value": "derivative"
@@ -8888,9 +8671,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -8916,9 +8697,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13233,
                                   "type": "contract ExpandedIERC20",
                                   "value": "tokenCurrency"
@@ -8935,9 +8714,7 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 13244,
                               "type": "address",
                               "value": "derivative"
@@ -8966,9 +8743,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -8994,9 +8769,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13233,
                                   "type": "contract ExpandedIERC20",
                                   "value": "tokenCurrency"
@@ -9013,9 +8786,7 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 13244,
                               "type": "address",
                               "value": "derivative"
@@ -9044,9 +8815,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -9064,9 +8833,7 @@
                                   "typeString": "address"
                                 }
                               ],
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 17379,
                               "type": "function (address[] memory,address)",
                               "value": "_registerContract"
@@ -9083,9 +8850,7 @@
                               "isPure": true,
                               "isStructConstructorCall": false,
                               "lValueRequested": false,
-                              "names": [
-                                null
-                              ],
+                              "names": [null],
                               "tryCall": false,
                               "type": "address[] memory",
                               "type_conversion": false
@@ -9157,9 +8922,7 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 13244,
                               "type": "address",
                               "value": "derivative"
@@ -9188,9 +8951,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -9208,9 +8969,7 @@
                                   "typeString": "address payable"
                                 }
                               ],
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 13129,
                               "type": "function (address,address)",
                               "value": "CreatedPerpetual"
@@ -9222,9 +8981,7 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 13244,
                               "type": "address",
                               "value": "derivative"
@@ -9248,9 +9005,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": -15,
                                   "type": "msg",
                                   "value": "msg"
@@ -9282,9 +9037,7 @@
                       {
                         "attributes": {
                           "argumentTypes": null,
-                          "overloadedDeclarations": [
-                            null
-                          ],
+                          "overloadedDeclarations": [null],
                           "referencedDeclaration": 13244,
                           "type": "address",
                           "value": "derivative"
@@ -9314,9 +9067,7 @@
               "implemented": true,
               "isConstructor": false,
               "kind": "function",
-              "modifiers": [
-                null
-              ],
+              "modifiers": [null],
               "name": "_convertParams",
               "overrides": null,
               "scope": 13505,
@@ -9488,9 +9239,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13302,
                                   "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                                   "value": "constructorParams"
@@ -9507,9 +9256,7 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 17307,
                               "type": "address",
                               "value": "finderAddress"
@@ -9556,9 +9303,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13302,
                                   "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                                   "value": "constructorParams"
@@ -9575,9 +9320,7 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 3048,
                               "type": "address",
                               "value": "timerAddress"
@@ -9606,9 +9349,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -9626,10 +9367,7 @@
                                   "typeString": "literal_string \"Withdrawal liveness cannot be 0\""
                                 }
                               ],
-                              "overloadedDeclarations": [
-                                -18,
-                                -18
-                              ],
+                              "overloadedDeclarations": [-18, -18],
                               "referencedDeclaration": -18,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
@@ -9668,9 +9406,7 @@
                                   {
                                     "attributes": {
                                       "argumentTypes": null,
-                                      "overloadedDeclarations": [
-                                        null
-                                      ],
+                                      "overloadedDeclarations": [null],
                                       "referencedDeclaration": 13295,
                                       "type": "struct PerpetualCreator.Params memory",
                                       "value": "params"
@@ -9743,9 +9479,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -9763,10 +9497,7 @@
                                   "typeString": "literal_string \"Liquidation liveness cannot be 0\""
                                 }
                               ],
-                              "overloadedDeclarations": [
-                                -18,
-                                -18
-                              ],
+                              "overloadedDeclarations": [-18, -18],
                               "referencedDeclaration": -18,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
@@ -9805,9 +9536,7 @@
                                   {
                                     "attributes": {
                                       "argumentTypes": null,
-                                      "overloadedDeclarations": [
-                                        null
-                                      ],
+                                      "overloadedDeclarations": [null],
                                       "referencedDeclaration": 13295,
                                       "type": "struct PerpetualCreator.Params memory",
                                       "value": "params"
@@ -9880,9 +9609,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -9896,9 +9623,7 @@
                                   "typeString": "address"
                                 }
                               ],
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 17347,
                               "type": "function (address) view",
                               "value": "_requireWhitelistedCollateral"
@@ -9922,9 +9647,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13295,
                                   "type": "struct PerpetualCreator.Params memory",
                                   "value": "params"
@@ -9958,9 +9681,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -9978,10 +9699,7 @@
                                   "typeString": "literal_string \"Withdrawal liveness too large\""
                                 }
                               ],
-                              "overloadedDeclarations": [
-                                -18,
-                                -18
-                              ],
+                              "overloadedDeclarations": [-18, -18],
                               "referencedDeclaration": -18,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
@@ -10020,9 +9738,7 @@
                                   {
                                     "attributes": {
                                       "argumentTypes": null,
-                                      "overloadedDeclarations": [
-                                        null
-                                      ],
+                                      "overloadedDeclarations": [null],
                                       "referencedDeclaration": 13295,
                                       "type": "struct PerpetualCreator.Params memory",
                                       "value": "params"
@@ -10095,9 +9811,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -10115,10 +9829,7 @@
                                   "typeString": "literal_string \"Liquidation liveness too large\""
                                 }
                               ],
-                              "overloadedDeclarations": [
-                                -18,
-                                -18
-                              ],
+                              "overloadedDeclarations": [-18, -18],
                               "referencedDeclaration": -18,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
@@ -10157,9 +9868,7 @@
                                   {
                                     "attributes": {
                                       "argumentTypes": null,
-                                      "overloadedDeclarations": [
-                                        null
-                                      ],
+                                      "overloadedDeclarations": [null],
                                       "referencedDeclaration": 13295,
                                       "type": "struct PerpetualCreator.Params memory",
                                       "value": "params"
@@ -10224,9 +9933,7 @@
                   },
                   {
                     "attributes": {
-                      "assignments": [
-                        13356
-                      ]
+                      "assignments": [13356]
                     },
                     "children": [
                       {
@@ -10267,9 +9974,7 @@
                           "isPure": true,
                           "isStructConstructorCall": true,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "struct FixedPoint.Unsigned memory",
                           "type_conversion": false
@@ -10295,9 +10000,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 2373,
                                   "type": "type(library FixedPoint)",
                                   "value": "FixedPoint"
@@ -10340,9 +10043,7 @@
                   },
                   {
                     "attributes": {
-                      "assignments": [
-                        13365
-                      ]
+                      "assignments": [13365]
                     },
                     "children": [
                       {
@@ -10383,9 +10084,7 @@
                           "isPure": true,
                           "isStructConstructorCall": true,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "struct FixedPoint.Unsigned memory",
                           "type_conversion": false
@@ -10411,9 +10110,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 2373,
                                   "type": "type(library FixedPoint)",
                                   "value": "FixedPoint"
@@ -10464,9 +10161,7 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -10484,10 +10179,7 @@
                                   "typeString": "literal_string \"Invalid tokenScaling\""
                                 }
                               ],
-                              "overloadedDeclarations": [
-                                -18,
-                                -18
-                              ],
+                              "overloadedDeclarations": [-18, -18],
                               "referencedDeclaration": -18,
                               "type": "function (bool,string memory) pure",
                               "value": "require"
@@ -10519,9 +10211,7 @@
                                   "isPure": false,
                                   "isStructConstructorCall": false,
                                   "lValueRequested": false,
-                                  "names": [
-                                    null
-                                  ],
+                                  "names": [null],
                                   "tryCall": false,
                                   "type": "bool",
                                   "type_conversion": false
@@ -10559,9 +10249,7 @@
                                           {
                                             "attributes": {
                                               "argumentTypes": null,
-                                              "overloadedDeclarations": [
-                                                null
-                                              ],
+                                              "overloadedDeclarations": [null],
                                               "referencedDeclaration": 13295,
                                               "type": "struct PerpetualCreator.Params memory",
                                               "value": "params"
@@ -10583,9 +10271,7 @@
                                   {
                                     "attributes": {
                                       "argumentTypes": null,
-                                      "overloadedDeclarations": [
-                                        null
-                                      ],
+                                      "overloadedDeclarations": [null],
                                       "referencedDeclaration": 13356,
                                       "type": "struct FixedPoint.Unsigned memory",
                                       "value": "minScaling"
@@ -10607,9 +10293,7 @@
                                   "isPure": false,
                                   "isStructConstructorCall": false,
                                   "lValueRequested": false,
-                                  "names": [
-                                    null
-                                  ],
+                                  "names": [null],
                                   "tryCall": false,
                                   "type": "bool",
                                   "type_conversion": false
@@ -10647,9 +10331,7 @@
                                           {
                                             "attributes": {
                                               "argumentTypes": null,
-                                              "overloadedDeclarations": [
-                                                null
-                                              ],
+                                              "overloadedDeclarations": [null],
                                               "referencedDeclaration": 13295,
                                               "type": "struct PerpetualCreator.Params memory",
                                               "value": "params"
@@ -10671,9 +10353,7 @@
                                   {
                                     "attributes": {
                                       "argumentTypes": null,
-                                      "overloadedDeclarations": [
-                                        null
-                                      ],
+                                      "overloadedDeclarations": [null],
                                       "referencedDeclaration": 13365,
                                       "type": "struct FixedPoint.Unsigned memory",
                                       "value": "maxScaling"
@@ -10747,9 +10427,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13302,
                                   "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                                   "value": "constructorParams"
@@ -10766,9 +10444,7 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
+                              "overloadedDeclarations": [null],
                               "referencedDeclaration": 13299,
                               "type": "address",
                               "value": "configStore"
@@ -10815,9 +10491,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13302,
                                   "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                                   "value": "constructorParams"
@@ -10839,9 +10513,7 @@
                               "isPure": false,
                               "isStructConstructorCall": false,
                               "lValueRequested": false,
-                              "names": [
-                                null
-                              ],
+                              "names": [null],
                               "tryCall": false,
                               "type": "address",
                               "type_conversion": true
@@ -10879,9 +10551,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13297,
                                   "type": "contract ExpandedIERC20",
                                   "value": "newTokenCurrency"
@@ -10933,9 +10603,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13302,
                                   "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                                   "value": "constructorParams"
@@ -10964,9 +10632,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13295,
                                   "type": "struct PerpetualCreator.Params memory",
                                   "value": "params"
@@ -11018,9 +10684,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13302,
                                   "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                                   "value": "constructorParams"
@@ -11049,9 +10713,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13295,
                                   "type": "struct PerpetualCreator.Params memory",
                                   "value": "params"
@@ -11103,9 +10765,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13302,
                                   "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                                   "value": "constructorParams"
@@ -11134,9 +10794,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13295,
                                   "type": "struct PerpetualCreator.Params memory",
                                   "value": "params"
@@ -11188,9 +10846,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13302,
                                   "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                                   "value": "constructorParams"
@@ -11219,9 +10875,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13295,
                                   "type": "struct PerpetualCreator.Params memory",
                                   "value": "params"
@@ -11273,9 +10927,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13302,
                                   "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                                   "value": "constructorParams"
@@ -11304,9 +10956,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13295,
                                   "type": "struct PerpetualCreator.Params memory",
                                   "value": "params"
@@ -11358,9 +11008,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13302,
                                   "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                                   "value": "constructorParams"
@@ -11389,9 +11037,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13295,
                                   "type": "struct PerpetualCreator.Params memory",
                                   "value": "params"
@@ -11443,9 +11089,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13302,
                                   "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                                   "value": "constructorParams"
@@ -11474,9 +11118,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13295,
                                   "type": "struct PerpetualCreator.Params memory",
                                   "value": "params"
@@ -11528,9 +11170,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13302,
                                   "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                                   "value": "constructorParams"
@@ -11559,9 +11199,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13295,
                                   "type": "struct PerpetualCreator.Params memory",
                                   "value": "params"
@@ -11613,9 +11251,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13302,
                                   "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                                   "value": "constructorParams"
@@ -11644,9 +11280,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13295,
                                   "type": "struct PerpetualCreator.Params memory",
                                   "value": "params"
@@ -11698,9 +11332,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13302,
                                   "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                                   "value": "constructorParams"
@@ -11729,9 +11361,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13295,
                                   "type": "struct PerpetualCreator.Params memory",
                                   "value": "params"
@@ -11783,9 +11413,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13302,
                                   "type": "struct PerpetualLiquidatable.ConstructorParams memory",
                                   "value": "constructorParams"
@@ -11814,9 +11442,7 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
+                                  "overloadedDeclarations": [null],
                                   "referencedDeclaration": 13295,
                                   "type": "struct PerpetualCreator.Params memory",
                                   "value": "params"
@@ -11857,9 +11483,7 @@
               "implemented": true,
               "isConstructor": false,
               "kind": "function",
-              "modifiers": [
-                null
-              ],
+              "modifiers": [null],
               "name": "_getSyntheticDecimals",
               "overrides": null,
               "scope": 13505,
@@ -11946,17 +11570,13 @@
                       {
                         "attributes": {
                           "argumentTypes": null,
-                          "arguments": [
-                            null
-                          ],
+                          "arguments": [null],
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
+                          "names": [null],
                           "tryCall": true,
                           "type": "uint8",
                           "type_conversion": false
@@ -11964,9 +11584,7 @@
                         "children": [
                           {
                             "attributes": {
-                              "argumentTypes": [
-                                null
-                              ],
+                              "argumentTypes": [null],
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -11984,9 +11602,7 @@
                                   "isPure": false,
                                   "isStructConstructorCall": false,
                                   "lValueRequested": false,
-                                  "names": [
-                                    null
-                                  ],
+                                  "names": [null],
                                   "tryCall": false,
                                   "type": "contract IERC20Standard",
                                   "type_conversion": true
@@ -12000,9 +11616,7 @@
                                           "typeString": "address"
                                         }
                                       ],
-                                      "overloadedDeclarations": [
-                                        null
-                                      ],
+                                      "overloadedDeclarations": [null],
                                       "referencedDeclaration": 3346,
                                       "type": "type(contract IERC20Standard)",
                                       "value": "IERC20Standard"
@@ -12014,9 +11628,7 @@
                                   {
                                     "attributes": {
                                       "argumentTypes": null,
-                                      "overloadedDeclarations": [
-                                        null
-                                      ],
+                                      "overloadedDeclarations": [null],
                                       "referencedDeclaration": 13481,
                                       "type": "address",
                                       "value": "_collateralAddress"
@@ -12090,9 +11702,7 @@
                                   {
                                     "attributes": {
                                       "argumentTypes": null,
-                                      "overloadedDeclarations": [
-                                        null
-                                      ],
+                                      "overloadedDeclarations": [null],
                                       "referencedDeclaration": 13492,
                                       "type": "uint8",
                                       "value": "_decimals"

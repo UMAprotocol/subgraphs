@@ -12,18 +12,13 @@ import {
   Liquidation,
   LiquidationCreatedEvent,
   LiquidationDisputedEvent,
-  LiquidationDisputeSettledEvent
+  LiquidationDisputeSettledEvent,
 } from "../../../generated/schema";
 import { BigDecimal, ethereum } from "@graphprotocol/graph-ts";
 import { BIGDECIMAL_ZERO } from "../constants";
 
-export function getOrCreatePositionCreatedEvent(
-  ethereumEvent: ethereum.Event
-): PositionCreatedEvent {
-  let id = ethereumEvent.transaction.hash
-    .toHexString()
-    .concat("-")
-    .concat(ethereumEvent.logIndex.toString());
+export function getOrCreatePositionCreatedEvent(ethereumEvent: ethereum.Event): PositionCreatedEvent {
+  let id = ethereumEvent.transaction.hash.toHexString().concat("-").concat(ethereumEvent.logIndex.toString());
 
   let event = new PositionCreatedEvent(id);
   event.tx_hash = ethereumEvent.transaction.hash.toHexString();
@@ -33,13 +28,8 @@ export function getOrCreatePositionCreatedEvent(
   return event as PositionCreatedEvent;
 }
 
-export function getOrCreateSettleExpiredPositionEvent(
-  ethereumEvent: ethereum.Event
-): SettleExpiredPositionEvent {
-  let id = ethereumEvent.transaction.hash
-    .toHexString()
-    .concat("-")
-    .concat(ethereumEvent.logIndex.toString());
+export function getOrCreateSettleExpiredPositionEvent(ethereumEvent: ethereum.Event): SettleExpiredPositionEvent {
+  let id = ethereumEvent.transaction.hash.toHexString().concat("-").concat(ethereumEvent.logIndex.toString());
 
   let event = new SettleExpiredPositionEvent(id);
   event.tx_hash = ethereumEvent.transaction.hash.toHexString();
@@ -49,13 +39,8 @@ export function getOrCreateSettleExpiredPositionEvent(
   return event as SettleExpiredPositionEvent;
 }
 
-export function getOrCreateRedeemEvent(
-  ethereumEvent: ethereum.Event
-): RedeemEvent {
-  let id = ethereumEvent.transaction.hash
-    .toHexString()
-    .concat("-")
-    .concat(ethereumEvent.logIndex.toString());
+export function getOrCreateRedeemEvent(ethereumEvent: ethereum.Event): RedeemEvent {
+  let id = ethereumEvent.transaction.hash.toHexString().concat("-").concat(ethereumEvent.logIndex.toString());
 
   let event = new RedeemEvent(id);
   event.tx_hash = ethereumEvent.transaction.hash.toHexString();
@@ -65,13 +50,8 @@ export function getOrCreateRedeemEvent(
   return event as RedeemEvent;
 }
 
-export function getOrCreateRepayEvent(
-  ethereumEvent: ethereum.Event
-): RepayEvent {
-  let id = ethereumEvent.transaction.hash
-    .toHexString()
-    .concat("-")
-    .concat(ethereumEvent.logIndex.toString());
+export function getOrCreateRepayEvent(ethereumEvent: ethereum.Event): RepayEvent {
+  let id = ethereumEvent.transaction.hash.toHexString().concat("-").concat(ethereumEvent.logIndex.toString());
 
   let event = new RepayEvent(id);
   event.tx_hash = ethereumEvent.transaction.hash.toHexString();
@@ -81,13 +61,8 @@ export function getOrCreateRepayEvent(
   return event as RepayEvent;
 }
 
-export function getOrCreateFundingRateUpdatedEvent(
-  ethereumEvent: ethereum.Event
-): FundingRateUpdatedEvent {
-  let id = ethereumEvent.transaction.hash
-    .toHexString()
-    .concat("-")
-    .concat(ethereumEvent.logIndex.toString());
+export function getOrCreateFundingRateUpdatedEvent(ethereumEvent: ethereum.Event): FundingRateUpdatedEvent {
+  let id = ethereumEvent.transaction.hash.toHexString().concat("-").concat(ethereumEvent.logIndex.toString());
 
   let event = new FundingRateUpdatedEvent(id);
   event.tx_hash = ethereumEvent.transaction.hash.toHexString();
@@ -97,13 +72,8 @@ export function getOrCreateFundingRateUpdatedEvent(
   return event as FundingRateUpdatedEvent;
 }
 
-export function getOrCreateFinalFeesPaidEvent(
-  ethereumEvent: ethereum.Event
-): FinalFeesPaidEvent {
-  let id = ethereumEvent.transaction.hash
-    .toHexString()
-    .concat("-")
-    .concat(ethereumEvent.logIndex.toString());
+export function getOrCreateFinalFeesPaidEvent(ethereumEvent: ethereum.Event): FinalFeesPaidEvent {
+  let id = ethereumEvent.transaction.hash.toHexString().concat("-").concat(ethereumEvent.logIndex.toString());
 
   let event = new FinalFeesPaidEvent(id);
   event.tx_hash = ethereumEvent.transaction.hash.toHexString();
@@ -113,13 +83,8 @@ export function getOrCreateFinalFeesPaidEvent(
   return event as FinalFeesPaidEvent;
 }
 
-export function getOrCreateDepositEvent(
-  ethereumEvent: ethereum.Event
-): DepositEvent {
-  let id = ethereumEvent.transaction.hash
-    .toHexString()
-    .concat("-")
-    .concat(ethereumEvent.logIndex.toString());
+export function getOrCreateDepositEvent(ethereumEvent: ethereum.Event): DepositEvent {
+  let id = ethereumEvent.transaction.hash.toHexString().concat("-").concat(ethereumEvent.logIndex.toString());
   let event = new DepositEvent(id);
   event.tx_hash = ethereumEvent.transaction.hash.toHexString();
   event.block = ethereumEvent.block.number;
@@ -128,13 +93,8 @@ export function getOrCreateDepositEvent(
   return event as DepositEvent;
 }
 
-export function getOrCreateWithdrawalEvent(
-  ethereumEvent: ethereum.Event
-): WithdrawalEvent {
-  let id = ethereumEvent.transaction.hash
-    .toHexString()
-    .concat("-")
-    .concat(ethereumEvent.logIndex.toString());
+export function getOrCreateWithdrawalEvent(ethereumEvent: ethereum.Event): WithdrawalEvent {
+  let id = ethereumEvent.transaction.hash.toHexString().concat("-").concat(ethereumEvent.logIndex.toString());
 
   let event = new WithdrawalEvent(id);
   event.tx_hash = ethereumEvent.transaction.hash.toHexString();
@@ -144,10 +104,7 @@ export function getOrCreateWithdrawalEvent(
   return event as WithdrawalEvent;
 }
 
-export function getOrCreateSponsor(
-  id: String,
-  createIfNotFound: boolean = true
-): Sponsor {
+export function getOrCreateSponsor(id: String, createIfNotFound: boolean = true): Sponsor {
   let sponsor = Sponsor.load(id);
 
   if (sponsor == null && createIfNotFound) {
@@ -157,10 +114,7 @@ export function getOrCreateSponsor(
   return sponsor as Sponsor;
 }
 
-export function getOrCreateSponsorPosition(
-  id: String,
-  createIfNotFound: boolean = true
-): SponsorPosition {
+export function getOrCreateSponsorPosition(id: String, createIfNotFound: boolean = true): SponsorPosition {
   let position = SponsorPosition.load(id);
 
   if (position == null && createIfNotFound) {
@@ -181,23 +135,13 @@ export function calculateGCR(
   outstanding: BigDecimal | null
 ): BigDecimal {
   let gcr: BigDecimal = BIGDECIMAL_ZERO;
-  if (
-    outstanding != null &&
-    feeMultiplier != null &&
-    rawCollateral != null &&
-    outstanding != BIGDECIMAL_ZERO
-  ) {
-    gcr =
-      (<BigDecimal>rawCollateral * <BigDecimal>feeMultiplier) /
-      <BigDecimal>outstanding;
+  if (outstanding != null && feeMultiplier != null && rawCollateral != null && outstanding != BIGDECIMAL_ZERO) {
+    gcr = (<BigDecimal>rawCollateral * <BigDecimal>feeMultiplier) / <BigDecimal>outstanding;
   }
   return gcr;
 }
 
-export function getOrCreateLiquidation(
-  id: String,
-  createIfNotFound: boolean = true
-): Liquidation {
+export function getOrCreateLiquidation(id: String, createIfNotFound: boolean = true): Liquidation {
   let liquidation = Liquidation.load(id);
 
   if (liquidation == null && createIfNotFound) {

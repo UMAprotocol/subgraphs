@@ -1,23 +1,16 @@
-import {
-  FinancialContract,
-  ContractCreator,
-  Token
-} from "../../../generated/schema";
+import { FinancialContract, ContractCreator, Token } from "../../../generated/schema";
 import {
   ExpiringMultiParty,
   ExpiringMultiPartyCreator,
   Perpetual,
-  PerpetualCreator
+  PerpetualCreator,
 } from "../../../generated/templates";
 import { ERC20 } from "../../../generated/templates/ExpiringMultiPartyCreator/ERC20";
 import { Address } from "@graphprotocol/graph-ts";
 import { DEFAULT_DECIMALS } from "../decimals";
 import { BIGDECIMAL_ONE, BIGDECIMAL_ZERO } from "../constants";
 
-export function getOrCreateFinancialContract(
-  id: String,
-  createIfNotFound: boolean = true
-): FinancialContract {
+export function getOrCreateFinancialContract(id: String, createIfNotFound: boolean = true): FinancialContract {
   let contract = FinancialContract.load(id);
 
   if (contract == null && createIfNotFound) {
@@ -30,10 +23,7 @@ export function getOrCreateFinancialContract(
   return contract as FinancialContract;
 }
 
-export function getOrCreatePerpetualContract(
-  id: String,
-  createIfNotFound: boolean = true
-): FinancialContract {
+export function getOrCreatePerpetualContract(id: String, createIfNotFound: boolean = true): FinancialContract {
   let contract = FinancialContract.load(id);
 
   if (contract == null && createIfNotFound) {
@@ -46,10 +36,7 @@ export function getOrCreatePerpetualContract(
   return contract as FinancialContract;
 }
 
-export function getOrCreateContractCreator(
-  id: String,
-  createIfNotFound: boolean = true
-): ContractCreator {
+export function getOrCreateContractCreator(id: String, createIfNotFound: boolean = true): ContractCreator {
   let contractCreator = ContractCreator.load(id);
 
   if (contractCreator == null && createIfNotFound) {
@@ -61,10 +48,7 @@ export function getOrCreateContractCreator(
   return contractCreator as ContractCreator;
 }
 
-export function getOrCreatePerpetualCreator(
-  id: String,
-  createIfNotFound: boolean = true
-): ContractCreator {
+export function getOrCreatePerpetualCreator(id: String, createIfNotFound: boolean = true): ContractCreator {
   let contractCreator = ContractCreator.load(id);
 
   if (contractCreator == null && createIfNotFound) {
@@ -75,7 +59,6 @@ export function getOrCreatePerpetualCreator(
 
   return contractCreator as ContractCreator;
 }
-
 
 export function getOrCreateToken(
   tokenAddress: Address,
@@ -97,13 +80,11 @@ export function getOrCreateToken(
     let tokenName = erc20Token.try_name();
     let tokenSymbol = erc20Token.try_symbol();
 
-    token.decimals = !tokenDecimals.reverted
-      ? tokenDecimals.value
-      : DEFAULT_DECIMALS;
+    token.decimals = !tokenDecimals.reverted ? tokenDecimals.value : DEFAULT_DECIMALS;
     token.name = !tokenName.reverted ? tokenName.value : "";
     token.symbol = !tokenSymbol.reverted ? tokenSymbol.value : "";
     token.indexingAsCollateral = false;
-    token.isOnWhitelist =  false;
+    token.isOnWhitelist = false;
     token.finalFee = BIGDECIMAL_ZERO;
 
     if (indexAsCollateral) {
