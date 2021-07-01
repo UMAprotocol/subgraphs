@@ -49,6 +49,8 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
 //  event PriceResolved(uint256 indexed roundId, bytes32 indexed identifier, uint256 time, int256 price);
 
 export function handlePriceResolved(event: PriceResolved): void {
+  let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
+  let request = getOrCreatePriceRequest(requestId);
   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
   let groupId = requestRound.id.concat("-").concat(event.params.price.toString());
   let voterGroup = getOrCreateVoterGroup(groupId);
