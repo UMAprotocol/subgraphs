@@ -23,5 +23,5 @@ export {
   handleOptimisticRequestPrice,
   handleOptimisticProposePrice,
   handleOptimisticDisputePrice,
-  handleOptimisticSettlePrice
+  handleOptimisticSettle
 } from "./mappings/optimisticOracle";

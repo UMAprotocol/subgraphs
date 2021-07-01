@@ -103,7 +103,7 @@ export function handleOptimisticDisputePrice(event: DisputePrice): void {
 }
 
 // - event: Settle(indexed address,indexed address,indexed address,bytes32,uint256,bytes,int256,uint256)
-//   handler: handleOptimisticSettlePrice
+//   handler: handleOptimisticSettle
 //  - event Settle(
 //     address indexed requester,
 //     address indexed proposer,
@@ -115,7 +115,7 @@ export function handleOptimisticDisputePrice(event: DisputePrice): void {
 //     uint256 payout
 // );
 
-export function handleOptimisticSettlePrice(event: Settle): void {
+export function handleOptimisticSettle(event: Settle): void {
     let requestId = event.params.identifier
       .toString()
       .concat("-")
