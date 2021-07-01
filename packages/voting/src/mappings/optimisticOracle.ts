@@ -24,6 +24,14 @@ import {
 //   );
 
 export function handleOptimisticRequestPrice(event: RequestPrice): void {
+  log.warning(
+    `(ancillary) OO PriceRequest params: {},{},{}`, 
+    [
+      event.params.timestamp.toString(),
+      event.params.identifier.toString(),
+      event.params.ancillaryData.toHex()
+    ]
+  ); 
   let requestId = event.params.identifier
     .toString()
     .concat("-")
@@ -59,6 +67,14 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
 // );
 
 export function handleOptimisticProposePrice(event: ProposePrice): void {
+  log.warning(
+    `(ancillary) OO PriceProposed params: {},{},{}`, 
+    [
+      event.params.timestamp.toString(),
+      event.params.identifier.toString(),
+      event.params.ancillaryData.toHex()
+    ]
+  ); 
     let requestId = event.params.identifier
       .toString()
       .concat("-")
@@ -88,6 +104,14 @@ export function handleOptimisticProposePrice(event: ProposePrice): void {
 //   );
 
 export function handleOptimisticDisputePrice(event: DisputePrice): void {
+  log.warning(
+    `(ancillary) OO PriceDisputed params: {},{},{}`, 
+    [
+      event.params.timestamp.toString(),
+      event.params.identifier.toString(),
+      event.params.ancillaryData.toHex()
+    ]
+  ); 
     let requestId = event.params.identifier
       .toString()
       .concat("-")
@@ -116,6 +140,14 @@ export function handleOptimisticDisputePrice(event: DisputePrice): void {
 // );
 
 export function handleOptimisticSettle(event: Settle): void {
+  log.warning(
+    `(ancillary) OO Settled params: {},{},{}`, 
+    [
+      event.params.timestamp.toString(),
+      event.params.identifier.toString(),
+      event.params.ancillaryData.toHex()
+    ]
+  ); 
     let requestId = event.params.identifier
       .toString()
       .concat("-")
