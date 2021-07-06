@@ -19,8 +19,10 @@ This subgraph indexes events emitted by the "Optimistic Oracle" contracts. The c
 
 - Kovan: https://thegraph.com/explorer/subgraph/umaprotocol/kovan-oo
 - Mainnet: https://thegraph.com/explorer/subgraph/umaprotocol/mainnet-oo
+- Polygon: https://thegraph.com/explorer/subgraph/umaprotocol/polygon-oo
 - (staging) Kovan: https://thegraph.com/explorer/subgraph/nicholaspai/kovan-oo-staging
 - (staging) Mainnet: https://thegraph.com/explorer/subgraph/nicholaspai/mainnet-oo-staging
+- (staging) Polygon: https://thegraph.com/explorer/subgraph/nicholaspai/polygon-oo-staging
 
 ## Financial Contract Events:
 

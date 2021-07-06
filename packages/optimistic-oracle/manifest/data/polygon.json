@@ -1,0 +1,11 @@
+{
+    "network": "matic",
+    "OptimisticOracleDataSources": [
+      {
+          "name": "OptimisticOracle",
+          "address": "0xaaf3f29521877d7a28c21e379bf7a5401883a6b2",
+          "startBlock": 15716448
+      }
+    ]
+  }
+  
