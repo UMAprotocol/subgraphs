@@ -12,6 +12,5 @@ cat $DATA
 mustache \
   -p manifest/templates/Voting.template.yaml \
   -p manifest/templates/VotingAncillary.template.yaml \
-  -p manifest/templates/OptimisticOracle.template.yaml \
   $DATA \
   manifest/templates/subgraph.template.yaml > subgraph.yaml

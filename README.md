@@ -17,10 +17,10 @@ This subgraph indexes events emitted by the core Oracle contracts. The code can 
 
 This subgraph indexes events emitted by the "Optimistic Oracle" contracts. The code can be found in `packages/optimistic-oracle`
 
-- Kovan: https://thegraph.com/explorer/subgraph/umaprotocol/kovan-optimistic-oracle
-- Mainnet: https://thegraph.com/explorer/subgraph/umaprotocol/mainnet-optimistic-oracle
-- (staging) Kovan: https://thegraph.com/explorer/subgraph/nicholaspai/kovan-optimistic-oracle-staging
-- (staging) Mainnet: https://thegraph.com/explorer/subgraph/nicholaspai/mainnet-optimistic-oracle-staging
+- Kovan: https://thegraph.com/explorer/subgraph/umaprotocol/kovan-oo
+- Mainnet: https://thegraph.com/explorer/subgraph/umaprotocol/mainnet-oo
+- (staging) Kovan: https://thegraph.com/explorer/subgraph/nicholaspai/kovan-oo-staging
+- (staging) Mainnet: https://thegraph.com/explorer/subgraph/nicholaspai/mainnet-oo-staging
 
 ## Financial Contract Events:
 
