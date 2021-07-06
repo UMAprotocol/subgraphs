@@ -58,7 +58,7 @@ export function handlePriceResolved(event: PriceResolved): void {
   ]);
   let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
   let request = getOrCreatePriceRequest(requestId);
-
+  
   log.warning(`Fetched Price Request Entity: {},{},{}`, [
     request.time.toString(),
     request.latestRound,

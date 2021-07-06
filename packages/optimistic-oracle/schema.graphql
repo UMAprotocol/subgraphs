@@ -1,0 +1,33 @@
+type OptimisticPriceRequest @entity {
+  "ID is the PriceIdentifier ID + the timestamp + ancillaryData (if available)"
+  id: ID!
+
+  identifier: String!
+
+  ancillaryData: String!
+
+  time: BigInt!
+
+  requester: Bytes!
+
+  currency: Bytes!
+
+  reward: BigInt!
+
+  finalFee: BigInt!
+
+  proposer: Bytes
+
+  proposedPrice: BigInt
+
+  proposalExpirationTimestamp: BigInt
+
+  disputer: Bytes
+
+  settlementPrice: BigInt
+
+  settlementPayout: BigInt
+
+  settlementRecipient: Bytes
+}
+

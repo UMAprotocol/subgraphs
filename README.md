@@ -13,6 +13,17 @@ This subgraph indexes events emitted by the core Oracle contracts. The code can 
 - (staging) Kovan: https://thegraph.com/explorer/subgraph/nicholaspai/kovan-voting-staging
 - (staging) Mainnet: https://thegraph.com/explorer/subgraph/nicholaspai/mainnet-voting-staging
 
+## Optimistic Oracle Events:
+
+This subgraph indexes events emitted by the "Optimistic Oracle" contracts. The code can be found in `packages/optimistic-oracle`
+
+- Kovan: https://thegraph.com/explorer/subgraph/umaprotocol/kovan-oo
+- Mainnet: https://thegraph.com/explorer/subgraph/umaprotocol/mainnet-oo
+- Polygon: https://thegraph.com/explorer/subgraph/umaprotocol/polygon-oo
+- (staging) Kovan: https://thegraph.com/explorer/subgraph/nicholaspai/kovan-oo-staging
+- (staging) Mainnet: https://thegraph.com/explorer/subgraph/nicholaspai/mainnet-oo-staging
+- (staging) Polygon: https://thegraph.com/explorer/subgraph/nicholaspai/polygon-oo-staging
+
 ## Financial Contract Events:
 
 This subgraph indexes events emitted by the ExpiringMultiParty and Perpetual contracts. The code can be found in `packages/financial-contracts`

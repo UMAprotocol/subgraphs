@@ -35,7 +35,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
 
   // PriceRequestAdded currently does not include `ancillaryData` so we cannot create the PriceRequestRound entity
   // until we detect the ancillaryData from the first VoteCommitted event.
-
+  
   log.warning(`(ancillary) New Price Request Saved: {},{}`, [request.time.toString(), request.identifier]);
   request.save();
 }

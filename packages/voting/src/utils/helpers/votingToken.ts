@@ -1,5 +1,5 @@
 import { User } from "../../../generated/schema";
-import { VotingToken } from "../../../generated/VotingToken/VotingToken";
+import { VotingToken } from "../../../generated/VotingAncillary/VotingToken";
 import { VOTING_TOKEN_ADDRESS, BIGINT_ZERO } from "../constants";
 import { Address } from "@graphprotocol/graph-ts";
 
