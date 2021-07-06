@@ -7,9 +7,8 @@ import {
   import {
     getOrCreateOptimisticPriceRequest
   } from "../utils/helpers";
-  import { toDecimal } from "../utils/decimals";
   
-  import { log, BigInt, BigDecimal } from "@graphprotocol/graph-ts";
+  import { log, BigInt } from "@graphprotocol/graph-ts";
   
 // - event: RequestPrice(indexed address,bytes32,uint256,bytes,address,uint256,uint256)
 //   handler: handleOptimisticRequestPrice

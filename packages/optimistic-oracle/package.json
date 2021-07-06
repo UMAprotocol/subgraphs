@@ -1,0 +1,32 @@
+{
+  "name": "optimistic-oracle-subgraph",
+  "version": "0.1.0",
+  "description": "Optimistic Oracle Contract Events Subgraph",
+  "scripts": {
+    "ganache": "ganache-cli -h 0.0.0.0",
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "prepare:mainnet": "scripts/build-manifest.sh mainnet && yarn codegen && yarn build",
+    "prepare:kovan": "scripts/build-manifest.sh kovan && yarn codegen && yarn build",
+    "deploy:kovan": "env STAGING=true scripts/deploy.sh kovan",
+    "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",
+    "deploy-prod:kovan": "scripts/deploy.sh kovan",
+    "deploy-prod:mainnet": "scripts/deploy.sh mainnet"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UMAprotocol/subgraphs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/UMAprotocol/subgraphs/issues"
+  },
+  "homepage": "https://github.com/UMAprotocol/subgraphs#readme",
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.20.0",
+    "@graphprotocol/graph-ts": "^0.20.0",
+    "mustache": "^4.2.0"
+  }
+}

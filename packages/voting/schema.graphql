@@ -217,37 +217,3 @@ type RewardsClaimed @entity {
   "NumTokens will be 0 if the claim is not 'valid'. This can happen if the function was called for a voter who didn't get the correct vote for example."
   numTokens: BigInt!
 }
-
-type OptimisticPriceRequest @entity {
-  "ID is the PriceIdentifier ID + the timestamp + ancillaryData (if available)"
-  id: ID!
-
-  identifier: PriceIdentifier!
-
-  ancillaryData: String!
-
-  time: BigInt!
-
-  requester: Bytes!
-
-  currency: Bytes!
-
-  reward: BigInt!
-
-  finalFee: BigInt!
-
-  proposer: Bytes
-
-  proposedPrice: BigInt
-
-  proposalExpirationTimestamp: BigInt
-
-  disputer: Bytes
-
-  settlementPrice: BigInt
-
-  settlementPayout: BigInt
-
-  settlementRecipient: Bytes
-}
-

@@ -14,11 +14,4 @@ export {
   handleRewardsRetrieved as handleRewardsRetrievedAncillary,
 } from "./mappings/votingAncillary";
 
-export {
-  handleOptimisticRequestPrice,
-  handleOptimisticProposePrice,
-  handleOptimisticDisputePrice,
-  handleOptimisticSettle
-} from "./mappings/optimisticOracle";
-
 export { handleSupportedIdentifierAdded, handleSupportedIdentifierRemoved } from "./mappings/identifierWhitelist";

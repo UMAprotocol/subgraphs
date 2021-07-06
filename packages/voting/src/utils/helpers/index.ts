@@ -10,5 +10,3 @@ export {
 } from "./voting";
 
 export { getOrCreatePriceIdentifier } from "./identifierWhitelist";
-
-export { getOrCreateOptimisticPriceRequest } from "./optimisticOracle";
