@@ -1,7 +1,7 @@
 {
-  "name": "optimistic-oracle-subgraph",
+  "name": "long-short-pair-subgraph",
   "version": "0.1.0",
-  "description": "Optimistic Oracle Contract Events Subgraph",
+  "description": "Long Short Pair Contract Events Subgraph",
   "scripts": {
     "ganache": "ganache-cli -h 0.0.0.0",
     "codegen": "graph codegen",

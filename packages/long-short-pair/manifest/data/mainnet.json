@@ -1,10 +1,10 @@
 {
   "network": "mainnet",
-  "OptimisticOracleDataSources": [
+  "LongShortPairDataSources": [
     {
-        "name": "OptimisticOracle",
-        "address": "0x287a1ba52e030459f163f48b2ae468a085003a07",
-        "startBlock": 11876085
+        "name": "LongShortPairCreator0",
+        "address": "0x0b8de441B26E36f461b2748919ed71f50593A67b",
+        "startBlock": 12736035
     }
   ]
 }
