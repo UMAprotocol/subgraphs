@@ -1,0 +1,24 @@
+- kind: ethereum/contract
+  name: {{name}}
+  network: {{network}}
+  source:
+    address: "{{address}}"
+    abi: LongShortPairCreator
+    startBlock: {{startBlock}} 
+  mapping:
+    kind: ethereum/events
+    apiVersion: 0.0.4
+    language: wasm/assemblyscript
+    file: ./src/index.ts
+    entities:
+      - LongShortPairContract
+    abis:
+      - name: LongShortPairCreator
+        file: ./abis/LongShortPairCreator.json
+      - name: LongShortPair
+        file: ./abis/LongShortPair.json
+      - name: ERC20
+        file: ./abis/ERC20.json
+    eventHandlers:
+      - event: CreatedLongShortPair(indexed address,indexed address,address,address)
+        handler: handleCreatedLongShortPair

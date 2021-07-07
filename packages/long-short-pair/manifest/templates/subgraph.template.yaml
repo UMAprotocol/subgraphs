@@ -1,0 +1,11 @@
+specVersion: 0.0.2
+description: Subgraph with support for the UMA Long Short Pair contract data
+repository: https://github.com/UMAprotocol/subgraphs
+schema:
+  file: ./schema.graphql
+dataSources:
+{{#LongShortPairDataSources}}
+  {{> LongShortPairCreator.template.yaml}}
+{{/LongShortPairDataSources}}
+templates:
+  {{> LongShortPair.template.yaml}}

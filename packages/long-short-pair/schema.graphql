@@ -1,0 +1,169 @@
+type LongShortPairContract @entity {
+  "Blockchain address of the contract"
+  id: ID!
+
+  priceIdentifier: String
+
+  "Factory contract used to create this contract"
+  creator: ContractCreator
+
+  deploymentTimestamp: BigInt
+
+  "Address that deployed the contract"
+  deployer: Bytes
+
+  "Address of the contract"
+  address: Bytes!
+
+  "Token used as collateral for this contract"
+  collateralToken: Token
+
+  "Long token for this contract"
+  longToken: Token
+
+  "Short token for this contract"
+  shortToken: Token
+
+  "Expiration timestamp of the LSP contract"
+  expirationTimestamp: BigInt
+
+  "Collateral Per Pair for the LSP contract"
+  collateralPerPair: BigInt
+
+  "Financial product library Library for the LSP contract"
+  financialProductLibrary: Bytes!
+
+  "Custom ancillary data for the LSP contract"
+  customAncillaryData: String
+
+  "Pre-loaded reward for the LSP contract"
+  prepaidProposerReward: BigInt
+
+  "OO bond to be paid by the price proposer"
+  optimisticOracleProposerBond: BigInt
+
+  "OO liveness timer for proposed price"
+  optimisticOracleLivenessTime: BigInt
+
+  "Total collateral within the LSP contract"
+  totalCollateralLocked: BigDecimal
+
+  "Total long tokens current in circulation, issued by the LSP contract"
+  longTokensOutstanding: BigDecimal
+
+  "Total short tokens current in circulation, issued by the LSP contract"
+  shortTokensOutstanding: BigDecimal
+
+  "Contract state of the LSP. Either Open, ExpiredPriceRequested, ExpiredPriceReceived"
+  contractState: String
+}
+
+type ContractCreator @entity {
+  "This entity represent a single contract creator. The id is the blockchain address of the Creator"
+  id: ID!
+
+  "List of all the contracts created from this Creator"
+  contractsCreated: [LongShortPairContract!]! @derivedFrom(field: "creator")
+}
+
+type Token @entity {
+  id: ID!
+
+  address: Bytes!
+
+  decimals: Int!
+
+  name: String!
+
+  symbol: String!
+
+  "Depicts whether this token is being indexed by the subgraph as a CollateralToken for at least one FinancialContract"
+  indexingAsCollateral: Boolean!
+
+  "Is token whitelisted as collateral"
+  isOnWhitelist: Boolean!
+
+  finalFee: BigDecimal!
+}
+
+interface LongShortPairEvent {
+  id: ID!
+
+  contract: LongShortPairContract!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+}
+
+type TokensCreatedEvent implements LongShortPairEvent @entity {
+  id: ID!
+
+  contract: LongShortPairContract!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  sponsor: String!
+
+  collateralUsed: BigInt!
+
+  tokensMinted: BigInt!
+}
+
+type TokensRedeemedEvent implements LongShortPairEvent @entity {
+  id: ID!
+
+  contract: LongShortPairContract!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  sponsor: String!
+
+  collateralReturned: BigInt!
+
+  tokensRedeemed: BigInt!
+}
+
+type ContractExpiredEvent implements LongShortPairEvent @entity {
+  id: ID!
+
+  contract: LongShortPairContract!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  caller: String!
+}
+
+type PositionSettledEvent implements LongShortPairEvent @entity {
+  id: ID!
+
+  contract: LongShortPairContract!
+
+  tx_hash: String!
+
+  block: BigInt!
+
+  timestamp: BigInt!
+
+  sponsor: String!
+
+  collateralReturned: BigInt!
+
+  longTokens: BigInt!
+
+  shortTokens: BigInt!
+}
