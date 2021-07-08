@@ -2,9 +2,14 @@
   "network": "mainnet",
   "OptimisticOracleDataSources": [
     {
-        "name": "OptimisticOracle",
+        "name": "OptimisticOracle0",
         "address": "0x287a1ba52e030459f163f48b2ae468a085003a07",
         "startBlock": 11876085
+    },
+    {
+      "name": "OptimisticOracle1",
+      "address": "0x9f631aea633be790b45f2d8e91081efcded7d256",
+      "startBlock": 12787123
     }
   ]
 }
