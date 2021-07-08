@@ -1,0 +1,25 @@
+ - name: LongShortPair
+   kind: ethereum/contract
+   network: {{network}}
+   source:
+     abi: LongShortPair
+   mapping:
+     kind: ethereum/events
+     apiVersion: 0.0.4
+     language: wasm/assemblyscript
+     file: ./src/index.ts
+     entities:
+       - LongShortPair
+     abis:
+       - name: LongShortPair
+         file: ./abis/LongShortPair.json
+     eventHandlers:
+       - event: TokensCreated(indexed address,indexed uint256,indexed uint256)
+         handler: handleTokensCreated
+       - event: TokensRedeemed(indexed address,indexed uint256,indexed uint256)
+         handler: handleTokensRedeemed
+       - event: ContractExpired(indexed address)
+         handler: handleContractExpired
+       - event: PositionSettled(indexed address,uint256,uint256,uint256)
+         handler: handlePositionSettled
+      

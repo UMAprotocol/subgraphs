@@ -1,0 +1,25 @@
+{
+  "network": "kovan",
+  "LongShortPairDataSources": [
+    {
+      "name": "LongShortPairCreator0",
+      "address": "0x2344Fe41e66b4DCAD1166b51d4dAD973271D1144",
+      "startBlock": 25841357
+    },
+    {
+      "name": "LongShortPairCreator1",
+      "address": "0xbd3D6914dd21a6BAdEF2beeCB798990e1c4162c6",
+      "startBlock": 25965422
+    },
+    {
+      "name": "LongShortPairCreator3",
+      "address": "0x566f98ECadE3EF95a6c5840621C43F15f403274c",
+      "startBlock": 25970008
+    },
+    {
+      "name": "LongShortPairCreator4",
+      "address": "0xFCac1751012A4A47E6497c3104Cb28C5e4F4faf7",
+      "startBlock": 25970959
+    }
+  ]
+}
