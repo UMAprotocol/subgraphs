@@ -2,9 +2,14 @@
   "network": "mainnet",
   "LongShortPairDataSources": [
     {
-        "name": "LongShortPairCreator0",
-        "address": "0x0b8de441B26E36f461b2748919ed71f50593A67b",
-        "startBlock": 12736035
+      "name": "LongShortPairCreator0",
+      "address": "0x0b8de441B26E36f461b2748919ed71f50593A67b",
+      "startBlock": 12736035
+    },
+    {
+      "name": "LongShortPairCreator1",
+      "address": "0x60F3f5DDE708D097B7F092EFaB2E085AC0a82F42",
+      "startBlock": 12787222
     }
   ]
 }

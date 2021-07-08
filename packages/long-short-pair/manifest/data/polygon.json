@@ -1,11 +1,15 @@
 {
-    "network": "matic",
-    "LongShortPairDataSources": [
-      {
-          "name": "LongShortPairCreator0",
-          "address": "0x3e665D15425fAee14eEF53B9caaa0762b243911a",
-          "startBlock": 16241492
-      }
-    ]
-  }
-  
+  "network": "matic",
+  "LongShortPairDataSources": [
+    {
+      "name": "LongShortPairCreator0",
+      "address": "0x3e665D15425fAee14eEF53B9caaa0762b243911a",
+      "startBlock": 16241492
+    },
+    {
+      "name": "LongShortPairCreator1",
+      "address": "0x62410e96a2ceB4d66824346e3264d1D9107a0aBE",
+      "startBlock": 16641913
+    }
+  ]
+}
