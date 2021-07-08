@@ -1,4 +1,4 @@
-# Optimistic Oracle Subgraph
+# Long Short Pair
 
 ## Deploying the subgraph
 

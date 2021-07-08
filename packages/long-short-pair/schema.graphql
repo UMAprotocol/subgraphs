@@ -5,7 +5,7 @@ type LongShortPairContract @entity {
   priceIdentifier: String
 
   "Factory contract used to create this contract"
-  creator: ContractCreator
+  creator: Bytes!
 
   deploymentTimestamp: BigInt
 
@@ -56,14 +56,6 @@ type LongShortPairContract @entity {
 
   "Contract state of the LSP. Either Open, ExpiredPriceRequested, ExpiredPriceReceived"
   contractState: String
-}
-
-type ContractCreator @entity {
-  "This entity represent a single contract creator. The id is the blockchain address of the Creator"
-  id: ID!
-
-  "List of all the contracts created from this Creator"
-  contractsCreated: [LongShortPairContract!]! @derivedFrom(field: "creator")
 }
 
 type Token @entity {

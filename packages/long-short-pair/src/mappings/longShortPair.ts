@@ -16,33 +16,31 @@ import {
 } from "../../generated/templates/LongShortPair/LongShortPair";
 
 import { toDecimal } from "../utils/decimals";
+import { CONTRACT_EXPIRED_PRICE_REQUESTED, CONTRACT_EXPIRED_PRICE_RECEIVED } from "../utils/constants";
 import { log, Address, BigInt } from "@graphprotocol/graph-ts";
 
-function updateLSP(
+function updateLSPBalances(
   lspAddress: Address,
   collateralChange: BigInt,
   longTokensChange: BigInt,
-  shortTokensChange: BigInt,
-  tokenCollateralAddition: boolean = true,
-  updateContractState: String = null
+  shortTokensChange: BigInt
 ): void {
   let lsp = getOrCreateLongShortPairContract(lspAddress.toHexString());
   let lspContract = LongShortPair.bind(lspAddress);
   let collateralToken = getOrCreateToken(lspContract.collateralToken());
-  if (tokenCollateralAddition) {
-    lsp.totalCollateralLocked = lsp.totalCollateralLocked.plus(toDecimal(collateralChange, collateralToken.decimals));
-    lsp.longTokensOutstanding = lsp.longTokensOutstanding.plus(toDecimal(longTokensChange, collateralToken.decimals));
-    lsp.shortTokensOutstanding = lsp.shortTokensOutstanding.plus(
-      toDecimal(shortTokensChange, collateralToken.decimals)
-    );
-  } else {
-    lsp.totalCollateralLocked = lsp.totalCollateralLocked.minus(toDecimal(collateralChange, collateralToken.decimals));
-    lsp.longTokensOutstanding = lsp.longTokensOutstanding.minus(toDecimal(longTokensChange, collateralToken.decimals));
-    lsp.shortTokensOutstanding = lsp.shortTokensOutstanding.minus(
-      toDecimal(shortTokensChange, collateralToken.decimals)
-    );
-  }
-  if (updateContractState) lsp.contractState = updateContractState.toString();
+
+  lsp.totalCollateralLocked = lsp.totalCollateralLocked.plus(toDecimal(collateralChange, collateralToken.decimals));
+  lsp.longTokensOutstanding = lsp.longTokensOutstanding.plus(toDecimal(longTokensChange, collateralToken.decimals));
+  lsp.shortTokensOutstanding = lsp.shortTokensOutstanding.plus(toDecimal(shortTokensChange, collateralToken.decimals));
+
+  lsp.save();
+}
+
+function updateLSPState(lspAddress: Address, updateContractState: String): void {
+  let lsp = getOrCreateLongShortPairContract(lspAddress.toHexString());
+
+  lsp.contractState = updateContractState.toString();
+
   lsp.save();
 }
 
@@ -57,7 +55,7 @@ export function handleTokensCreated(event: TokensCreated): void {
     event.params.tokensMinted.toString(),
   ]);
 
-  updateLSP(event.address, event.params.collateralUsed, event.params.tokensMinted, event.params.tokensMinted);
+  updateLSPBalances(event.address, event.params.collateralUsed, event.params.tokensMinted, event.params.tokensMinted);
 
   let tokensCreatedEvent = getOrCreateTokensCreatedEvent(event);
   tokensCreatedEvent.contract = event.address.toHexString();
@@ -79,12 +77,11 @@ export function handleTokensRedeemed(event: TokensRedeemed): void {
     event.params.tokensRedeemed.toString(),
   ]);
 
-  updateLSP(
+  updateLSPBalances(
     event.address,
-    event.params.collateralReturned,
-    event.params.tokensRedeemed,
-    event.params.tokensRedeemed,
-    false
+    event.params.collateralReturned.times(BigInt.fromString("-1")),
+    event.params.tokensRedeemed.times(BigInt.fromString("-1")),
+    event.params.tokensRedeemed.times(BigInt.fromString("-1"))
   );
 
   let tokensRedeemedEvent = getOrCreateTokensRedeemedEvent(event);
@@ -102,7 +99,7 @@ export function handleTokensRedeemed(event: TokensRedeemed): void {
 export function handleContractExpired(event: ContractExpired): void {
   log.warning(`ContractExpired on LSP: {} with params: {}`, [event.address.toString(), event.params.caller.toString()]);
 
-  updateLSP(event.address, new BigInt(0), new BigInt(0), new BigInt(0), false, "ExpiredPriceRequested");
+  updateLSPState(event.address, CONTRACT_EXPIRED_PRICE_REQUESTED);
 
   let contractExpiredEvent = getOrCreateContractExpiredEvent(event);
   contractExpiredEvent.contract = event.address.toHexString();
@@ -123,14 +120,14 @@ export function handlePositionSettled(event: PositionSettled): void {
     event.params.shortTokens.toString(),
   ]);
 
-  updateLSP(
+  updateLSPBalances(
     event.address,
-    event.params.collateralReturned,
-    event.params.longTokens,
-    event.params.shortTokens,
-    false,
-    "ExpiredPriceReceived"
+    event.params.collateralReturned.times(BigInt.fromString("-1")),
+    event.params.longTokens.times(BigInt.fromString("-1")),
+    event.params.shortTokens.times(BigInt.fromString("-1"))
   );
+
+  updateLSPState(event.address, CONTRACT_EXPIRED_PRICE_RECEIVED);
 
   let positionSettledEvent = getOrCreatePositionSettledEvent(event);
   positionSettledEvent.contract = event.address.toHexString();

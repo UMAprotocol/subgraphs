@@ -1,2 +1,7 @@
 export { handleCreatedLongShortPair } from "./mappings/LongShortPairCreator";
-export { handleTokensCreated, handleTokensRedeemed } from "./mappings/LongShortPair";
+export {
+  handleTokensCreated,
+  handleTokensRedeemed,
+  handleContractExpired,
+  handlePositionSettled,
+} from "./mappings/LongShortPair";

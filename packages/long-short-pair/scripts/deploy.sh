@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NETWORK=$1
-SUBGRAPH_NAME=$NETWORK'-lsp'
+SUBGRAPH_NAME=$NETWORK'-oo'
 if [ "$STAGING" ]; then
   SUBGRAPH_NAME=$SUBGRAPH_NAME-staging
 fi

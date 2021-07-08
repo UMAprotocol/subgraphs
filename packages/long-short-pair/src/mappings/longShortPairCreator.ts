@@ -4,6 +4,8 @@ import { getOrCreateLongShortPairContract, getOrCreateToken } from "../utils/hel
 
 import { LongShortPair } from "../../generated/templates/LongShortPair/LongShortPair";
 
+import { CONTRACT_OPEN } from "../utils/constants";
+
 import { log } from "@graphprotocol/graph-ts";
 
 // - event: CreatedLongShortPair(indexed address,indexed address,address,address)
@@ -18,9 +20,6 @@ export function handleCreatedLongShortPair(event: CreatedLongShortPair): void {
   ]);
   let contract = getOrCreateLongShortPairContract(event.params.longShortPair.toHexString());
   let lspContract = LongShortPair.bind(event.params.longShortPair);
-
-  //TODO: Add the LSP creator (Factory) to this data type. I'm not exactly sure how to pull this info.
-  // contract.creator = event.address; something like this
 
   let priceIdentifier = lspContract.try_priceIdentifier();
   let expirationTimestamp = lspContract.try_expirationTimestamp();
@@ -46,6 +45,7 @@ export function handleCreatedLongShortPair(event: CreatedLongShortPair): void {
     let shortTokenInstance = getOrCreateToken(shortToken.value, true, true);
     contract.shortToken = shortTokenInstance.id;
   }
+  contract.creator = event.address;
   contract.deploymentTimestamp = event.block.timestamp;
   contract.deployer = event.params.deployerAddress;
   contract.address = event.params.longShortPair;
@@ -63,6 +63,6 @@ export function handleCreatedLongShortPair(event: CreatedLongShortPair): void {
     ? null
     : optimisticOracleLivenessTime.value;
 
-  contract.contractState = "Open";
+  contract.contractState = CONTRACT_OPEN;
   contract.save();
 }
