@@ -381,6 +381,9 @@ export function handleLiquidationDisputed(event: LiquidationDisputed): void {
 
   updateSponsorPositionAndEMP(event.address, event.params.sponsor);
 
+  let emp = getOrCreateFinancialContract(event.address.toHexString());
+  let collateralToken = getOrCreateToken(Address.fromString(emp.collateralToken));
+
   liquidationEvent.tx_hash = event.transaction.hash.toHexString();
   liquidationEvent.block = event.block.number;
   liquidationEvent.timestamp = event.block.timestamp;
@@ -394,7 +397,7 @@ export function handleLiquidationDisputed(event: LiquidationDisputed): void {
 
   liquidation.status = LIQUIDATION_PENDING_DISPUTE;
   liquidation.disputer = event.params.disputer;
-  liquidation.disputeBondAmount = toDecimal(event.params.disputeBondAmount);
+  liquidation.disputeBondAmount = toDecimal(event.params.disputeBondAmount, collateralToken.decimals);
 
   liquidationEvent.save();
   liquidation.save();
