@@ -10,6 +10,11 @@
       "name": "LongShortPairCreator1",
       "address": "0x62410e96a2ceB4d66824346e3264d1D9107a0aBE",
       "startBlock": 16641913
+    },
+    {
+      "name": "LongShortPairCreator2",
+      "address": "0x5Fd7FFF20Ee851cD7bEE72fB3C6d324e4C104c9f",
+      "startBlock": 16775174
     }
   ]
 }
