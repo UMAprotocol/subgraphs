@@ -15,6 +15,7 @@ import {
 import { EMP_CREATORS, PERP_CREATORS } from "../utils/constants";
 import { toDecimal } from "../utils/decimals";
 import { log, BigInt } from "@graphprotocol/graph-ts";
+import { Token } from "../../generated/schema";
 
 // - event: NewContractRegistered(indexed address,indexed address,address[])
 //   handler: handleNewContractRegistered
@@ -79,13 +80,15 @@ export function handleCreatedExpiringMultiParty(event: CreatedExpiringMultiParty
   let withdrawalLiveness = empContract.try_withdrawalLiveness();
   let liquidationLiveness = empContract.try_liquidationLiveness();
 
+  let collateralToken: Token = null;
   if (!collateral.reverted) {
-    let collateralToken = getOrCreateToken(collateral.value, true, true);
+    collateralToken = getOrCreateToken(collateral.value, true, true);
     contract.collateralToken = collateralToken.id;
   }
 
+  let syntheticToken: Token = null;
   if (!synthetic.reverted) {
-    let syntheticToken = getOrCreateToken(synthetic.value, true, false);
+    syntheticToken = getOrCreateToken(synthetic.value, true, false);
     contract.syntheticToken = syntheticToken.id;
   }
 
@@ -93,7 +96,7 @@ export function handleCreatedExpiringMultiParty(event: CreatedExpiringMultiParty
   contract.deployer = event.params.deployerAddress;
   contract.address = event.params.expiringMultiPartyAddress;
   contract.priceIdentifier = priceIdentifier.reverted ? null : priceIdentifier.value.toString();
-  contract.minSponsorTokens = minSponsorTokens.reverted ? null : toDecimal(minSponsorTokens.value);
+  contract.minSponsorTokens = (minSponsorTokens.reverted || !syntheticToken) ? null : toDecimal(minSponsorTokens.value, syntheticToken.decimals);
   contract.disputeBondPercentage = disputeBondPercentage.reverted
     ? disputeBondPct.reverted
       ? null
@@ -113,9 +116,9 @@ export function handleCreatedExpiringMultiParty(event: CreatedExpiringMultiParty
   contract.liquidationLiveness = liquidationLiveness.reverted ? null : liquidationLiveness.value;
   contract.collateralRequirement = requirement.reverted ? null : toDecimal(requirement.value);
   contract.expirationTimestamp = expiration.reverted ? null : expiration.value;
-  contract.totalTokensOutstanding = totalOutstanding.reverted ? null : toDecimal(totalOutstanding.value);
+  contract.totalTokensOutstanding = (totalOutstanding.reverted || !syntheticToken) ? null : toDecimal(totalOutstanding.value, syntheticToken.decimals);
   contract.cumulativeFeeMultiplier = feeMultiplier.reverted ? null : toDecimal(feeMultiplier.value);
-  contract.rawTotalPositionCollateral = rawCollateral.reverted ? null : toDecimal(rawCollateral.value);
+  contract.rawTotalPositionCollateral = (rawCollateral.reverted || !collateralToken) ? null : toDecimal(rawCollateral.value, collateralToken.decimals);
 
   contract.globalCollateralizationRatio = calculateGCR(
     contract.rawTotalPositionCollateral,
@@ -152,13 +155,15 @@ export function handleCreatedPerpetual(event: CreatedPerpetual): void {
   let withdrawalLiveness = perpetualContract.try_withdrawalLiveness();
   let liquidationLiveness = perpetualContract.try_liquidationLiveness();
 
+  let collateralToken: Token = null;
   if (!collateral.reverted) {
-    let collateralToken = getOrCreateToken(collateral.value, true, true);
+    collateralToken = getOrCreateToken(collateral.value, true, true);
     contract.collateralToken = collateralToken.id;
   }
 
+  let syntheticToken: Token = null;
   if (!synthetic.reverted) {
-    let syntheticToken = getOrCreateToken(synthetic.value, true, false);
+    syntheticToken = getOrCreateToken(synthetic.value, true, false);
     contract.syntheticToken = syntheticToken.id;
   }
 
@@ -166,7 +171,7 @@ export function handleCreatedPerpetual(event: CreatedPerpetual): void {
   contract.deployer = event.params.deployerAddress;
   contract.address = event.params.perpetualAddress;
   contract.priceIdentifier = priceIdentifier.reverted ? null : priceIdentifier.value.toString();
-  contract.minSponsorTokens = minSponsorTokens.reverted ? null : toDecimal(minSponsorTokens.value);
+  contract.minSponsorTokens = (minSponsorTokens.reverted || !syntheticToken) ? null : toDecimal(minSponsorTokens.value, syntheticToken.decimals);
   contract.disputeBondPercentage = disputeBondPercentage.reverted ? null : toDecimal(disputeBondPercentage.value);
   contract.sponsorDisputeRewardPercentage = sponsorDisputeRewardPercentage.reverted
     ? null
@@ -177,12 +182,12 @@ export function handleCreatedPerpetual(event: CreatedPerpetual): void {
   contract.withdrawalLiveness = withdrawalLiveness.reverted ? null : withdrawalLiveness.value;
   contract.liquidationLiveness = liquidationLiveness.reverted ? null : liquidationLiveness.value;
   contract.collateralRequirement = requirement.reverted ? null : toDecimal(requirement.value);
-  contract.totalTokensOutstanding = totalOutstanding.reverted ? null : toDecimal(totalOutstanding.value);
+  contract.totalTokensOutstanding = (totalOutstanding.reverted || !syntheticToken) ? null : toDecimal(totalOutstanding.value, syntheticToken.decimals);
   contract.cumulativeFeeMultiplier = feeMultiplier.reverted ? null : toDecimal(feeMultiplier.value);
   contract.cumulativeFundingRateMultiplier = fundingRateData.reverted
     ? null
     : toDecimal(fundingRateData.value.value2.rawValue);
-  contract.rawTotalPositionCollateral = rawCollateral.reverted ? null : toDecimal(rawCollateral.value);
+  contract.rawTotalPositionCollateral = (rawCollateral.reverted || !collateralToken) ? null : toDecimal(rawCollateral.value, collateralToken.decimals);
 
   contract.globalCollateralizationRatio = calculateGCR(
     contract.rawTotalPositionCollateral,
