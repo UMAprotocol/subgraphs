@@ -1,9 +1,14 @@
 {
   "network": "kovan",
-  "votingTokenAddress": "0x489Bf230d4Ab5c2083556E394a28276C22c3B580",
   "votingTokenStartBlock": 20185622,
   "identifierWhitelistAddress": "0x7b3c4D3B6a4eB3259DAfc8416981131E870f85a7",
   "identifierWhitelistStartBlock": 25189527,
+  "registryAddress": "0x7b1c04D2826B140779e2B97d5783AF05cf00Fbab",
+  "registryStartBlock": 20185622,
+  "addressWhitelistAddress": "0xf8bdab5d675f76ed863ff9fa35b129a6e43e71ca",
+  "addressWhitelistStartBlock": 20185676,
+  "storeAddress": "0x41af40eb92bec4dd8da77103597838b3dbbd3b6f",
+  "storeStartBlock": 20185644,
   "VotingDataSources": [
     {
       "name": "Voting",
