@@ -7,8 +7,6 @@
   "registryStartBlock": 9937650,
   "addressWhitelistAddress": "0xdbf90434df0b98219f87d112f37d74b1d90758c7",
   "addressWhitelistStartBlock": 10484890,
-  "storeAddress": "0x54f44ea3d2e7aa0ac089c4d8f7c93c27844057bf",
-  "storeStartBlock": 9937562,
   "VotingDataSources": [
     {
       "name": "Voting",
@@ -29,6 +27,12 @@
       "abi": "VotingAncillary",
       "address": "0x8b1631ab830d11531ae83725fda4d86012eccd77",
       "startBlock": 11876839
+    }
+  ],
+  "StoreDataSources": [
+    {
+      "address": "0x54f44ea3d2e7aa0ac089c4d8f7c93c27844057bf",
+      "startBlock": 9937562
     }
   ]
 }

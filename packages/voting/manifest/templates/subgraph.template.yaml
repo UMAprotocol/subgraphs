@@ -56,28 +56,9 @@ dataSources:
           handler: handleAddedToWhitelist
         - event: RemovedFromWhitelist(indexed address)
           handler: handleRemovedFromWhitelist
-  - kind: ethereum/contract
-    name: Store
-    network: {{network}}
-    source:
-      address: "{{storeAddress}}"
-      abi: Store
-      startBlock: {{storeStartBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      file: ./src/index.ts
-      entities:
-        - Collateral
-      abis:
-        - name: Store
-          file: ./abis/Store.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-      callHandlers:
-        - function: setFinalFee(address,(uint256))
-          handler: handleSetFinalFee
+{{#StoreDataSources}}
+  {{> Store.template.yaml}}
+{{/StoreDataSources}}
   - kind: ethereum/contract
     name: Registry
     network: {{network}}

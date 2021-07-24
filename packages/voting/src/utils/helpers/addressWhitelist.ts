@@ -1,8 +1,7 @@
 import { Collateral } from "../../../generated/schema";
-import { ERC20 } from "../../../generated/templates/AddressWhitelist/ERC20";
+import { ERC20 } from "../../../generated/AddressWhitelist/ERC20";
 import { Address } from "@graphprotocol/graph-ts";
 import { DEFAULT_DECIMALS } from "../decimals";
-import { BIGDECIMAL_ZERO } from "../constants";
 
 export function getOrCreateCollateral(
     tokenAddress: Address,
@@ -14,7 +13,6 @@ export function getOrCreateCollateral(
   
     if (token == null) {
       token = new Collateral(addressString);
-      token.address = tokenAddress;
   
       let erc20Token = ERC20.bind(tokenAddress);
   
@@ -26,12 +24,16 @@ export function getOrCreateCollateral(
       token.name = !tokenName.reverted ? tokenName.value : "";
       token.symbol = !tokenSymbol.reverted ? tokenSymbol.value : "";
       token.isOnWhitelist = false;
-      token.finalFee = BIGDECIMAL_ZERO;
   
       if (setOnWhitelist) {
-        token.isOnWhitelist = setOnWhitelist;
+        token.isOnWhitelist = true;
       }
   
+      token.save();
+    }
+
+    if (setOnWhitelist && !token.isOnWhitelist) {
+      token.isOnWhitelist = true;
       token.save();
     }
   

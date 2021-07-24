@@ -19,8 +19,6 @@ type Collateral @entity {
   "Represents approved collateral that is whitelisted in the AddressWhitelist and whose fees are set in the Store. Id of the entity is its address"
   id: ID!
 
-  address: Bytes!
-
   decimals: Int!
 
   name: String!
@@ -30,7 +28,7 @@ type Collateral @entity {
   "Is token currently whitelisted as collateral"
   isOnWhitelist: Boolean!
 
-  finalFee: BigDecimal!
+  finalFee: BigDecimal
 }
 
 type PriceIdentifier @entity {
