@@ -10,3 +10,7 @@ export {
 } from "./voting";
 
 export { getOrCreatePriceIdentifier } from "./identifierWhitelist";
+
+export { getOrCreateCollateral } from "./addressWhitelist";
+
+export { getOrCreateFinancialContract } from "./registry";

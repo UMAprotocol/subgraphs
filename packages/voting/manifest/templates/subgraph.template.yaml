@@ -92,7 +92,6 @@ dataSources:
       file: ./src/index.ts
       entities:
         - FinancialContract
-        - ContractCreator
       abis:
         - name: Registry
           file: ./abis/Registry.json
