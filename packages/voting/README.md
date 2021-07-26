@@ -14,3 +14,5 @@ Failed to start subgraph, code: SubgraphStartFailure, error: expected triggers a
 ```
 
 This error means that the network (Polygon in this case) does not support traces, so you cannot deploy a subgraph that relies on `callHandlers` or `blockHandlers` with call filters.
+
+Our current solution simply ignores `Store` events for specific networks, like Polygon.
