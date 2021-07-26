@@ -1,0 +1,13 @@
+{
+    "network": "matic",
+    "identifierWhitelistAddress": "0x2271a5E74eA8A29764ab10523575b41AA52455f0",
+    "identifierWhitelistStartBlock": 14487554,
+    "registryAddress": "0x5f25b1647fa8eaea0e15edd413c7afcbe613b6f4",
+    "registryStartBlock": 16894785,
+    "addressWhitelistAddress": "0x1020Ae36548ab28Bc0c41Fd2a08D24132C82cc55",
+    "addressWhitelistStartBlock": 14488536,
+    "VotingDataSources": [],
+    "VotingAncillaryDataSources": [],
+    "StoreDataSources": []
+  }
+  

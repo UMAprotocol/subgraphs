@@ -15,6 +15,22 @@ type User @entity {
   votesRevealed: [RevealedVote!]! @derivedFrom(field: "voter")
 }
 
+type Collateral @entity {
+  "Represents approved collateral that is whitelisted in the AddressWhitelist and whose fees are set in the Store. Id of the entity is its address"
+  id: ID!
+
+  decimals: Int!
+
+  name: String!
+
+  symbol: String!
+
+  "Is token currently whitelisted as collateral"
+  isOnWhitelist: Boolean!
+
+  finalFee: BigDecimal
+}
+
 type PriceIdentifier @entity {
   id: ID!
 
@@ -216,4 +232,14 @@ type RewardsClaimed @entity {
 
   "NumTokens will be 0 if the claim is not 'valid'. This can happen if the function was called for a voter who didn't get the correct vote for example."
   numTokens: BigInt!
+}
+
+type FinancialContract @entity {
+  "This entity represents a contract that can make price requests to the DVM. ID is address of the contract"
+  id: ID!
+
+  "Creator who registered this contract"
+  creator: Bytes!
+
+  registrationTimestamp: BigInt!
 }

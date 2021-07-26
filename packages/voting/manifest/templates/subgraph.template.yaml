@@ -32,3 +32,50 @@ dataSources:
           handler: handleSupportedIdentifierAdded
         - event: SupportedIdentifierRemoved(indexed bytes32)
           handler: handleSupportedIdentifierRemoved
+  - kind: ethereum/contract
+    name: AddressWhitelist
+    network: {{network}}
+    source:
+      address: "{{addressWhitelistAddress}}"
+      abi: AddressWhitelist
+      startBlock: {{addressWhitelistStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/index.ts
+      entities:
+        - Collateral
+      abis:
+        - name: AddressWhitelist
+          file: ./abis/AddressWhitelist.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: AddedToWhitelist(indexed address)
+          handler: handleAddedToWhitelist
+        - event: RemovedFromWhitelist(indexed address)
+          handler: handleRemovedFromWhitelist
+{{#StoreDataSources}}
+  {{> Store.template.yaml}}
+{{/StoreDataSources}}
+  - kind: ethereum/contract
+    name: Registry
+    network: {{network}}
+    source:
+      address: "{{registryAddress}}"
+      abi: Registry
+      startBlock: {{registryStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/index.ts
+      entities:
+        - FinancialContract
+      abis:
+        - name: Registry
+          file: ./abis/Registry.json
+      eventHandlers:
+        - event: NewContractRegistered(indexed address,indexed address,address[])
+          handler: handleNewContractRegistered
