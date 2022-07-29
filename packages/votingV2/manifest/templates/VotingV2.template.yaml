@@ -1,0 +1,27 @@
+- kind: ethereum/contract
+  name: {{name}}
+  network: {{network}}
+  source:
+    address: "{{address}}"
+    abi: VotingV2
+    startBlock: {{startBlock}}
+  mapping:
+    kind: ethereum/events
+    apiVersion: 0.0.6
+    language: wasm/assemblyscript
+    file: ./src/index.ts
+    entities:
+      - CommittedVote
+      - RevealedVote
+      - PriceRequest
+      - User
+      - PriceIdentifier
+      - Store
+    abis:
+      - name: VotingV2
+        file: ./abis/VotingV2.json
+      - name: VotingToken
+        file: ./abis/VotingToken.json
+    eventHandlers:
+      - event: PriceRequestAdded(address,indexed uint256,indexed bytes32,indexed uint256,uint256,bytes,bool)
+        handler: handlePriceRequestAdded
