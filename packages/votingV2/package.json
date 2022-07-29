@@ -1,0 +1,38 @@
+{
+  "name": "votingV2-subgraph",
+  "version": "0.1.0",
+  "description": "Voting Contract Events Subgraph",
+  "scripts": {
+    "ganache": "ganache-cli -h 0.0.0.0",
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "prepare:goerli": "scripts/build-manifest.sh goerli && yarn codegen && yarn build",
+    "prepare:mainnet": "scripts/build-manifest.sh mainnet && yarn codegen && yarn build",
+    "prepare:kovan": "scripts/build-manifest.sh kovan && yarn codegen && yarn build",
+    "prepare:polygon": "scripts/build-manifest.sh polygon && yarn codegen && yarn build",
+    "deploy:kovan": "env STAGING=true scripts/deploy.sh kovan",
+    "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",
+    "deploy:polygon": "env STAGING=true scripts/deploy.sh polygon",
+    "deploy-prod:kovan": "scripts/deploy.sh kovan",
+    "deploy-prod:mainnet": "scripts/deploy.sh mainnet",
+    "deploy-prod:polygon": "scripts/deploy.sh polygon",
+    "create:local:goerli": "graph create md0x/local-goerli --node http://127.0.0.1:8020",
+    "deploy:local:goerli": "graph deploy md0x/local-goerli --ipfs http://127.0.0.1:5001 --node http://127.0.0.1:8020"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UMAprotocol/subgraphs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/UMAprotocol/subgraphs/issues"
+  },
+  "homepage": "https://github.com/UMAprotocol/subgraphs#readme",
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.20.0",
+    "@graphprotocol/graph-ts": "^0.20.0",
+    "mustache": "^4.2.0"
+  }
+}

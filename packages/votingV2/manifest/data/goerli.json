@@ -1,0 +1,23 @@
+{
+  "network": "goerli",
+  "votingTokenStartBlock": 7311523,
+  "identifierWhitelistAddress": "0x488211B646b909C490d942f456481BeAE52fde27",
+  "identifierWhitelistStartBlock": 7311333,
+  "registryAddress": "0x9214454Ff30410a1558b8749Ab3FB0fD6F942539",
+  "registryStartBlock": 7311327,
+  "addressWhitelistAddress": "0x63fDfF29EBBcf1a958032d1E64F7627c3C98A059",
+  "addressWhitelistStartBlock": 7311343,
+  "VotingDataSources": [
+    {
+      "name": "Voting",
+      "address": "0x038e789392f8B3F5dF8e5974Ea25575BA9d63730",
+      "startBlock": 7311557
+    }
+  ],
+  "StoreDataSources": [
+    {
+      "address": "0x07417cA264170Fc5bD3568f93cFb956729752B61",
+      "startBlock": 7311339
+    }
+  ]
+}

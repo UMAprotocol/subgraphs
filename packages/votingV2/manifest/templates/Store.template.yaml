@@ -1,0 +1,22 @@
+- kind: ethereum/contract
+  name: Store
+  network: {{network}}
+  source:
+    address: "{{address}}"
+    abi: Store
+    startBlock: {{startBlock}}
+  mapping:
+    kind: ethereum/events
+    apiVersion: 0.0.6
+    language: wasm/assemblyscript
+    file: ./src/index.ts
+    entities:
+      - Collateral
+    abis:
+      - name: Store
+        file: ./abis/Store.json
+      - name: ERC20
+        file: ./abis/ERC20.json
+    callHandlers:
+      - function: setFinalFee(address,(uint256))
+        handler: handleSetFinalFee
