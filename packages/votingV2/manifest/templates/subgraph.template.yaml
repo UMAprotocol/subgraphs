@@ -19,7 +19,7 @@ dataSources:
       startBlock: {{identifierWhitelistStartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.4
       language: wasm/assemblyscript
       file: ./src/index.ts
       entities:
@@ -41,7 +41,7 @@ dataSources:
       startBlock: {{addressWhitelistStartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.4
       language: wasm/assemblyscript
       file: ./src/index.ts
       entities:
@@ -68,7 +68,7 @@ dataSources:
       startBlock: {{registryStartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.4
       language: wasm/assemblyscript
       file: ./src/index.ts
       entities:

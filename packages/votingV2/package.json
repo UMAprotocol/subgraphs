@@ -11,13 +11,12 @@
     "prepare:kovan": "scripts/build-manifest.sh kovan && yarn codegen && yarn build",
     "prepare:polygon": "scripts/build-manifest.sh polygon && yarn codegen && yarn build",
     "deploy:kovan": "env STAGING=true scripts/deploy.sh kovan",
+    "deploy:goerli": "env STAGING=true scripts/deploy.sh goerli",
     "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",
     "deploy:polygon": "env STAGING=true scripts/deploy.sh polygon",
     "deploy-prod:kovan": "scripts/deploy.sh kovan",
     "deploy-prod:mainnet": "scripts/deploy.sh mainnet",
-    "deploy-prod:polygon": "scripts/deploy.sh polygon",
-    "create:local:goerli": "graph create md0x/local-goerli --node http://127.0.0.1:8020",
-    "deploy:local:goerli": "graph deploy md0x/local-goerli --ipfs http://127.0.0.1:5001 --node http://127.0.0.1:8020"
+    "deploy-prod:polygon": "scripts/deploy.sh polygon"
   },
   "repository": {
     "type": "git",

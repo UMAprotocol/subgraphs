@@ -1,12 +1,12 @@
 #!/bin/bash
 
 NETWORK=$1
-SUBGRAPH_NAME=$NETWORK'-voting'
+SUBGRAPH_NAME=$NETWORK'-voting-v2'
 if [ "$STAGING" ]; then
   SUBGRAPH_NAME=$SUBGRAPH_NAME-staging
 fi
 if [ "$STAGING" ]; then
-  NAMESPACE="nicholaspai"
+  NAMESPACE="md0x"
 else 
   NAMESPACE="umaprotocol"
 fi

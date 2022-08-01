@@ -1,18 +1,10 @@
 export {
-  handleVoteRevealed,
-  handleVoteCommitted,
+  // handleVoteRevealed,
+  // handleVoteCommitted,
   handlePriceRequestAdded,
-  handlePriceResolved,
-  handleRewardsRetrieved,
+  // handlePriceResolved,
+  // handleRewardsRetrieved,
 } from "./mappings/votingV2";
-
-export {
-  handlePriceRequestAdded as handlePriceRequestAddedAncillary,
-  handleVoteRevealed as handleVoteRevealedAncillary,
-  handleVoteCommitted as handleVoteCommittedAncillary,
-  handlePriceResolved as handlePriceResolvedAncillary,
-  handleRewardsRetrieved as handleRewardsRetrievedAncillary,
-} from "./mappings/votingAncillary";
 
 export { handleSupportedIdentifierAdded, handleSupportedIdentifierRemoved } from "./mappings/identifierWhitelist";
 

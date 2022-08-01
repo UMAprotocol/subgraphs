@@ -1,17 +1,5 @@
 # VotingV2 Subgraph
 
-## Running the subgraph locally
-
-Create a new .env file in the root directory of the subgraph and add your INFURA_API_KEY
-Then run `docker-compose up`
-
-Once you graph-noder is ready run the following commands to create the goerli local sugraph and deploy it to the node:
-
-```
-yarn create:local:goerli
-yarn deploy:local:goerli
-```
-
 ## Deploying the subgraph
 
 - Mainnet: `yarn prepare:mainnet && yarn deploy:mainnet`
