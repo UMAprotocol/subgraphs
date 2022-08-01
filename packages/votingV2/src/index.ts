@@ -1,8 +1,8 @@
 export {
   // handleVoteRevealed,
-  handleVoteCommitted,
+  // handleVoteCommitted,
   handlePriceRequestAdded,
-  handlePriceResolved,
+  // handlePriceResolved,
   // handleRewardsRetrieved,
 } from "./mappings/votingV2";
 
