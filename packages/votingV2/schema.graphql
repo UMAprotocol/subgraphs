@@ -82,6 +82,9 @@ type PriceRequest @entity {
 
   "List of all the rewards claimed events for this request"
   rewardsClaimed: [RewardsClaimed!]! @derivedFrom(field: "request")
+
+  "Is this request a governance action"
+  isGovernance: Boolean!
 }
 
 type PriceRequestRound @entity {
