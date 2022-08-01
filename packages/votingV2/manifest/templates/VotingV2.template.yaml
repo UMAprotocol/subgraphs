@@ -25,3 +25,7 @@
     eventHandlers:
       - event: PriceRequestAdded(address,indexed uint256,indexed bytes32,indexed uint256,uint256,bytes,bool)
         handler: handlePriceRequestAdded
+      - event: VoteCommitted(indexed address,indexed address,uint256,indexed bytes32,uint256,bytes)
+        handler: handleVoteCommitted
+      - event: PriceResolved(indexed uint256,indexed bytes32,uint256,int256,bytes)
+        handler: handlePriceResolved
