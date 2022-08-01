@@ -1,5 +1,11 @@
-import { PriceRequestAdded, PriceResolved, VoteCommitted, VoteRevealed } from "../../generated/Voting/VotingV2";
-import { VoterGroup } from "../../generated/schema";
+import {
+  PriceRequestAdded,
+  PriceResolved,
+  VoteCommitted,
+  VoteRevealed,
+  VotingV2,
+} from "../../generated/Voting/VotingV2";
+import { PriceRequestRound, VoterGroup } from "../../generated/schema";
 import {
   getOrCreateUser,
   getOrCreateCommittedVote,
@@ -44,55 +50,59 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
 //   handler: handlePriceResolved
 //  event PriceResolved(uint256 indexed roundId, bytes32 indexed identifier, uint256 time, int256 price);
 
-// export function handlePriceResolved(event: PriceResolved): void {
-//   log.warning(`Price Resolved params: {},{},{}`, [
-//     event.params.time.toString(),
-//     event.params.identifier.toString(),
-//     event.params.roundId.toString(),
-//   ]);
-//   let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
-//   let request = getOrCreatePriceRequest(requestId);
+export function handlePriceResolved(event: PriceResolved): void {
+  log.warning(`Price Resolved params: {},{},{}`, [
+    event.params.time.toString(),
+    event.params.identifier.toString(),
+    event.params.roundId.toString(),
+  ]);
+  let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
+  let request = getOrCreatePriceRequest(requestId);
 
-//   log.warning(`Fetched Price Request Entity: {},{},{}`, [
-//     request.time.toString(),
-//     request.latestRound,
-//     request.identifier,
-//   ]);
-//   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
-//   let groupId = requestRound.id.concat("-").concat(event.params.price.toString());
-//   let voterGroup = getOrCreateVoterGroup(groupId);
-//   let votingContract = Voting.bind(event.address);
-//   let roundInfo = votingContract.try_rounds(event.params.roundId);
+  log.warning(`Fetched Price Request Entity: {},{},{}`, [
+    request.time.toString(),
+    request.latestRound,
+    request.identifier,
+  ]);
+  let requestRound: PriceRequestRound = getOrCreatePriceRequestRound(
+    requestId.concat("-").concat(event.params.roundId.toString())
+  );
+  let groupId = requestRound.id.concat("-").concat(event.params.price.toString());
+  let voterGroup = getOrCreateVoterGroup(groupId);
+  let votingContract = VotingV2.bind(event.address);
+  let roundInfo = votingContract.try_rounds(event.params.roundId);
 
-//   request.latestRound = requestRound.id;
-//   request.price = event.params.price;
-//   request.resolutionTransaction = event.transaction.hash;
-//   request.resolutionTimestamp = event.block.timestamp;
-//   request.resolutionBlock = event.block.number;
-//   request.isResolved = true;
+  request.latestRound = requestRound.id;
+  request.price = event.params.price;
+  request.resolutionTransaction = event.transaction.hash;
+  request.resolutionTimestamp = event.block.timestamp;
+  request.resolutionBlock = event.block.number;
+  request.isResolved = true;
 
-//   voterGroup.won = true;
+  voterGroup.won = true;
 
-//   requestRound.request = request.id;
-//   requestRound.identifier = event.params.identifier.toString();
-//   requestRound.time = event.params.time;
-//   requestRound.roundId = event.params.roundId;
-//   requestRound.votersEligibleForRewardsRatio = voterGroup.votersAmount / requestRound.votersAmount;
-//   requestRound.votersEligibleForRewardsPercentage = requestRound.votersEligibleForRewardsRatio * BIGDECIMAL_HUNDRED;
-//   requestRound.winnerGroup = voterGroup.id;
-//   requestRound.inflationRateRaw = roundInfo.reverted
-//     ? requestRound.inflationRateRaw
-//     : toDecimal(roundInfo.value.value1.rawValue);
-//   requestRound.gatPercentageRaw = roundInfo.reverted
-//     ? requestRound.gatPercentageRaw
-//     : toDecimal(roundInfo.value.value2.rawValue);
-//   requestRound.inflationRate = requestRound.inflationRateRaw * BIGDECIMAL_HUNDRED;
-//   requestRound.gatPercentage = requestRound.gatPercentageRaw * BIGDECIMAL_HUNDRED;
+  requestRound.request = request.id;
+  requestRound.identifier = event.params.identifier.toString();
+  requestRound.time = event.params.time;
+  requestRound.roundId = event.params.roundId;
+  requestRound.votersEligibleForRewardsRatio = voterGroup.votersAmount.div(requestRound.votersAmount);
 
-//   requestRound.save();
-//   request.save();
-//   voterGroup.save();
-// }
+  requestRound.votersEligibleForRewardsPercentage =
+    requestRound.votersEligibleForRewardsRatio.times(BIGDECIMAL_HUNDRED);
+  requestRound.winnerGroup = voterGroup.id;
+  requestRound.inflationRateRaw = roundInfo.reverted
+    ? requestRound.inflationRateRaw
+    : toDecimal(roundInfo.value.value0);
+  requestRound.gatPercentageRaw = roundInfo.reverted
+    ? requestRound.gatPercentageRaw
+    : toDecimal(roundInfo.value.value1);
+  requestRound.inflationRate = requestRound.inflationRateRaw.times(BIGDECIMAL_HUNDRED);
+  requestRound.gatPercentage = requestRound.gatPercentageRaw.times(BIGDECIMAL_HUNDRED);
+
+  requestRound.save();
+  request.save();
+  voterGroup.save();
+}
 
 // - event: RewardsRetrieved(indexed address,indexed uint256,indexed bytes32,uint256,uint256)
 //   handler: handleRewardsRetrieved
@@ -221,7 +231,7 @@ export function handleVoteCommitted(event: VoteCommitted): void {
 //   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
 //   let groupId = requestRound.id.concat("-").concat(event.params.price.toString());
 //   let voterGroup = getOrCreateVoterGroup(groupId);
-//   let votingContract = Voting.bind(event.address);
+//   let votingContract = VotingV2.bind(event.address);
 //   let roundInfo = votingContract.try_rounds(event.params.roundId);
 
 //   vote.voter = voter.id;
