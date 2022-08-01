@@ -28,6 +28,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   request.latestRound = requestRound.id;
   request.time = event.params.time;
 
+  request.isGovernance = event.params.isGovernance;
   requestRound.request = request.id;
   requestRound.identifier = event.params.identifier.toString();
   requestRound.time = event.params.time;
@@ -164,35 +165,35 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
 //   handler: handleVoteCommitted
 //  event VoteCommitted(address indexed voter, uint256 indexed roundId, bytes32 indexed identifier, uint256 time);
 
-// export function handleVoteCommitted(event: VoteCommitted): void {
-//   let voteId = event.params.voter
-//     .toHexString()
-//     .concat("-")
-//     .concat(event.params.identifier.toString())
-//     .concat("-")
-//     .concat(event.params.time.toString())
-//     .concat("-")
-//     .concat(event.params.roundId.toString());
-//   let vote = getOrCreateCommittedVote(voteId);
-//   let voter = getOrCreateUser(event.params.voter);
-//   let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
-//   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
+export function handleVoteCommitted(event: VoteCommitted): void {
+  let voteId = event.params.voter
+    .toHexString()
+    .concat("-")
+    .concat(event.params.identifier.toString())
+    .concat("-")
+    .concat(event.params.time.toString())
+    .concat("-")
+    .concat(event.params.roundId.toString());
+  let vote = getOrCreateCommittedVote(voteId);
+  let voter = getOrCreateUser(event.params.voter);
+  let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
+  let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
 
-//   vote.voter = voter.id;
-//   vote.request = requestId;
-//   vote.identifier = event.params.identifier.toString();
-//   vote.time = event.params.time;
-//   vote.round = requestRound.id;
+  vote.voter = voter.id;
+  vote.request = requestId;
+  vote.identifier = event.params.identifier.toString();
+  vote.time = event.params.time;
+  vote.round = requestRound.id;
 
-//   requestRound.request = requestId;
-//   requestRound.identifier = event.params.identifier.toString();
-//   requestRound.time = event.params.time;
-//   requestRound.roundId = event.params.roundId;
+  requestRound.request = requestId;
+  requestRound.identifier = event.params.identifier.toString();
+  requestRound.time = event.params.time;
+  requestRound.roundId = event.params.roundId;
 
-//   requestRound.save();
-//   vote.save();
-//   voter.save();
-// }
+  requestRound.save();
+  vote.save();
+  voter.save();
+}
 
 // - event: VoteRevealed(indexed address,indexed uint256,indexed bytes32,uint256,int256,uint256)
 //   handler: handleVoteRevealed
