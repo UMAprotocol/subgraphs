@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NETWORK=$1
-SUBGRAPH_NAME=$NETWORK'-voting-v2'
+SUBGRAPH_NAME=$NETWORK'-votingv2'
 if [ "$STAGING" ]; then
   SUBGRAPH_NAME=$SUBGRAPH_NAME-staging
 fi

@@ -21,9 +21,16 @@ import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE, BIGINT
 
 import { log, BigInt, BigDecimal } from "@graphprotocol/graph-ts";
 
-// - event: PriceRequestAdded(indexed uint256,indexed bytes32,uint256)
-//   handler: handlePriceRequestAdded
-//  event PriceRequestAdded(uint256 indexed roundId, bytes32 indexed identifier, uint256 time);
+// - event: PriceRequestAdded(address,indexed uint256,indexed bytes32,indexed uint256,uint256,bytes,bool)
+// event PriceRequestAdded(
+//   address requester,
+//   uint256 indexed roundId,
+//   bytes32 indexed identifier,
+//   uint256 indexed time,
+//   uint256 requestIndex, TODO check if we can use this
+//   bytes ancillaryData, TODO check if we can use this
+//   bool isGovernance
+// );
 
 export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
@@ -46,9 +53,14 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   request.save();
 }
 
-// - event: PriceResolved(indexed uint256,indexed bytes32,uint256,int256)
-//   handler: handlePriceResolved
-//  event PriceResolved(uint256 indexed roundId, bytes32 indexed identifier, uint256 time, int256 price);
+// - event: PriceResolved(indexed uint256,indexed bytes32,uint256,int256,bytes)
+// event PriceResolved(
+//   uint256 indexed roundId,
+//   bytes32 indexed identifier,
+//   uint256 time,
+//   int256 price,
+//   bytes ancillaryData TODO check if we want to use this
+// );
 
 export function handlePriceResolved(event: PriceResolved): void {
   log.warning(`Price Resolved params: {},{},{}`, [
@@ -104,9 +116,15 @@ export function handlePriceResolved(event: PriceResolved): void {
   voterGroup.save();
 }
 
-// - event: VoteCommitted(indexed address,indexed uint256,indexed bytes32,uint256)
-//   handler: handleVoteCommitted
-//  event VoteCommitted(address indexed voter, uint256 indexed roundId, bytes32 indexed identifier, uint256 time);
+// - event: VoteCommitted(indexed address,indexed address,uint256,indexed bytes32,uint256,bytes)
+// event VoteCommitted(
+//   address indexed voter,
+//   address indexed caller,
+//   uint256 roundId,
+//   bytes32 indexed identifier,
+//   uint256 time,
+//   bytes ancillaryData TODO check if we want to use this
+// );
 
 export function handleVoteCommitted(event: VoteCommitted): void {
   let voteId = event.params.voter
@@ -137,17 +155,17 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   vote.save();
   voter.save();
 }
-
-// - event: VoteRevealed(indexed address,indexed uint256,indexed bytes32,uint256,int256,uint256)
-//   handler: handleVoteRevealed
-//  event VoteRevealed(
-//      address indexed voter,
-//      uint256 indexed roundId,
-//      bytes32 indexed identifier,
-//      uint256 time,
-//      int256 price,
-//      uint256 numTokens
-//  );
+// - event: VoteRevealed(indexed address,indexed address,uint256,indexed bytes32,uint256,int256,bytes,uint256)
+// event VoteRevealed(
+//   address indexed voter,
+//   address indexed caller,  TODO check if we want to use this
+//   uint256 roundId,
+//   bytes32 indexed identifier,
+//   uint256 time,
+//   int256 price,
+//   bytes ancillaryData,   TODO check if we want to use this
+//   uint256 numTokens
+// );
 
 export function handleVoteRevealed(event: VoteRevealed): void {
   let voteId = event.params.voter
