@@ -45,6 +45,9 @@ type PriceRequest @entity {
   "ID is the PriceIdentifier ID + the timestamp"
   id: ID!
 
+  "The price request index"
+  requestIndex: BigInt!
+
   "Depicts whether the request has been resolved"
   isResolved: Boolean!
 

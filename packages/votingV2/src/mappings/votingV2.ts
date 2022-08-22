@@ -38,6 +38,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
 
   request.identifier = event.params.identifier.toString();
+  request.requestIndex = event.params.requestIndex;
   request.latestRound = requestRound.id;
   request.time = event.params.time;
 
@@ -209,13 +210,10 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   requestRound.votersAmount = requestRound.votersAmount.plus(BIGDECIMAL_ONE);
   requestRound.snapshotId = roundInfo.reverted ? null : roundInfo.value.value0;
   if (requestRound.snapshotId != null && requestRound.totalSupplyAtSnapshot == null) {
-    let supply = getTokenContract().try_totalSupplyAt(<BigInt>requestRound.snapshotId);
-    requestRound.totalSupplyAtSnapshot = supply.reverted ? null : toDecimal(supply.value as BigInt);
+    // let supply = getTokenContract().try_totalSupplyAt(<BigInt>requestRound.snapshotId);
+    requestRound.totalSupplyAtSnapshot = BigDecimal.fromString("0");
   }
-  requestRound.tokenVoteParticipationRatio =
-    requestRound.totalSupplyAtSnapshot != null
-      ? requestRound.totalVotesRevealed.div(requestRound.totalSupplyAtSnapshot)
-      : null;
+  requestRound.tokenVoteParticipationRatio = BigDecimal.fromString("0");
   requestRound.tokenVoteParticipationPercentage = requestRound.tokenVoteParticipationRatio.times(BIGDECIMAL_HUNDRED);
 
   requestRound.save();
