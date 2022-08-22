@@ -1,0 +1,248 @@
+type User @entity {
+  "Utility entity that links data from a single ethereum address. Id of the entity is the ethereum address itself"
+  id: ID!
+
+  address: Bytes!
+
+  "Number of price requests that this user has revealed a vote for, and therefore participated in as a voter"
+  countReveals: BigInt
+
+  "Provides a lower-bound on # of votes that user has correctly voted for. User may not have retrieved rewards for all of their correct votes."
+  countRetrievals: BigInt
+
+  votesCommited: [CommittedVote!]! @derivedFrom(field: "voter")
+
+  votesRevealed: [RevealedVote!]! @derivedFrom(field: "voter")
+}
+
+type Collateral @entity {
+  "Represents approved collateral that is whitelisted in the AddressWhitelist and whose fees are set in the Store. Id of the entity is its address"
+  id: ID!
+
+  decimals: Int!
+
+  name: String!
+
+  symbol: String!
+
+  "Is token currently whitelisted as collateral"
+  isOnWhitelist: Boolean!
+
+  finalFee: BigDecimal
+}
+
+type PriceIdentifier @entity {
+  id: ID!
+
+  "Depicts whether this PriceIdentifier is currently among the identifiers supported on the whitelist. Will only be false if it was removed from the whitelist."
+  isSupported: Boolean!
+
+  "List of all the PriceRequest entities related to this particular PriceIdentifier."
+  priceRequests: [PriceRequest!]! @derivedFrom(field: "identifier")
+}
+
+type PriceRequest @entity {
+  "ID is the PriceIdentifier ID + the timestamp"
+  id: ID!
+
+  "Depicts whether the request has been resolved"
+  isResolved: Boolean!
+
+  "Price resolved for this request"
+  price: BigInt
+
+  "PriceRequestRound entity corresponding to the last round of voting"
+  latestRound: PriceRequestRound
+
+  "Timestamp when the PriceRequest was requested"
+  time: BigInt!
+
+  "PriceIdentifier for the request"
+  identifier: PriceIdentifier!
+
+  ancillaryData: String
+
+  "Transaction where the resolution of the request took place"
+  resolutionTransaction: Bytes
+
+  "Timestamp when the resolution of the request took place"
+  resolutionTimestamp: BigInt
+
+  "Block number when the resolution of the request took place"
+  resolutionBlock: BigInt
+
+  "List of all the rounds involved in this PriceRequest"
+  rounds: [PriceRequestRound!]! @derivedFrom(field: "request")
+
+  "List of all the votes committed on this request"
+  committedVotes: [CommittedVote!]! @derivedFrom(field: "request")
+
+  "List of all the votes revealed on this request"
+  revealedVotes: [RevealedVote!]! @derivedFrom(field: "request")
+
+  "List of all the rewards claimed events for this request"
+  rewardsClaimed: [RewardsClaimed!]! @derivedFrom(field: "request")
+
+  "Is this request a governance action"
+  isGovernance: Boolean!
+}
+
+type PriceRequestRound @entity {
+  "ID is the PriceIdentifier ID + the timestamp + the roundId + ancillaryData (if available)"
+  id: ID!
+
+  request: PriceRequest!
+
+  identifier: PriceIdentifier!
+
+  ancillaryData: String
+
+  time: BigInt!
+
+  roundId: BigInt!
+
+  snapshotId: BigInt
+
+  "Total amount of users who voted on this round"
+  votersAmount: BigDecimal!
+
+  "Total amount of users who claimed rewards on this round"
+  votersClaimedAmount: BigDecimal!
+
+  totalVotesRevealed: BigDecimal!
+
+  totalRewardsClaimed: BigDecimal!
+
+  totalSupplyAtSnapshot: BigDecimal
+
+  "Ratio of the total supply of tokens that were weighted on this vote"
+  tokenVoteParticipationRatio: BigDecimal
+
+  "Percentage of the total supply of tokens that were weighted on this vote"
+  tokenVoteParticipationPercentage: BigDecimal
+
+  "Ratio of correct voters over total voters on this price request"
+  votersEligibleForRewardsRatio: BigDecimal
+
+  "Percentage of correct voters over total voters on this price request"
+  votersEligibleForRewardsPercentage: BigDecimal
+
+  "Ratio of correct voters who claimed their rewards"
+  votersClaimedRatio: BigDecimal
+
+  "Percentage of correct voters who claimed their rewards"
+  votersClaimedPercentage: BigDecimal
+
+  "Ratio of rewards claimed over total supply of voting token"
+  tokensClaimedRatio: BigDecimal
+
+  "Percentage of rewards claimed over total supply of voting token"
+  tokensClaimedPercentage: BigDecimal
+
+  "gatPercentage expressed exactly as in the contract. 1 = 100%"
+  gatPercentageRaw: BigDecimal
+
+  "gatPercentage expressed as a percentage value"
+  gatPercentage: BigDecimal
+
+  "inflationRate expressed exactly as in the contract. 1 = 100%"
+  inflationRateRaw: BigDecimal
+
+  "inflationRate expressed as a percentage value"
+  inflationRate: BigDecimal
+
+  winnerGroup: VoterGroup
+
+  committedVotes: [CommittedVote!]! @derivedFrom(field: "round")
+
+  revealedVotes: [RevealedVote!]! @derivedFrom(field: "round")
+
+  groups: [VoterGroup!]! @derivedFrom(field: "round")
+
+  rewardsClaimed: [RewardsClaimed!]! @derivedFrom(field: "round")
+}
+
+type VoterGroup @entity {
+  "Just a helper entity to group voters who voted the same price result. ID is composed of round ID + voted price"
+  id: ID!
+
+  price: BigInt!
+
+  round: PriceRequestRound!
+
+  votes: [RevealedVote!]! @derivedFrom(field: "group")
+
+  totalVoteAmount: BigDecimal!
+
+  votersAmount: BigDecimal!
+
+  won: Boolean!
+}
+
+type CommittedVote @entity {
+  "Commited votes won't show the price until a reveal happens and a RevealedVote is created"
+  id: ID!
+
+  identifier: PriceIdentifier!
+
+  ancillaryData: String
+
+  request: PriceRequest!
+
+  time: BigInt!
+
+  round: PriceRequestRound!
+
+  voter: User!
+}
+
+type RevealedVote @entity {
+  id: ID!
+
+  identifier: PriceIdentifier!
+
+  ancillaryData: String
+
+  request: PriceRequest!
+
+  time: BigInt!
+
+  round: PriceRequestRound!
+
+  price: BigInt!
+
+  voter: User!
+
+  numTokens: BigInt!
+
+  group: VoterGroup!
+}
+
+type RewardsClaimed @entity {
+  id: ID!
+
+  identifier: PriceIdentifier!
+
+  ancillaryData: String
+
+  request: PriceRequest!
+
+  time: BigInt!
+
+  round: PriceRequestRound!
+
+  claimer: User!
+
+  "NumTokens will be 0 if the claim is not 'valid'. This can happen if the function was called for a voter who didn't get the correct vote for example."
+  numTokens: BigInt!
+}
+
+type FinancialContract @entity {
+  "This entity represents a contract that can make price requests to the DVM. ID is address of the contract"
+  id: ID!
+
+  "Creator who registered this contract"
+  creator: Bytes!
+
+  registrationTimestamp: BigInt!
+}
