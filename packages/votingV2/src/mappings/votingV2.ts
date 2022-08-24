@@ -27,8 +27,8 @@ import { log, BigInt, BigDecimal } from "@graphprotocol/graph-ts";
 //   uint256 indexed roundId,
 //   bytes32 indexed identifier,
 //   uint256 indexed time,
-//   uint256 requestIndex, TODO check if we can use this
-//   bytes ancillaryData, TODO check if we can use this
+//   uint256 requestIndex
+//   bytes ancillaryData,
 //   bool isGovernance
 // );
 
@@ -41,8 +41,9 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   request.requestIndex = event.params.requestIndex;
   request.latestRound = requestRound.id;
   request.time = event.params.time;
-
+  request.ancillaryData = event.params.ancillaryData.toHex();
   request.isGovernance = event.params.isGovernance;
+
   requestRound.request = request.id;
   requestRound.identifier = event.params.identifier.toString();
   requestRound.time = event.params.time;
