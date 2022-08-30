@@ -116,7 +116,7 @@ type PriceRequestRound @entity {
 
   totalRewardsClaimed: BigDecimal!
 
-  totalSupplyAtSnapshot: BigDecimal
+  cumulativeActiveStakeAtRound: BigDecimal
 
   "Ratio of the total supply of tokens that were weighted on this vote"
   tokenVoteParticipationRatio: BigDecimal

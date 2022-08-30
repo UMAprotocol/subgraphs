@@ -85,6 +85,9 @@ export function handlePriceResolved(event: PriceResolved): void {
   let voterGroup = getOrCreateVoterGroup(groupId);
   let votingContract = VotingV2.bind(event.address);
   let roundInfo = votingContract.try_rounds(event.params.roundId);
+  let cumulativeActiveStakeAtRound = roundInfo.reverted
+    ? toDecimal(BigInt.fromString("0"))
+    : toDecimal(roundInfo.value.value1);
 
   request.latestRound = requestRound.id;
   request.price = event.params.price;
@@ -112,6 +115,7 @@ export function handlePriceResolved(event: PriceResolved): void {
     : toDecimal(roundInfo.value.value1);
   requestRound.inflationRate = requestRound.inflationRateRaw.times(BIGDECIMAL_HUNDRED);
   requestRound.gatPercentage = requestRound.gatPercentageRaw.times(BIGDECIMAL_HUNDRED);
+  requestRound.cumulativeActiveStakeAtRound = cumulativeActiveStakeAtRound;
 
   requestRound.save();
   request.save();
@@ -186,6 +190,9 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   let voterGroup = getOrCreateVoterGroup(groupId);
   let votingContract = VotingV2.bind(event.address);
   let roundInfo = votingContract.try_rounds(event.params.roundId);
+  let cumulativeActiveStakeAtRound = roundInfo.reverted
+    ? toDecimal(BigInt.fromString("0"))
+    : toDecimal(roundInfo.value.value1);
 
   vote.voter = voter.id;
   vote.round = requestRound.id;
@@ -210,11 +217,10 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   requestRound.totalVotesRevealed = requestRound.totalVotesRevealed.plus(toDecimal(vote.numTokens));
   requestRound.votersAmount = requestRound.votersAmount.plus(BIGDECIMAL_ONE);
   requestRound.snapshotId = roundInfo.reverted ? null : roundInfo.value.value0;
-  if (requestRound.snapshotId != null && requestRound.totalSupplyAtSnapshot == null) {
-    // let supply = getTokenContract().try_totalSupplyAt(<BigInt>requestRound.snapshotId);
-    requestRound.totalSupplyAtSnapshot = BigDecimal.fromString("0");
-  }
-  requestRound.tokenVoteParticipationRatio = BigDecimal.fromString("0");
+
+  requestRound.tokenVoteParticipationRatio = cumulativeActiveStakeAtRound.gt(BIGDECIMAL_ZERO)
+    ? requestRound.totalVotesRevealed.div(<BigDecimal>cumulativeActiveStakeAtRound)
+    : BigDecimal.fromString("0");
   requestRound.tokenVoteParticipationPercentage = requestRound.tokenVoteParticipationRatio.times(BIGDECIMAL_HUNDRED);
 
   requestRound.save();
