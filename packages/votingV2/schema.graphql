@@ -61,7 +61,7 @@ type PriceRequest @entity {
   time: BigInt!
 
   "PriceIdentifier for the request"
-  identifier: PriceIdentifier
+  identifier: PriceIdentifier!
 
   ancillaryData: String
 
@@ -96,7 +96,7 @@ type PriceRequestRound @entity {
 
   request: PriceRequest!
 
-  identifier: PriceIdentifier
+  identifier: PriceIdentifier!
 
   ancillaryData: String
 
@@ -181,7 +181,7 @@ type CommittedVote @entity {
   "Commited votes won't show the price until a reveal happens and a RevealedVote is created"
   id: ID!
 
-  identifier: PriceIdentifier
+  identifier: PriceIdentifier!
 
   ancillaryData: String
 
@@ -197,7 +197,7 @@ type CommittedVote @entity {
 type RevealedVote @entity {
   id: ID!
 
-  identifier: PriceIdentifier
+  identifier: PriceIdentifier!
 
   ancillaryData: String
 
@@ -219,7 +219,7 @@ type RevealedVote @entity {
 type RewardsClaimed @entity {
   id: ID!
 
-  identifier: PriceIdentifier
+  identifier: PriceIdentifier!
 
   ancillaryData: String
 

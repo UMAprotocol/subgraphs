@@ -1,3 +1,4 @@
+import { PriceRequestRound } from "../../generated/schema";
 import {
   PriceRequestAdded,
   PriceResolved,
@@ -5,21 +6,19 @@ import {
   VoteRevealed,
   VotingV2,
 } from "../../generated/Voting/VotingV2";
-import { PriceRequestRound, VoterGroup } from "../../generated/schema";
+import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE } from "../utils/constants";
+import { toDecimal } from "../utils/decimals";
 import {
-  getOrCreateUser,
   getOrCreateCommittedVote,
+  getOrCreatePriceIdentifier,
   getOrCreatePriceRequest,
-  getOrCreateRevealedVote,
-  getOrCreateRewardsClaimed,
   getOrCreatePriceRequestRound,
-  getTokenContract,
+  getOrCreateRevealedVote,
+  getOrCreateUser,
   getOrCreateVoterGroup,
 } from "../utils/helpers";
-import { toDecimal } from "../utils/decimals";
-import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE, BIGINT_ZERO } from "../utils/constants";
 
-import { log, BigInt, BigDecimal } from "@graphprotocol/graph-ts";
+import { BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
 
 // - event: PriceRequestAdded(address,indexed uint256,indexed bytes32,indexed uint256,uint256,bytes,bool)
 // event PriceRequestAdded(
@@ -43,6 +42,13 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   request.time = event.params.time;
   request.ancillaryData = event.params.ancillaryData.toHex();
   request.isGovernance = event.params.isGovernance;
+
+  // If governance request we manually create an identifier as it doesn't exist on chain
+  if (event.params.isGovernance) {
+    let identifier = getOrCreatePriceIdentifier(event.params.identifier.toString());
+    identifier.isSupported = true;
+    identifier.save();
+  }
 
   requestRound.request = request.id;
   requestRound.identifier = event.params.identifier.toString();
