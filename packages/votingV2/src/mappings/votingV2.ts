@@ -2,9 +2,14 @@ import { PriceRequestRound } from "../../generated/schema";
 import {
   PriceRequestAdded,
   PriceResolved,
+  Staked,
+  UpdatedActiveStake,
+  UpdatedReward,
   VoteCommitted,
   VoteRevealed,
+  VoterSlashed,
   VotingV2,
+  WithdrawnRewards,
 } from "../../generated/Voting/VotingV2";
 import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE } from "../utils/constants";
 import { toDecimal } from "../utils/decimals";
@@ -227,4 +232,70 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   vote.save();
   voter.save();
   voterGroup.save();
+}
+
+// event Staked(
+//   address indexed voter,
+//   address indexed from,
+//   uint256 amount,
+//   uint256 voterActiveStake,
+//   uint256 voterPendingStake,
+//   uint256 voterPendingUnstake,
+//   uint256 cumulativeActiveStake,
+//   uint256 cumulativePendingStake
+// );
+
+export function handleStaked(event: Staked): void {
+  let user = getOrCreateUser(event.params.voter);
+  user.voterActiveStake = toDecimal(event.params.voterActiveStake);
+  user.voterPendingStake = toDecimal(event.params.voterPendingStake);
+  user.voterPendingUnstake = toDecimal(event.params.voterPendingUnStake);
+  user.cumulativeActiveStake = toDecimal(event.params.cumulativeActiveStake);
+  user.cumulativePendingStake = toDecimal(event.params.cumulativePendingStake);
+  user.save();
+}
+
+// event UpdatedActiveStake(
+//   address indexed voter,
+//   uint256 voterActiveStake,
+//   uint256 voterPendingStake,
+//   uint256 cumulativeActiveStake,
+//   uint256 cumulativePendingStake
+// );
+
+export function handleUpdatedActiveStake(event: UpdatedActiveStake): void {
+  let user = getOrCreateUser(event.params.voter);
+  user.voterActiveStake = toDecimal(event.params.voterActiveStake);
+  user.voterPendingStake = toDecimal(event.params.voterPendingStake);
+  user.cumulativeActiveStake = toDecimal(event.params.cumulativeActiveStake);
+  user.cumulativePendingStake = toDecimal(event.params.cumulativePendingStake);
+  user.save();
+}
+
+// event UpdatedReward(address indexed voter, uint256 newReward, uint256 lastUpdateTime);
+
+export function handleUpdatedReward(event: UpdatedReward): void {
+  let user = getOrCreateUser(event.params.voter);
+  let votingContract = VotingV2.bind(event.address);
+  let voterStake = votingContract.try_voterStakes(event.params.voter);
+  user.outstandingRewards = voterStake.reverted ? user.outstandingRewards : toDecimal(voterStake.value.value4);
+  user.rewardsLastUpdateTime = event.params.lastUpdateTime;
+  user.save();
+}
+
+// event WithdrawnRewards(address indexed voter, address indexed delegate, uint256 tokensWithdrawn);
+
+export function handleWithdrawnRewards(event: WithdrawnRewards): void {
+  let user = getOrCreateUser(event.params.voter);
+  user.claimedRewards = user.claimedRewards.plus(toDecimal(event.params.tokensWithdrawn));
+  user.save();
+}
+
+// event VoterSlashed(address indexed voter, int256 slashedTokens, uint256 postActiveStake);
+
+export function handleVoterSlashed(event: VoterSlashed): void {
+  let user = getOrCreateUser(event.params.voter);
+  user.slashed = user.claimedRewards.plus(toDecimal(event.params.slashedTokens));
+  user.voterActiveStake = toDecimal(event.params.postActiveStake);
+  user.save();
 }

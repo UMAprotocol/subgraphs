@@ -31,3 +31,15 @@
         handler: handleVoteRevealed
       - event: PriceResolved(indexed uint256,indexed bytes32,uint256,int256,bytes)
         handler: handlePriceResolved
+      - event: Staked(indexed address,uint256,uint256,uint256,uint256,uint256,uint256)
+        handler: handleStaked
+      - event: UpdatedActiveStake(indexed address,uint256,uint256,uint256,uint256)
+        handler: handleUpdatedActiveStake
+      - event: UpdatedReward(indexed address,uint256,uint256)
+        handler: handleUpdatedReward
+      - event: WithdrawnRewards(indexed address,uint256)
+        handler: handleWithdrawnRewards
+      - event: VoterSlashed(indexed address,int256,uint256)
+        handler: handleVoterSlashed
+
+

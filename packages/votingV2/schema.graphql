@@ -10,6 +10,24 @@ type User @entity {
   "Provides a lower-bound on # of votes that user has correctly voted for. User may not have retrieved rewards for all of their correct votes."
   countRetrievals: BigInt
 
+  voterActiveStake: BigDecimal
+
+  voterPendingStake: BigDecimal
+
+  voterPendingUnstake: BigDecimal
+  
+  cumulativeActiveStake: BigDecimal
+  
+  cumulativePendingStake: BigDecimal
+
+  claimedRewards: BigDecimal
+
+  outstandingRewards: BigDecimal
+
+  rewardsLastUpdateTime: BigInt
+
+  slashed: BigDecimal
+
   votesCommited: [CommittedVote!]! @derivedFrom(field: "voter")
 
   votesRevealed: [RevealedVote!]! @derivedFrom(field: "voter")

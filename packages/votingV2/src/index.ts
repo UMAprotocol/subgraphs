@@ -3,6 +3,11 @@ export {
   handleVoteCommitted,
   handlePriceRequestAdded,
   handlePriceResolved,
+  handleStaked,
+  handleUpdatedActiveStake,
+  handleUpdatedReward,
+  handleWithdrawnRewards,
+  handleVoterSlashed
 } from "./mappings/votingV2";
 
 export { handleSupportedIdentifierAdded, handleSupportedIdentifierRemoved } from "./mappings/identifierWhitelist";
