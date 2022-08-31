@@ -104,8 +104,6 @@ type PriceRequestRound @entity {
 
   roundId: BigInt!
 
-  snapshotId: BigInt
-
   "Total amount of users who voted on this round"
   votersAmount: BigDecimal!
 

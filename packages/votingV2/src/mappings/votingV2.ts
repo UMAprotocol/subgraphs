@@ -216,7 +216,6 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   requestRound.roundId = event.params.roundId;
   requestRound.totalVotesRevealed = requestRound.totalVotesRevealed.plus(toDecimal(vote.numTokens));
   requestRound.votersAmount = requestRound.votersAmount.plus(BIGDECIMAL_ONE);
-  requestRound.snapshotId = roundInfo.reverted ? null : roundInfo.value.value0;
 
   requestRound.tokenVoteParticipationRatio = cumulativeActiveStakeAtRound.gt(BIGDECIMAL_ZERO)
     ? requestRound.totalVotesRevealed.div(<BigDecimal>cumulativeActiveStakeAtRound)
