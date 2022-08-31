@@ -107,13 +107,8 @@ export function handlePriceResolved(event: PriceResolved): void {
   requestRound.votersEligibleForRewardsPercentage =
     requestRound.votersEligibleForRewardsRatio.times(BIGDECIMAL_HUNDRED);
   requestRound.winnerGroup = voterGroup.id;
-  requestRound.inflationRateRaw = roundInfo.reverted
-    ? requestRound.inflationRateRaw
-    : toDecimal(roundInfo.value.value0);
-  requestRound.gatPercentageRaw = roundInfo.reverted
-    ? requestRound.gatPercentageRaw
-    : toDecimal(roundInfo.value.value1);
-  requestRound.inflationRate = requestRound.inflationRateRaw.times(BIGDECIMAL_HUNDRED);
+  requestRound.gat = roundInfo.reverted ? requestRound.gat : toDecimal(roundInfo.value.value0);
+  requestRound.gatPercentageRaw = requestRound.gat.div(cumulativeActiveStakeAtRound);
   requestRound.gatPercentage = requestRound.gatPercentageRaw.times(BIGDECIMAL_HUNDRED);
   requestRound.cumulativeActiveStakeAtRound = cumulativeActiveStakeAtRound;
 

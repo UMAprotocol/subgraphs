@@ -140,17 +140,14 @@ type PriceRequestRound @entity {
   "Percentage of rewards claimed over total supply of voting token"
   tokensClaimedPercentage: BigDecimal
 
+  "gat expressed exactly as in the contract"
+  gat: BigDecimal
+
   "gatPercentage expressed exactly as in the contract. 1 = 100%"
   gatPercentageRaw: BigDecimal
 
   "gatPercentage expressed as a percentage value"
   gatPercentage: BigDecimal
-
-  "inflationRate expressed exactly as in the contract. 1 = 100%"
-  inflationRateRaw: BigDecimal
-
-  "inflationRate expressed as a percentage value"
-  inflationRate: BigDecimal
 
   winnerGroup: VoterGroup
 
