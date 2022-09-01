@@ -1,4 +1,5 @@
 import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
+import { BIGDECIMAL_ZERO, BIGINT_ZERO } from "./constants";
 
 export const DEFAULT_DECIMALS = 18;
 
@@ -22,4 +23,12 @@ export function toDecimal(value: BigInt, decimals: number = DEFAULT_DECIMALS): B
     .toBigDecimal();
 
   return value.divDecimal(precision);
+}
+
+export function defaultBigInt(value: BigInt | null): BigInt {
+  return value === null ? BIGINT_ZERO : <BigInt>value;
+}
+
+export function defaultBigDecimal(value: BigDecimal | null): BigDecimal {
+  return value === null ? BIGDECIMAL_ZERO : <BigDecimal>value;
 }

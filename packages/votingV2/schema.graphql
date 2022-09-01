@@ -22,11 +22,17 @@ type User @entity {
 
   claimedRewards: BigDecimal
 
+  claimedRewardsLastUpdateTime: BigInt
+
   outstandingRewards: BigDecimal
 
   rewardsLastUpdateTime: BigInt
 
   slashed: BigDecimal
+
+  slashedLastUpdateTime: BigInt
+
+  slashedPerSecond: BigDecimal
 
   votesCommited: [CommittedVote!]! @derivedFrom(field: "voter")
 

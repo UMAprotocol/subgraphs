@@ -12,7 +12,7 @@ import {
   WithdrawnRewards,
 } from "../../generated/Voting/VotingV2";
 import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE } from "../utils/constants";
-import { toDecimal } from "../utils/decimals";
+import { defaultBigDecimal, defaultBigInt, toDecimal } from "../utils/decimals";
 import {
   getOrCreateCommittedVote,
   getOrCreatePriceIdentifier,
@@ -278,8 +278,10 @@ export function handleUpdatedReward(event: UpdatedReward): void {
   let user = getOrCreateUser(event.params.voter);
   let votingContract = VotingV2.bind(event.address);
   let voterStake = votingContract.try_voterStakes(event.params.voter);
+
   user.outstandingRewards = voterStake.reverted ? user.outstandingRewards : toDecimal(voterStake.value.value4);
   user.rewardsLastUpdateTime = event.params.lastUpdateTime;
+
   user.save();
 }
 
@@ -287,7 +289,10 @@ export function handleUpdatedReward(event: UpdatedReward): void {
 
 export function handleWithdrawnRewards(event: WithdrawnRewards): void {
   let user = getOrCreateUser(event.params.voter);
-  user.claimedRewards = user.claimedRewards.plus(toDecimal(event.params.tokensWithdrawn));
+
+  user.claimedRewards = defaultBigDecimal(user.claimedRewards).plus(toDecimal(event.params.tokensWithdrawn));
+  user.claimedRewardsLastUpdateTime = event.block.timestamp;
+
   user.save();
 }
 
@@ -295,7 +300,16 @@ export function handleWithdrawnRewards(event: WithdrawnRewards): void {
 
 export function handleVoterSlashed(event: VoterSlashed): void {
   let user = getOrCreateUser(event.params.voter);
-  user.slashed = user.claimedRewards.plus(toDecimal(event.params.slashedTokens));
+
+  let newSlashed = defaultBigDecimal(user.slashed).plus(toDecimal(event.params.slashedTokens));
+  let newSlashedLastUpdateTime = event.block.timestamp;
+
+  let numerator = newSlashed.minus(defaultBigDecimal(user.slashed));
+  let denominator = newSlashedLastUpdateTime.minus(defaultBigInt(user.slashedLastUpdateTime)).toBigDecimal();
+  user.slashedPerSecond = denominator.equals(BIGDECIMAL_ZERO) ? BIGDECIMAL_ZERO : numerator.div(denominator);
+  user.slashed = newSlashed;
+  user.slashedLastUpdateTime = newSlashedLastUpdateTime;
   user.voterActiveStake = toDecimal(event.params.postActiveStake);
+
   user.save();
 }
