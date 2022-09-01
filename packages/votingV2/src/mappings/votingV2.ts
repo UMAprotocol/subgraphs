@@ -1,5 +1,6 @@
 import { PriceRequestRound } from "../../generated/schema";
 import {
+  ExecutedUnstake,
   PriceRequestAdded,
   PriceResolved,
   Staked,
@@ -311,5 +312,19 @@ export function handleVoterSlashed(event: VoterSlashed): void {
   user.slashedLastUpdateTime = newSlashedLastUpdateTime;
   user.voterActiveStake = toDecimal(event.params.postActiveStake);
 
+  user.save();
+}
+
+// event ExecutedUnstake(
+//   address indexed voter,
+//   uint256 tokensSent,
+//   uint256 voterActiveStake,
+//   uint256 voterPendingStake
+// );
+
+export function handleExecutedUnstake(event: ExecutedUnstake): void {
+  let user = getOrCreateUser(event.params.voter);
+  user.voterActiveStake = toDecimal(event.params.voterActiveStake);
+  user.voterPendingStake = toDecimal(event.params.voterPendingStake);
   user.save();
 }

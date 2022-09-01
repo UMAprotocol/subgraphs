@@ -35,6 +35,8 @@
         handler: handleStaked
       - event: UpdatedActiveStake(indexed address,uint256,uint256,uint256,uint256)
         handler: handleUpdatedActiveStake
+      - event: ExecutedUnstake(indexed address,uint256,uint256,uint256)
+        handler: handleExecutedUnstake
       - event: UpdatedReward(indexed address,uint256,uint256)
         handler: handleUpdatedReward
       - event: WithdrawnRewards(indexed address,uint256)
