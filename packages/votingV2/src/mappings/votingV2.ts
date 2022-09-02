@@ -22,6 +22,7 @@ import {
   getOrCreateRevealedVote,
   getOrCreateUser,
   getOrCreateVoterGroup,
+  getTokenContract,
 } from "../utils/helpers";
 
 import { BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
@@ -67,13 +68,13 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   request.save();
 }
 
-// - event: PriceResolved(indexed uint256,indexed bytes32,uint256,int256,bytes)
 // event PriceResolved(
 //   uint256 indexed roundId,
 //   bytes32 indexed identifier,
 //   uint256 time,
+//   uint256 requestIndex,
 //   int256 price,
-//   bytes ancillaryData TODO check if we want to use this
+//   bytes ancillaryData
 // );
 
 export function handlePriceResolved(event: PriceResolved): void {
@@ -120,7 +121,8 @@ export function handlePriceResolved(event: PriceResolved): void {
     requestRound.votersEligibleForRewardsRatio.times(BIGDECIMAL_HUNDRED);
   requestRound.winnerGroup = voterGroup.id;
   requestRound.gat = roundInfo.reverted ? requestRound.gat : toDecimal(roundInfo.value.value0);
-  requestRound.gatPercentageRaw = requestRound.gat.div(cumulativeActiveStakeAtRound);
+
+  requestRound.gatPercentageRaw = requestRound.gat.div(toDecimal(getTokenContract().try_totalSupply().value));
   requestRound.gatPercentage = requestRound.gatPercentageRaw.times(BIGDECIMAL_HUNDRED);
   requestRound.cumulativeActiveStakeAtRound = cumulativeActiveStakeAtRound;
 
@@ -250,7 +252,7 @@ export function handleStaked(event: Staked): void {
   let user = getOrCreateUser(event.params.voter);
   user.voterActiveStake = toDecimal(event.params.voterActiveStake);
   user.voterPendingStake = toDecimal(event.params.voterPendingStake);
-  user.voterPendingUnstake = toDecimal(event.params.voterPendingUnStake);
+  user.voterPendingUnstake = toDecimal(event.params.voterPendingUnstake);
   user.cumulativeActiveStake = toDecimal(event.params.cumulativeActiveStake);
   user.cumulativePendingStake = toDecimal(event.params.cumulativePendingStake);
   user.save();
