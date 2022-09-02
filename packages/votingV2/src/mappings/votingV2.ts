@@ -283,7 +283,7 @@ export function handleUpdatedReward(event: UpdatedReward): void {
   let voterStake = votingContract.try_voterStakes(event.params.voter);
 
   user.outstandingRewards = voterStake.reverted ? user.outstandingRewards : toDecimal(voterStake.value.value4);
-  user.rewardsLastUpdateTime = event.params.lastUpdateTime;
+  user.outstandingRewardsLastUpdateTime = event.params.lastUpdateTime;
 
   user.save();
 }
@@ -294,7 +294,6 @@ export function handleWithdrawnRewards(event: WithdrawnRewards): void {
   let user = getOrCreateUser(event.params.voter);
 
   user.claimedRewards = defaultBigDecimal(user.claimedRewards).plus(toDecimal(event.params.tokensWithdrawn));
-  user.claimedRewardsLastUpdateTime = event.block.timestamp;
 
   user.save();
 }
@@ -304,14 +303,7 @@ export function handleWithdrawnRewards(event: WithdrawnRewards): void {
 export function handleVoterSlashed(event: VoterSlashed): void {
   let user = getOrCreateUser(event.params.voter);
 
-  let newSlashed = defaultBigDecimal(user.slashed).plus(toDecimal(event.params.slashedTokens));
-  let newSlashedLastUpdateTime = event.block.timestamp;
-
-  let numerator = newSlashed.minus(defaultBigDecimal(user.slashed));
-  let denominator = newSlashedLastUpdateTime.minus(defaultBigInt(user.slashedLastUpdateTime)).toBigDecimal();
-  user.slashedPerSecond = denominator.equals(BIGDECIMAL_ZERO) ? BIGDECIMAL_ZERO : numerator.div(denominator);
-  user.slashed = newSlashed;
-  user.slashedLastUpdateTime = newSlashedLastUpdateTime;
+  user.cumulativeSlash = defaultBigDecimal(user.cumulativeSlash).plus(toDecimal(event.params.slashedTokens));
   user.voterActiveStake = toDecimal(event.params.postActiveStake);
 
   user.save();

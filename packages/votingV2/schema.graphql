@@ -15,24 +15,24 @@ type User @entity {
   voterPendingStake: BigDecimal
 
   voterPendingUnstake: BigDecimal
-  
+
+  "Cumulative active stake from all stakeholders"
   cumulativeActiveStake: BigDecimal
-  
+
+  "Cumulative pending stake from all stakeholders"
   cumulativePendingStake: BigDecimal
 
+  "Total rewards claimed in voting token"
   claimedRewards: BigDecimal
 
-  claimedRewardsLastUpdateTime: BigInt
-
+  "Outstanding rewards unclaimed in voting token"
   outstandingRewards: BigDecimal
 
-  rewardsLastUpdateTime: BigInt
+  "Last outstandingRewards update time"
+  outstandingRewardsLastUpdateTime: BigInt
 
-  slashed: BigDecimal
-
-  slashedLastUpdateTime: BigInt
-
-  slashedPerSecond: BigDecimal
+  "Total slashed applied to the user"
+  cumulativeSlash: BigDecimal
 
   votesCommited: [CommittedVote!]! @derivedFrom(field: "voter")
 
