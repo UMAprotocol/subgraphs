@@ -1,6 +1,7 @@
 {
   "network": "goerli",
   "votingTokenStartBlock": 7311523,
+  "votingTokenAddress": "0xBa950974AFdae520cEE596c98295150Cf8D9659c",
   "identifierWhitelistAddress": "0x488211B646b909C490d942f456481BeAE52fde27",
   "identifierWhitelistStartBlock": 7311333,
   "registryAddress": "0x9214454Ff30410a1558b8749Ab3FB0fD6F942539",

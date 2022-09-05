@@ -14,3 +14,7 @@ mustache \
   -p manifest/templates/Store.template.yaml \
   $DATA \
   manifest/templates/subgraph.template.yaml > subgraph.yaml
+
+mustache \
+  $DATA \
+  manifest/templates/addresses.ts > addresses.ts
