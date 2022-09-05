@@ -17,4 +17,4 @@ mustache \
 
 mustache \
   $DATA \
-  manifest/templates/addresses.ts > addresses.ts
+  manifest/templates/addresses.template.ts > addresses.ts
