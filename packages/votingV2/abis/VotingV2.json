@@ -1,56 +1,17 @@
 [
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_emissionRate",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_spamDeletionProposalBond",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_unstakeCoolDown",
-        "type": "uint64"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_phaseLength",
-        "type": "uint64"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_minRollToNextRoundLength",
-        "type": "uint64"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_gat",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint64",
-        "name": "_startingRequestIndex",
-        "type": "uint64"
-      },
-      {
-        "internalType": "address",
-        "name": "_votingToken",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_finder",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_slashingLibrary",
-        "type": "address"
-      }
+      { "internalType": "uint256", "name": "_emissionRate", "type": "uint256" },
+      { "internalType": "uint256", "name": "_spamDeletionProposalBond", "type": "uint256" },
+      { "internalType": "uint64", "name": "_unstakeCoolDown", "type": "uint64" },
+      { "internalType": "uint64", "name": "_phaseLength", "type": "uint64" },
+      { "internalType": "uint64", "name": "_minRollToNextRoundLength", "type": "uint64" },
+      { "internalType": "uint256", "name": "_gat", "type": "uint256" },
+      { "internalType": "uint64", "name": "_startingRequestIndex", "type": "uint64" },
+      { "internalType": "address", "name": "_votingToken", "type": "address" },
+      { "internalType": "address", "name": "_finder", "type": "address" },
+      { "internalType": "address", "name": "_slashingLibrary", "type": "address" },
+      { "internalType": "address", "name": "_previousVotingContract", "type": "address" }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
@@ -58,42 +19,12 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "caller",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "roundId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "ancillaryData",
-        "type": "bytes"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "encryptedVote",
-        "type": "bytes"
-      }
+      { "indexed": true, "internalType": "address", "name": "caller", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "roundId", "type": "uint256" },
+      { "indexed": true, "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "indexed": false, "internalType": "uint256", "name": "time", "type": "uint256" },
+      { "indexed": false, "internalType": "bytes", "name": "ancillaryData", "type": "bytes" },
+      { "indexed": false, "internalType": "bytes", "name": "encryptedVote", "type": "bytes" }
     ],
     "name": "EncryptedVote",
     "type": "event"
@@ -101,18 +32,8 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "bool",
-        "name": "executed",
-        "type": "bool"
-      }
+      { "indexed": true, "internalType": "uint256", "name": "proposalId", "type": "uint256" },
+      { "indexed": true, "internalType": "bool", "name": "executed", "type": "bool" }
     ],
     "name": "ExecutedSpamDeletion",
     "type": "event"
@@ -120,62 +41,25 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "voter",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "tokensSent",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "voterActiveStake",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "voterPendingStake",
-        "type": "uint256"
-      }
+      { "indexed": true, "internalType": "address", "name": "voter", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "tokensSent", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "voterActiveStake", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "voterPendingStake", "type": "uint256" }
     ],
     "name": "ExecutedUnstake",
     "type": "event"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "newGat",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "indexed": false, "internalType": "uint256", "name": "newGat", "type": "uint256" }],
     "name": "GatChanged",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
+      { "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }
     ],
     "name": "OwnershipTransferred",
     "type": "event"
@@ -183,48 +67,13 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "requester",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "roundId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "requestIndex",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "ancillaryData",
-        "type": "bytes"
-      },
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "isGovernance",
-        "type": "bool"
-      }
+      { "indexed": true, "internalType": "address", "name": "requester", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "roundId", "type": "uint256" },
+      { "indexed": true, "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "indexed": false, "internalType": "uint256", "name": "time", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "requestIndex", "type": "uint256" },
+      { "indexed": false, "internalType": "bytes", "name": "ancillaryData", "type": "bytes" },
+      { "indexed": false, "internalType": "bool", "name": "isGovernance", "type": "bool" }
     ],
     "name": "PriceRequestAdded",
     "type": "event"
@@ -232,36 +81,12 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "roundId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "int256",
-        "name": "price",
-        "type": "int256"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "ancillaryData",
-        "type": "bytes"
-      }
+      { "indexed": true, "internalType": "uint256", "name": "roundId", "type": "uint256" },
+      { "indexed": true, "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "indexed": false, "internalType": "uint256", "name": "time", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "requestIndex", "type": "uint256" },
+      { "indexed": false, "internalType": "int256", "name": "price", "type": "int256" },
+      { "indexed": false, "internalType": "bytes", "name": "ancillaryData", "type": "bytes" }
     ],
     "name": "PriceResolved",
     "type": "event"
@@ -269,137 +94,50 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "voter",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "unstakeTime",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "voterActiveStake",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "voterPendingStake",
-        "type": "uint256"
-      }
+      { "indexed": true, "internalType": "address", "name": "voter", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "unstakeTime", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "voterActiveStake", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "voterPendingStake", "type": "uint256" }
     ],
     "name": "RequestedUnstake",
     "type": "event"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "newEmissionRate",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "indexed": false, "internalType": "uint256", "name": "newEmissionRate", "type": "uint256" }],
     "name": "SetNewEmissionRate",
     "type": "event"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "newUnstakeCooldown",
-        "type": "uint256"
-      }
-    ],
-    "name": "SetNewUnstakeCooldown",
+    "inputs": [{ "indexed": false, "internalType": "uint256", "name": "newUnstakeCoolDown", "type": "uint256" }],
+    "name": "SetNewUnstakeCoolDown",
     "type": "event"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "newAddress",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "newAddress", "type": "address" }],
     "name": "SlashingLibraryChanged",
     "type": "event"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "newBond",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "indexed": false, "internalType": "uint256", "name": "newBond", "type": "uint256" }],
     "name": "SpamDeletionProposalBondChanged",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "voter",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "voterActiveStake",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "voterPendingStake",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "voterPendingUnStake",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "cumulativeActiveStake",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "cumulativePendingStake",
-        "type": "uint256"
-      }
+      { "indexed": true, "internalType": "address", "name": "voter", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "from", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "voterActiveStake", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "voterPendingStake", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "voterPendingUnstake", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "cumulativeActiveStake", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "cumulativePendingStake", "type": "uint256" }
     ],
     "name": "Staked",
     "type": "event"
@@ -407,36 +145,11 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "voter",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "voterActiveStake",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "voterPendingStake",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "cumulativeActiveStake",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "cumulativePendingStake",
-        "type": "uint256"
-      }
+      { "indexed": true, "internalType": "address", "name": "voter", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "voterActiveStake", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "voterPendingStake", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "cumulativeActiveStake", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "cumulativePendingStake", "type": "uint256" }
     ],
     "name": "UpdatedActiveStake",
     "type": "event"
@@ -444,24 +157,9 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "voter",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "newReward",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "lastUpdateTime",
-        "type": "uint256"
-      }
+      { "indexed": true, "internalType": "address", "name": "voter", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "newReward", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "lastUpdateTime", "type": "uint256" }
     ],
     "name": "UpdatedReward",
     "type": "event"
@@ -469,42 +167,12 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "voter",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "caller",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "roundId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "ancillaryData",
-        "type": "bytes"
-      }
+      { "indexed": true, "internalType": "address", "name": "voter", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "caller", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "roundId", "type": "uint256" },
+      { "indexed": true, "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "indexed": false, "internalType": "uint256", "name": "time", "type": "uint256" },
+      { "indexed": false, "internalType": "bytes", "name": "ancillaryData", "type": "bytes" }
     ],
     "name": "VoteCommitted",
     "type": "event"
@@ -512,54 +180,14 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "voter",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "caller",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "roundId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "int256",
-        "name": "price",
-        "type": "int256"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "ancillaryData",
-        "type": "bytes"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "numTokens",
-        "type": "uint256"
-      }
+      { "indexed": true, "internalType": "address", "name": "voter", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "caller", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "roundId", "type": "uint256" },
+      { "indexed": true, "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "indexed": false, "internalType": "uint256", "name": "time", "type": "uint256" },
+      { "indexed": false, "internalType": "int256", "name": "price", "type": "int256" },
+      { "indexed": false, "internalType": "bytes", "name": "ancillaryData", "type": "bytes" },
+      { "indexed": false, "internalType": "uint256", "name": "numTokens", "type": "uint256" }
     ],
     "name": "VoteRevealed",
     "type": "event"
@@ -567,100 +195,57 @@
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "voter",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "int256",
-        "name": "slashedTokens",
-        "type": "int256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "postActiveStake",
-        "type": "uint256"
-      }
+      { "indexed": true, "internalType": "address", "name": "voter", "type": "address" },
+      { "indexed": false, "internalType": "int256", "name": "slashedTokens", "type": "int256" },
+      { "indexed": false, "internalType": "uint256", "name": "postActiveStake", "type": "uint256" }
     ],
     "name": "VoterSlashed",
     "type": "event"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "newAddress",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "newAddress", "type": "address" }],
     "name": "VotingContractMigrated",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "voter",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "tokensWithdrawn",
-        "type": "uint256"
-      }
+      { "indexed": true, "internalType": "address", "name": "voter", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "delegate", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "tokensWithdrawn", "type": "uint256" }
     ],
     "name": "WithdrawnRewards",
     "type": "event"
   },
   {
     "inputs": [],
-    "name": "ancillaryBytesLimit",
+    "name": "ANCILLARY_BYTES_LIMIT",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "internalType": "uint256", "name": "time", "type": "uint256" },
+      { "internalType": "bytes", "name": "ancillaryData", "type": "bytes" }
+    ],
+    "name": "_getPriceFromPreviousVotingContract",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+      { "internalType": "bool", "name": "", "type": "bool" },
+      { "internalType": "int256", "name": "", "type": "int256" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "ancillaryData",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "hash",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes",
-        "name": "encryptedVote",
-        "type": "bytes"
-      }
+      { "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "internalType": "uint256", "name": "time", "type": "uint256" },
+      { "internalType": "bytes", "name": "ancillaryData", "type": "bytes" },
+      { "internalType": "bytes32", "name": "hash", "type": "bytes32" },
+      { "internalType": "bytes", "name": "encryptedVote", "type": "bytes" }
     ],
     "name": "commitAndEmitEncryptedVote",
     "outputs": [],
@@ -669,77 +254,10 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "hash",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes",
-        "name": "encryptedVote",
-        "type": "bytes"
-      }
-    ],
-    "name": "commitAndEmitEncryptedVote",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "ancillaryData",
-        "type": "bytes"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "hash",
-        "type": "bytes32"
-      }
-    ],
-    "name": "commitVote",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "hash",
-        "type": "bytes32"
-      }
+      { "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "internalType": "uint256", "name": "time", "type": "uint256" },
+      { "internalType": "bytes", "name": "ancillaryData", "type": "bytes" },
+      { "internalType": "bytes32", "name": "hash", "type": "bytes32" }
     ],
     "name": "commitVote",
     "outputs": [],
@@ -749,175 +267,78 @@
   {
     "inputs": [],
     "name": "cumulativeActiveStake",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "cumulativePendingStake",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "currentActiveRequests",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "delegateToStaker",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint64",
-        "name": "",
-        "type": "uint64"
-      }
-    ],
-    "name": "deletedRequests",
-    "outputs": [
-      {
-        "internalType": "uint64",
-        "name": "",
-        "type": "uint64"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "emissionRate",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "proposalId",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "proposalId", "type": "uint256" }],
     "name": "executeSpamDeletion",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
-  {
-    "inputs": [],
-    "name": "executeUnstake",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
+  { "inputs": [], "name": "executeUnstake", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
   {
     "inputs": [],
     "name": "gat",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "getCumulativeStake",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "getCurrentRoundId",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "getCurrentTime",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "getNumberOfPriceRequests",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -927,23 +348,12 @@
     "outputs": [
       {
         "components": [
-          {
-            "internalType": "bytes32",
-            "name": "identifier",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "time",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bytes",
-            "name": "ancillaryData",
-            "type": "bytes"
-          }
+          { "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+          { "internalType": "uint256", "name": "time", "type": "uint256" },
+          { "internalType": "bytes", "name": "ancillaryData", "type": "bytes" },
+          { "internalType": "uint64", "name": "priceRequestIndex", "type": "uint64" }
         ],
-        "internalType": "struct VotingV2Interface.PendingRequestAncillary[]",
+        "internalType": "struct VotingV2Interface.PendingRequestAncillaryAugmented[]",
         "name": "",
         "type": "tuple[]"
       }
@@ -953,54 +363,22 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "ancillaryData",
-        "type": "bytes"
-      }
+      { "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "internalType": "uint256", "name": "time", "type": "uint256" },
+      { "internalType": "bytes", "name": "ancillaryData", "type": "bytes" }
     ],
     "name": "getPrice",
-    "outputs": [
-      {
-        "internalType": "int256",
-        "name": "",
-        "type": "int256"
-      }
-    ],
+    "outputs": [{ "internalType": "int256", "name": "", "type": "int256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      }
+      { "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "internalType": "uint256", "name": "time", "type": "uint256" }
     ],
     "name": "getPrice",
-    "outputs": [
-      {
-        "internalType": "int256",
-        "name": "",
-        "type": "int256"
-      }
-    ],
+    "outputs": [{ "internalType": "int256", "name": "", "type": "int256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -1008,21 +386,9 @@
     "inputs": [
       {
         "components": [
-          {
-            "internalType": "bytes32",
-            "name": "identifier",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "time",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bytes",
-            "name": "ancillaryData",
-            "type": "bytes"
-          }
+          { "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+          { "internalType": "uint256", "name": "time", "type": "uint256" },
+          { "internalType": "bytes", "name": "ancillaryData", "type": "bytes" }
         ],
         "internalType": "struct VotingV2Interface.PendingRequestAncillary[]",
         "name": "requests",
@@ -1033,16 +399,8 @@
     "outputs": [
       {
         "components": [
-          {
-            "internalType": "enum VotingV2.RequestStatus",
-            "name": "status",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "lastVotingRound",
-            "type": "uint256"
-          }
+          { "internalType": "enum VotingV2.RequestStatus", "name": "status", "type": "uint8" },
+          { "internalType": "uint256", "name": "lastVotingRound", "type": "uint256" }
         ],
         "internalType": "struct VotingV2.RequestState[]",
         "name": "",
@@ -1053,359 +411,131 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "bytes32",
-            "name": "identifier",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "time",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct VotingV2Interface.PendingRequest[]",
-        "name": "requests",
-        "type": "tuple[]"
-      }
-    ],
-    "name": "getPriceRequestStatuses",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "enum VotingV2.RequestStatus",
-            "name": "status",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "lastVotingRound",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct VotingV2.RequestState[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "roundId",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "roundId", "type": "uint256" }],
     "name": "getRoundEndTime",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "getVotePhase",
-    "outputs": [
-      {
-        "internalType": "enum VotingV2Interface.Phase",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
+    "outputs": [{ "internalType": "enum VotingV2Interface.Phase", "name": "", "type": "uint8" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "caller",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "caller", "type": "address" }],
     "name": "getVoterFromDelegate",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "voterAddress",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "voterAddress", "type": "address" }],
     "name": "getVoterStake",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      }
+      { "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "internalType": "uint256", "name": "time", "type": "uint256" }
     ],
     "name": "hasPrice",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "ancillaryData",
-        "type": "bytes"
-      }
+      { "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "internalType": "uint256", "name": "time", "type": "uint256" },
+      { "internalType": "bytes", "name": "ancillaryData", "type": "bytes" }
     ],
     "name": "hasPrice",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "lastUpdateTime",
-    "outputs": [
-      {
-        "internalType": "uint64",
-        "name": "",
-        "type": "uint64"
-      }
-    ],
+    "outputs": [{ "internalType": "uint64", "name": "", "type": "uint64" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "migratedAddress",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bytes[]",
-        "name": "data",
-        "type": "bytes[]"
-      }
-    ],
+    "inputs": [{ "internalType": "bytes[]", "name": "data", "type": "bytes[]" }],
     "name": "multicall",
-    "outputs": [
-      {
-        "internalType": "bytes[]",
-        "name": "results",
-        "type": "bytes[]"
-      }
-    ],
+    "outputs": [{ "internalType": "bytes[]", "name": "results", "type": "bytes[]" }],
     "stateMutability": "payable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "voterAddress",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "voterAddress", "type": "address" }],
     "name": "outstandingRewards",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "name": "pendingPriceRequests",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "priceRequestIds",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "name": "priceRequests",
-    "outputs": [
-      {
-        "internalType": "uint32",
-        "name": "lastVotingRound",
-        "type": "uint32"
-      },
-      {
-        "internalType": "bool",
-        "name": "isGovernance",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint64",
-        "name": "pendingRequestIndex",
-        "type": "uint64"
-      },
-      {
-        "internalType": "uint64",
-        "name": "priceRequestIndex",
-        "type": "uint64"
-      },
-      {
-        "internalType": "uint64",
-        "name": "time",
-        "type": "uint64"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "bytes",
-        "name": "ancillaryData",
-        "type": "bytes"
-      }
-    ],
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "previousVotingContract",
+    "outputs": [{ "internalType": "contract OracleAncillaryInterface", "name": "", "type": "address" }],
+    "stateMutability": "view",
     "type": "function"
   },
   {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "priceRequestIds",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "name": "priceRequests",
+    "outputs": [
+      { "internalType": "uint32", "name": "lastVotingRound", "type": "uint32" },
+      { "internalType": "bool", "name": "isGovernance", "type": "bool" },
+      { "internalType": "uint64", "name": "pendingRequestIndex", "type": "uint64" },
+      { "internalType": "uint64", "name": "priceRequestIndex", "type": "uint64" },
+      { "internalType": "uint64", "name": "time", "type": "uint64" },
+      { "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "internalType": "bytes", "name": "ancillaryData", "type": "bytes" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  { "inputs": [], "name": "renounceOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "ancillaryData",
-        "type": "bytes"
-      }
+      { "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "internalType": "uint256", "name": "time", "type": "uint256" },
+      { "internalType": "bytes", "name": "ancillaryData", "type": "bytes" }
     ],
     "name": "requestGovernanceAction",
     "outputs": [],
@@ -1414,21 +544,9 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "ancillaryData",
-        "type": "bytes"
-      }
+      { "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "internalType": "uint256", "name": "time", "type": "uint256" },
+      { "internalType": "bytes", "name": "ancillaryData", "type": "bytes" }
     ],
     "name": "requestPrice",
     "outputs": [],
@@ -1437,16 +555,8 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      }
+      { "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "internalType": "uint256", "name": "time", "type": "uint256" }
     ],
     "name": "requestPrice",
     "outputs": [],
@@ -1454,37 +564,15 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "requestIndex",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "requestIndex", "type": "uint256" }],
     "name": "requestSlashingTrackers",
     "outputs": [
       {
         "components": [
-          {
-            "internalType": "uint256",
-            "name": "wrongVoteSlashPerToken",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "noVoteSlashPerToken",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "totalSlashed",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "totalCorrectVotes",
-            "type": "uint256"
-          }
+          { "internalType": "uint256", "name": "wrongVoteSlashPerToken", "type": "uint256" },
+          { "internalType": "uint256", "name": "noVoteSlashPerToken", "type": "uint256" },
+          { "internalType": "uint256", "name": "totalSlashed", "type": "uint256" },
+          { "internalType": "uint256", "name": "totalCorrectVotes", "type": "uint256" }
         ],
         "internalType": "struct VotingV2.SlashingTracker",
         "name": "",
@@ -1495,13 +583,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }],
     "name": "requestUnstake",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -1509,59 +591,31 @@
   },
   {
     "inputs": [
+      { "internalType": "address", "name": "voterAddress", "type": "address" },
+      { "internalType": "uint256", "name": "roundId", "type": "uint256" },
       {
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "internalType": "int256",
-        "name": "price",
-        "type": "int256"
-      },
-      {
-        "internalType": "int256",
-        "name": "salt",
-        "type": "int256"
+        "components": [
+          { "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+          { "internalType": "uint256", "name": "time", "type": "uint256" },
+          { "internalType": "bytes", "name": "ancillaryData", "type": "bytes" }
+        ],
+        "internalType": "struct MinimumVotingAncillaryInterface.PendingRequestAncillary[]",
+        "name": "toRetrieve",
+        "type": "tuple[]"
       }
     ],
-    "name": "revealVote",
-    "outputs": [],
+    "name": "retrieveRewardsOnMigratedVotingContract",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "identifier",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      },
-      {
-        "internalType": "int256",
-        "name": "price",
-        "type": "int256"
-      },
-      {
-        "internalType": "bytes",
-        "name": "ancillaryData",
-        "type": "bytes"
-      },
-      {
-        "internalType": "int256",
-        "name": "salt",
-        "type": "int256"
-      }
+      { "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "internalType": "uint256", "name": "time", "type": "uint256" },
+      { "internalType": "int256", "name": "price", "type": "int256" },
+      { "internalType": "bytes", "name": "ancillaryData", "type": "bytes" },
+      { "internalType": "int256", "name": "salt", "type": "int256" }
     ],
     "name": "revealVote",
     "outputs": [],
@@ -1571,220 +625,113 @@
   {
     "inputs": [],
     "name": "rewardPerToken",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "rewardPerTokenStored",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "name": "rounds",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "gat",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "cumulativeActiveStakeAtRound",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "gat", "type": "uint256" },
+      { "internalType": "uint256", "name": "cumulativeActiveStakeAtRound", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "delegate",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "delegate", "type": "address" }],
     "name": "setDelegate",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "delegator",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "delegator", "type": "address" }],
     "name": "setDelegator",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_emissionRate",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "newEmissionRate", "type": "uint256" }],
     "name": "setEmissionRate",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "newGat",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "newGat", "type": "uint256" }],
     "name": "setGat",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "newVotingAddress",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "newVotingAddress", "type": "address" }],
     "name": "setMigrated",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "NewRewardsExpirationTimeout",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "NewRewardsExpirationTimeout", "type": "uint256" }],
     "name": "setRewardsExpirationTimeout",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_newSlashingLibrary",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_newSlashingLibrary", "type": "address" }],
     "name": "setSlashingLibrary",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_spamDeletionProposalBond",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "_spamDeletionProposalBond", "type": "uint256" }],
     "name": "setSpamDeletionProposalBond",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint64",
-        "name": "_unstakeCoolDown",
-        "type": "uint64"
-      }
-    ],
+    "inputs": [{ "internalType": "uint64", "name": "newUnstakeCoolDown", "type": "uint64" }],
     "name": "setUnstakeCoolDown",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
+    "inputs": [{ "internalType": "uint64", "name": "", "type": "uint64" }],
+    "name": "skippedRequestIndexes",
+    "outputs": [{ "internalType": "uint64", "name": "", "type": "uint64" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "slashingLibrary",
-    "outputs": [
-      {
-        "internalType": "contract SlashingLibrary",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "contract SlashingLibraryInterface", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "spamDeletionProposals",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "requestTime",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "executed",
-        "type": "bool"
-      },
-      {
-        "internalType": "address",
-        "name": "proposer",
-        "type": "address"
-      }
-    ],
+    "inputs": [],
+    "name": "spamDeletionProposalBond",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }],
     "name": "stake",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -1792,12 +739,16 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "recipient", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
     ],
+    "name": "stakeTo",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }],
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -1806,24 +757,12 @@
   {
     "inputs": [],
     "name": "unstakeCoolDown",
-    "outputs": [
-      {
-        "internalType": "uint64",
-        "name": "",
-        "type": "uint64"
-      }
-    ],
+    "outputs": [{ "internalType": "uint64", "name": "", "type": "uint64" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "voterAddress",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "voterAddress", "type": "address" }],
     "name": "updateTrackers",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -1831,16 +770,8 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "voterAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "indexTo",
-        "type": "uint256"
-      }
+      { "internalType": "address", "name": "voterAddress", "type": "address" },
+      { "internalType": "uint256", "name": "indexTo", "type": "uint256" }
     ],
     "name": "updateTrackersRange",
     "outputs": [],
@@ -1851,70 +782,25 @@
     "inputs": [],
     "name": "voteTiming",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "phaseLength",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "minRollToNextRoundLength",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "phaseLength", "type": "uint256" },
+      { "internalType": "uint256", "name": "minRollToNextRoundLength", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "voterStakes",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "activeStake",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "pendingUnstake",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "pendingStake",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "rewardsPaidPerToken",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "outstandingRewards",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint64",
-        "name": "lastRequestIndexConsidered",
-        "type": "uint64"
-      },
-      {
-        "internalType": "uint64",
-        "name": "unstakeRequestTime",
-        "type": "uint64"
-      },
-      {
-        "internalType": "address",
-        "name": "delegate",
-        "type": "address"
-      }
+      { "internalType": "uint256", "name": "activeStake", "type": "uint256" },
+      { "internalType": "uint256", "name": "pendingUnstake", "type": "uint256" },
+      { "internalType": "uint256", "name": "pendingStake", "type": "uint256" },
+      { "internalType": "uint256", "name": "rewardsPaidPerToken", "type": "uint256" },
+      { "internalType": "uint256", "name": "outstandingRewards", "type": "uint256" },
+      { "internalType": "int256", "name": "unappliedSlash", "type": "int256" },
+      { "internalType": "uint64", "name": "nextIndexToProcess", "type": "uint64" },
+      { "internalType": "uint64", "name": "unstakeRequestTime", "type": "uint64" },
+      { "internalType": "address", "name": "delegate", "type": "address" }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -1922,39 +808,21 @@
   {
     "inputs": [],
     "name": "votingToken",
-    "outputs": [
-      {
-        "internalType": "contract VotingToken",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "contract ExpandedIERC20", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "withdrawAndRestake",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "withdrawRewards",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   }

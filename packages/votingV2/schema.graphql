@@ -10,6 +10,30 @@ type User @entity {
   "Provides a lower-bound on # of votes that user has correctly voted for. User may not have retrieved rewards for all of their correct votes."
   countRetrievals: BigInt
 
+  voterActiveStake: BigDecimal
+
+  voterPendingStake: BigDecimal
+
+  voterPendingUnstake: BigDecimal
+
+  "Cumulative active stake from all stakeholders"
+  cumulativeActiveStake: BigDecimal
+
+  "Cumulative pending stake from all stakeholders"
+  cumulativePendingStake: BigDecimal
+
+  "Total rewards claimed in voting token"
+  claimedRewards: BigDecimal
+
+  "Outstanding rewards unclaimed in voting token"
+  outstandingRewards: BigDecimal
+
+  "Last outstandingRewards update time"
+  outstandingRewardsLastUpdateTime: BigInt
+
+  "Total slashed applied to the user"
+  cumulativeSlash: BigDecimal
+
   votesCommited: [CommittedVote!]! @derivedFrom(field: "voter")
 
   votesRevealed: [RevealedVote!]! @derivedFrom(field: "voter")
@@ -44,6 +68,9 @@ type PriceIdentifier @entity {
 type PriceRequest @entity {
   "ID is the PriceIdentifier ID + the timestamp"
   id: ID!
+
+  "The price request index"
+  requestIndex: BigInt!
 
   "Depicts whether the request has been resolved"
   isResolved: Boolean!
@@ -101,8 +128,6 @@ type PriceRequestRound @entity {
 
   roundId: BigInt!
 
-  snapshotId: BigInt
-
   "Total amount of users who voted on this round"
   votersAmount: BigDecimal!
 
@@ -113,7 +138,7 @@ type PriceRequestRound @entity {
 
   totalRewardsClaimed: BigDecimal!
 
-  totalSupplyAtSnapshot: BigDecimal
+  cumulativeActiveStakeAtRound: BigDecimal
 
   "Ratio of the total supply of tokens that were weighted on this vote"
   tokenVoteParticipationRatio: BigDecimal
@@ -127,29 +152,14 @@ type PriceRequestRound @entity {
   "Percentage of correct voters over total voters on this price request"
   votersEligibleForRewardsPercentage: BigDecimal
 
-  "Ratio of correct voters who claimed their rewards"
-  votersClaimedRatio: BigDecimal
+  "gat expressed exactly as in the contract"
+  gat: BigDecimal
 
-  "Percentage of correct voters who claimed their rewards"
-  votersClaimedPercentage: BigDecimal
-
-  "Ratio of rewards claimed over total supply of voting token"
-  tokensClaimedRatio: BigDecimal
-
-  "Percentage of rewards claimed over total supply of voting token"
-  tokensClaimedPercentage: BigDecimal
-
-  "gatPercentage expressed exactly as in the contract. 1 = 100%"
+  "The raw percentage that the gat represents of total supply . 1 = 100%"
   gatPercentageRaw: BigDecimal
 
   "gatPercentage expressed as a percentage value"
   gatPercentage: BigDecimal
-
-  "inflationRate expressed exactly as in the contract. 1 = 100%"
-  inflationRateRaw: BigDecimal
-
-  "inflationRate expressed as a percentage value"
-  inflationRate: BigDecimal
 
   winnerGroup: VoterGroup
 
