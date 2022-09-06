@@ -1,7 +1,8 @@
 import { User } from "../../../generated/schema";
-import { VOTING_TOKEN_ADDRESS, BIGINT_ZERO } from "../constants";
+import { BIGINT_ZERO } from "../constants";
 import { Address } from "@graphprotocol/graph-ts";
 import { VotingToken } from "../../../generated/Voting/VotingToken";
+import { VOTING_TOKEN_ADDRESS } from "../../../addresses";
 
 export function getOrCreateUser(id: Address, createIfNotFound: boolean = true): User {
   let user = User.load(id.toHexString());
@@ -19,5 +20,5 @@ export function getOrCreateUser(id: Address, createIfNotFound: boolean = true): 
 }
 
 export function getTokenContract(): VotingToken {
-  return VotingToken.bind(VOTING_TOKEN_ADDRESS);
+  return VotingToken.bind(Address.fromString(VOTING_TOKEN_ADDRESS));
 }
