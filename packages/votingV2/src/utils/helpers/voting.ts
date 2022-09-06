@@ -5,8 +5,22 @@ import {
   RevealedVote,
   RewardsClaimed,
   VoterGroup,
+  SlashedVote,
+  Stakeholders,
 } from "../../../generated/schema";
 import { BIGDECIMAL_ZERO } from "../constants";
+const STAKEHOLDERS = "stakeholders";
+
+export function getOrCreateStakeholders(): Stakeholders {
+  let request = Stakeholders.load(STAKEHOLDERS);
+
+  if (request == null) {
+    request = new Stakeholders(STAKEHOLDERS);
+    request.users = [];
+  }
+
+  return request as Stakeholders;
+}
 
 export function getOrCreatePriceRequest(id: String, createIfNotFound: boolean = true): PriceRequest {
   let request = PriceRequest.load(id);
@@ -32,6 +46,27 @@ export function getOrCreatePriceRequestRound(id: String, createIfNotFound: boole
   }
 
   return requestRound as PriceRequestRound;
+}
+
+export function getOrCreateSlashedVote(
+  id: String,
+  requestId: string,
+  voterId: string,
+  createIfNotFound: boolean = true
+): SlashedVote {
+  let vote = SlashedVote.load(id);
+
+  if (vote == null && createIfNotFound) {
+    vote = new SlashedVote(id);
+    vote.voter = voterId;
+    vote.request = requestId;
+    vote.slashAmount = BIGDECIMAL_ZERO;
+    vote.correctness = false;
+    vote.processed = false;
+    vote.voted = false;
+  }
+
+  return vote as SlashedVote;
 }
 
 export function getOrCreateCommittedVote(id: String, createIfNotFound: boolean = true): CommittedVote {
@@ -75,4 +110,30 @@ export function getOrCreateVoterGroup(id: String, createIfNotFound: boolean = tr
   }
 
   return group as VoterGroup;
+}
+
+export function getVoteId(
+  voter: string,
+  identifier: string,
+  time: string,
+  ancillaryData: string,
+  roundId: string
+): string {
+  return voter
+    .concat("-")
+    .concat(identifier)
+    .concat("-")
+    .concat(time)
+    .concat("-")
+    .concat(ancillaryData)
+    .concat("-")
+    .concat(roundId);
+}
+
+export function getVoteIdNoRoundId(voter: string, identifier: string, time: string, ancillaryData: string): string {
+  return voter.concat("-").concat(identifier).concat("-").concat(time).concat("-").concat(ancillaryData);
+}
+
+export function getPriceRequestId(identifier: string, time: string, ancillaryData: string): string {
+  return identifier.concat("-").concat(time).concat("-").concat(ancillaryData);
 }

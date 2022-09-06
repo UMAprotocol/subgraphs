@@ -12,7 +12,7 @@ import {
   VotingV2,
   WithdrawnRewards,
 } from "../../generated/Voting/VotingV2";
-import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE } from "../utils/constants";
+import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE, BIGINT_ZERO } from "../utils/constants";
 import { defaultBigDecimal, defaultBigInt, toDecimal } from "../utils/decimals";
 import {
   getOrCreateCommittedVote,
@@ -25,7 +25,14 @@ import {
   getTokenContract,
 } from "../utils/helpers";
 
-import { BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
+import {
+  getOrCreateSlashedVote,
+  getOrCreateStakeholders,
+  getPriceRequestId,
+  getVoteId,
+  getVoteIdNoRoundId,
+} from "../utils/helpers/voting";
 
 // - event: PriceRequestAdded(address,indexed uint256,indexed bytes32,indexed uint256,uint256,bytes,bool)
 // event PriceRequestAdded(
@@ -39,7 +46,11 @@ import { BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
 // );
 
 export function handlePriceRequestAdded(event: PriceRequestAdded): void {
-  let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
+  let requestId = getPriceRequestId(
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString()
+  );
   let request = getOrCreatePriceRequest(requestId);
   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
 
@@ -83,7 +94,11 @@ export function handlePriceResolved(event: PriceResolved): void {
     event.params.identifier.toString(),
     event.params.roundId.toString(),
   ]);
-  let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
+  let requestId = getPriceRequestId(
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString()
+  );
   let request = getOrCreatePriceRequest(requestId);
 
   log.warning(`Fetched Price Request Entity: {},{},{}`, [
@@ -129,6 +144,45 @@ export function handlePriceResolved(event: PriceResolved): void {
   requestRound.save();
   request.save();
   voterGroup.save();
+
+  let stakeholders = getOrCreateStakeholders();
+  let users = stakeholders.users;
+  for (let i = 0; i < users.length; i++) {
+    let userAddress = users[i];
+    let user = getOrCreateUser(Address.fromString(userAddress as string));
+
+    var voteId = getVoteId(
+      userAddress,
+      event.params.identifier.toString(),
+      event.params.time.toString(),
+      event.params.ancillaryData.toHexString(),
+      event.params.roundId.toString()
+    );
+
+    let voteSlashedId = getVoteIdNoRoundId(
+      userAddress,
+      event.params.identifier.toString(),
+      event.params.time.toString(),
+      event.params.ancillaryData.toHexString()
+    );
+
+    let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id);
+
+    if (user.votesRevealed.filter((vote) => vote === voteId)) {
+      let vote = getOrCreateRevealedVote(voteId);
+      if (event.params.price.equals(vote.price)) {
+        voteSlashed.correctness = true;
+        // TODO calculate slash
+      } else {
+        voteSlashed.correctness = false;
+        // TODO calculate slash
+      }
+    } else {
+      voteSlashed.voted = false;
+      // TODO calculate slash
+    }
+    voteSlashed.save();
+  }
 }
 
 // - event: VoteCommitted(indexed address,indexed address,uint256,indexed bytes32,uint256,bytes)
@@ -142,17 +196,21 @@ export function handlePriceResolved(event: PriceResolved): void {
 // );
 
 export function handleVoteCommitted(event: VoteCommitted): void {
-  let voteId = event.params.voter
-    .toHexString()
-    .concat("-")
-    .concat(event.params.identifier.toString())
-    .concat("-")
-    .concat(event.params.time.toString())
-    .concat("-")
-    .concat(event.params.roundId.toString());
+  let voteId = getVoteId(
+    event.params.voter.toHexString(),
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString(),
+    event.params.roundId.toString()
+  );
   let vote = getOrCreateCommittedVote(voteId);
   let voter = getOrCreateUser(event.params.voter);
-  let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
+
+  let requestId = getPriceRequestId(
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString()
+  );
   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
 
   vote.voter = voter.id;
@@ -183,17 +241,20 @@ export function handleVoteCommitted(event: VoteCommitted): void {
 // );
 
 export function handleVoteRevealed(event: VoteRevealed): void {
-  let voteId = event.params.voter
-    .toHexString()
-    .concat("-")
-    .concat(event.params.identifier.toString())
-    .concat("-")
-    .concat(event.params.time.toString())
-    .concat("-")
-    .concat(event.params.roundId.toString());
+  let voteId = getVoteId(
+    event.params.voter.toHexString(),
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString(),
+    event.params.roundId.toString()
+  );
   let vote = getOrCreateRevealedVote(voteId);
   let voter = getOrCreateUser(event.params.voter);
-  let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
+  let requestId = getPriceRequestId(
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString()
+  );
   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
   let groupId = requestRound.id.concat("-").concat(event.params.price.toString());
   let voterGroup = getOrCreateVoterGroup(groupId);
@@ -232,9 +293,21 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   requestRound.tokenVoteParticipationPercentage = requestRound.tokenVoteParticipationRatio.times(BIGDECIMAL_HUNDRED);
 
   requestRound.save();
+
+  let voteSlashedId = getVoteIdNoRoundId(
+    event.params.voter.toHexString(),
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString()
+  );
+
+  let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, voter.id);
+  voteSlashed.voted = true;
+
   vote.save();
   voter.save();
   voterGroup.save();
+  voteSlashed.save();
 }
 
 // event Staked(
@@ -250,12 +323,19 @@ export function handleVoteRevealed(event: VoteRevealed): void {
 
 export function handleStaked(event: Staked): void {
   let user = getOrCreateUser(event.params.voter);
+  let stakeholders = getOrCreateStakeholders();
   user.voterActiveStake = toDecimal(event.params.voterActiveStake);
   user.voterPendingStake = toDecimal(event.params.voterPendingStake);
   user.voterPendingUnstake = toDecimal(event.params.voterPendingUnstake);
   user.cumulativeActiveStake = toDecimal(event.params.cumulativeActiveStake);
   user.cumulativePendingStake = toDecimal(event.params.cumulativePendingStake);
+
+  let users = stakeholders.users;
+  users.push(user.id);
+  stakeholders.users = users;
+
   user.save();
+  stakeholders.save();
 }
 
 // event UpdatedActiveStake(
@@ -279,11 +359,41 @@ export function handleUpdatedActiveStake(event: UpdatedActiveStake): void {
 
 export function handleUpdatedReward(event: UpdatedReward): void {
   let user = getOrCreateUser(event.params.voter);
+  let nextIndexToProcess = user.nextIndexToProcess;
   let votingContract = VotingV2.bind(event.address);
   let voterStake = votingContract.try_voterStakes(event.params.voter);
+  let nextIndexToProcessChain = voterStake.value.value6;
 
   user.outstandingRewards = voterStake.reverted ? user.outstandingRewards : toDecimal(voterStake.value.value4);
   user.outstandingRewardsLastUpdateTime = event.params.lastUpdateTime;
+  user.nextIndexToProcess = nextIndexToProcessChain;
+
+  for (
+    let start: BigInt = defaultBigInt(nextIndexToProcess);
+    start.lt(nextIndexToProcessChain);
+    start = start.plus(BIGINT_ONE)
+  ) {
+    let priceRequestId = votingContract.try_priceRequestIds(start);
+    let priceRequest = votingContract.try_priceRequests(priceRequestId.value);
+    let voteSlashedId = getVoteIdNoRoundId(
+      event.params.voter.toHexString(),
+      priceRequest.value.value5.toString(),
+      priceRequest.value.value4.toString(),
+      priceRequest.value.value6.toHexString()
+    );
+    let requestId = getPriceRequestId(
+      priceRequest.value.value5.toString(),
+      priceRequest.value.value4.toString(),
+      priceRequest.value.value6.toHexString()
+    );
+
+    log.warning(`Processed Price Request slash: {},{}`, [voteSlashedId, user.id]);
+    log.warning(`Processed requestId: {},{}`, [requestId, user.id]);
+
+    let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id);
+    voteSlashed.processed = true;
+    voteSlashed.save();
+  }
 
   user.save();
 }

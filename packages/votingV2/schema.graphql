@@ -1,3 +1,8 @@
+type Stakeholders @entity {
+  id: ID!
+  users: [User!]! @derivedFrom(field: "stakeholders")
+}
+
 type User @entity {
   "Utility entity that links data from a single ethereum address. Id of the entity is the ethereum address itself"
   id: ID!
@@ -34,9 +39,15 @@ type User @entity {
   "Total slashed applied to the user"
   cumulativeSlash: BigDecimal
 
+  nextIndexToProcess: BigInt
+
   votesCommited: [CommittedVote!]! @derivedFrom(field: "voter")
 
   votesRevealed: [RevealedVote!]! @derivedFrom(field: "voter")
+
+  votesSlashed: [SlashedVote!]! @derivedFrom(field: "voter")
+
+  stakeholders: Stakeholders!
 }
 
 type Collateral @entity {
@@ -187,6 +198,23 @@ type VoterGroup @entity {
   votersAmount: BigDecimal!
 
   won: Boolean!
+}
+
+type SlashedVote @entity {
+  "Commited votes won't show the price until a reveal happens and a RevealedVote is created"
+  id: ID!
+
+  request: PriceRequest!
+
+  voter: User!
+
+  slashAmount: BigDecimal!
+
+  voted: Boolean!
+
+  correctness: Boolean!
+
+  processed: Boolean!
 }
 
 type CommittedVote @entity {
