@@ -6,20 +6,20 @@ import {
   RewardsClaimed,
   VoterGroup,
   SlashedVote,
-  Stakeholders,
+  Stakeholder,
 } from "../../../generated/schema";
 import { BIGDECIMAL_ZERO } from "../constants";
 export const STAKEHOLDERS = "stakeholders";
 
-export function getOrCreateStakeholders(): Stakeholders {
-  let request = Stakeholders.load(STAKEHOLDERS);
+export function getOrCreateStakeholder(): Stakeholder {
+  let request = Stakeholder.load(STAKEHOLDERS);
 
   if (request == null) {
-    request = new Stakeholders(STAKEHOLDERS);
-    request.save();
+    request = new Stakeholder(STAKEHOLDERS);
+    request.userAddresses = [];
   }
 
-  return request as Stakeholders;
+  return request as Stakeholder;
 }
 
 export function getOrCreatePriceRequest(id: String, createIfNotFound: boolean = true): PriceRequest {

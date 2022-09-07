@@ -1,4 +1,4 @@
-import { PriceRequestRound } from "../../generated/schema";
+import { PriceRequestRound, RevealedVote } from "../../generated/schema";
 import {
   ExecutedUnstake,
   PriceRequestAdded,
@@ -28,7 +28,7 @@ import {
 import { Address, BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
 import {
   getOrCreateSlashedVote,
-  getOrCreateStakeholders,
+  getOrCreateStakeholder,
   getPriceRequestId,
   getVoteId,
   getVoteIdNoRoundId,
@@ -149,54 +149,53 @@ export function handlePriceResolved(event: PriceResolved): void {
   requestRound.gatPercentage = defaultBigDecimal(requestRound.gatPercentageRaw).times(BIGDECIMAL_HUNDRED);
   requestRound.cumulativeActiveStakeAtRound = cumulativeActiveStakeAtRound;
 
-  let stakeholders = getOrCreateStakeholders();
-  let users = stakeholders.users;
-  log.warning(`LENGTH : {}`, [typeof users]);
+  let stakeholders = getOrCreateStakeholder();
+  let users = stakeholders.userAddresses;
 
   requestRound.save();
   request.save();
   voterGroup.save();
+  stakeholders.save();
 
-  // let stakeholders = getOrCreateStakeholders();
-  // let users = stakeholders.users;
-  // log.warning(`LENGTH : {}`, [isNaN(users.length) ? "NaN" : (<number>users.length).toString()]);
+  log.warning(`LENGTH : {}`, [users[0]]);
 
-  // for (let i = 0; i < users.length; i++) {
-  //   let userAddress = users[i];
-  //   let user = getOrCreateUser(Address.fromString(userAddress as string));
+  for (let i = 0; i < users.length; i++) {
+    let userAddress = users[i];
+    let user = getOrCreateUser(Address.fromString(userAddress as string));
 
-  //   var voteId = getVoteId(
-  //     userAddress,
-  //     event.params.identifier.toString(),
-  //     event.params.time.toString(),
-  //     event.params.ancillaryData.toHexString(),
-  //     event.params.roundId.toString()
-  //   );
+    log.warning("INSIDE ", [userAddress]);
+    var voteId = getVoteId(
+      userAddress,
+      event.params.identifier.toString(),
+      event.params.time.toString(),
+      event.params.ancillaryData.toHexString(),
+      event.params.roundId.toString()
+    );
 
-  //   let voteSlashedId = getVoteIdNoRoundId(
-  //     userAddress,
-  //     event.params.identifier.toString(),
-  //     event.params.time.toString(),
-  //     event.params.ancillaryData.toHexString()
-  //   );
+    let voteSlashedId = getVoteIdNoRoundId(
+      userAddress,
+      event.params.identifier.toString(),
+      event.params.time.toString(),
+      event.params.ancillaryData.toHexString()
+    );
 
-  //   let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id);
+    let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id);
 
-  //   if (user.votesRevealed.filter((vote) => vote === voteId)) {
-  //     let vote = getOrCreateRevealedVote(voteId);
-  //     if (event.params.price.equals(vote.price)) {
-  //       voteSlashed.correctness = true;
-  //       // TODO calculate slash
-  //     } else {
-  //       voteSlashed.correctness = false;
-  //       // TODO calculate slash
-  //     }
-  //   } else {
-  //     voteSlashed.voted = false;
-  //     // TODO calculate slash
-  //   }
-  //   voteSlashed.save();
-  // }
+    if (RevealedVote.load(voteId) != null) {
+      let vote = getOrCreateRevealedVote(voteId);
+      if (event.params.price.equals(vote.price)) {
+        voteSlashed.correctness = true;
+        // TODO calculate slash
+      } else {
+        voteSlashed.correctness = false;
+        // TODO calculate slash
+      }
+    } else {
+      voteSlashed.voted = false;
+      // TODO calculate slash
+    }
+    voteSlashed.save();
+  }
 }
 
 // - event: VoteCommitted(indexed address,indexed address,uint256,indexed bytes32,uint256,bytes)
@@ -339,15 +338,21 @@ export function handleVoteRevealed(event: VoteRevealed): void {
 
 export function handleStaked(event: Staked): void {
   let user = getOrCreateUser(event.params.voter);
-  getOrCreateStakeholders();
+  let stakeholders = getOrCreateStakeholder();
   user.voterActiveStake = toDecimal(event.params.voterActiveStake);
   user.voterPendingStake = toDecimal(event.params.voterPendingStake);
   user.voterPendingUnstake = toDecimal(event.params.voterPendingUnstake);
   user.cumulativeActiveStake = toDecimal(event.params.cumulativeActiveStake);
   user.cumulativePendingStake = toDecimal(event.params.cumulativePendingStake);
-  user.stakeholders = STAKEHOLDERS;
+  user.stakeholders = stakeholders.id;
+
+  let newUserAddresses = stakeholders.userAddresses;
+  if (!newUserAddresses.includes(event.params.voter.toHexString()))
+    newUserAddresses.push(event.params.voter.toHexString());
+  stakeholders.userAddresses = newUserAddresses;
 
   user.save();
+  stakeholders.save();
 }
 
 // event UpdatedActiveStake(

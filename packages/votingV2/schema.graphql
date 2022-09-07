@@ -1,6 +1,7 @@
-type Stakeholders @entity {
+type Stakeholder @entity {
   id: ID!
   users: [User!] @derivedFrom(field: "stakeholders")
+  userAddresses: [String!]!
 }
 
 type User @entity {
@@ -47,7 +48,7 @@ type User @entity {
 
   votesSlashed: [SlashedVote!]! @derivedFrom(field: "voter")
 
-  stakeholders: Stakeholders!
+  stakeholders: Stakeholder!
 }
 
 type Collateral @entity {
