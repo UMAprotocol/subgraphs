@@ -157,13 +157,14 @@ export function handlePriceResolved(event: PriceResolved): void {
   voterGroup.save();
   stakeholders.save();
 
-  log.warning(`LENGTH : {}`, [users[0]]);
+  let slashingTrackers = votingContract.try_requestSlashingTrackers(request.requestIndex);
+
+  // SlashingTracker(wrongVoteSlash, noVoteSlash, totalSlashed, totalCorrectVote)
 
   for (let i = 0; i < users.length; i++) {
     let userAddress = users[i];
     let user = getOrCreateUser(Address.fromString(userAddress as string));
 
-    log.warning("INSIDE ", [userAddress]);
     var voteId = getVoteId(
       userAddress,
       event.params.identifier.toString(),
@@ -185,10 +186,14 @@ export function handlePriceResolved(event: PriceResolved): void {
       let vote = getOrCreateRevealedVote(voteId);
       if (event.params.price.equals(vote.price)) {
         voteSlashed.correctness = true;
-        // TODO calculate slash
+        let slashing = toDecimal(vote.numTokens)
+          .times(toDecimal(slashingTrackers.value.totalSlashed))
+          .div(toDecimal(slashingTrackers.value.totalCorrectVotes));
+        voteSlashed.slashAmount = slashing;
       } else {
         voteSlashed.correctness = false;
-        // TODO calculate slash
+        let slashing = toDecimal(vote.numTokens).times(toDecimal(slashingTrackers.value.wrongVoteSlashPerToken));
+        voteSlashed.slashAmount = slashing;
       }
     } else {
       voteSlashed.voted = false;
@@ -384,33 +389,6 @@ export function handleUpdatedReward(event: UpdatedReward): void {
   user.outstandingRewards = voterStake.reverted ? user.outstandingRewards : toDecimal(voterStake.value.value4);
   user.outstandingRewardsLastUpdateTime = event.params.lastUpdateTime;
   user.nextIndexToProcess = nextIndexToProcessChain;
-
-  for (
-    let start: BigInt = defaultBigInt(nextIndexToProcess);
-    start.lt(nextIndexToProcessChain);
-    start = start.plus(BIGINT_ONE)
-  ) {
-    let priceRequestId = votingContract.try_priceRequestIds(start);
-    let priceRequest = votingContract.try_priceRequests(priceRequestId.value);
-    let voteSlashedId = getVoteIdNoRoundId(
-      event.params.voter.toHexString(),
-      priceRequest.value.value5.toString(),
-      priceRequest.value.value4.toString(),
-      priceRequest.value.value6.toHexString()
-    );
-    let requestId = getPriceRequestId(
-      priceRequest.value.value5.toString(),
-      priceRequest.value.value4.toString(),
-      priceRequest.value.value6.toHexString()
-    );
-
-    log.warning(`Processed Price Request slash: {},{}`, [voteSlashedId, user.id]);
-    log.warning(`Processed requestId: {},{}`, [requestId, user.id]);
-
-    let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id);
-    voteSlashed.processed = true;
-    voteSlashed.save();
-  }
 
   user.save();
 }
