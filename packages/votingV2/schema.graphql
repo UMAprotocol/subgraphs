@@ -1,6 +1,6 @@
 type Stakeholders @entity {
   id: ID!
-  users: [User!]! @derivedFrom(field: "stakeholders")
+  users: [User!] @derivedFrom(field: "stakeholders")
 }
 
 type User @entity {

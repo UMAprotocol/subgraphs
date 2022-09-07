@@ -32,6 +32,7 @@ import {
   getPriceRequestId,
   getVoteId,
   getVoteIdNoRoundId,
+  STAKEHOLDERS,
 } from "../utils/helpers/voting";
 
 // - event: PriceRequestAdded(address,indexed uint256,indexed bytes32,indexed uint256,uint256,bytes,bool)
@@ -73,7 +74,11 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   requestRound.time = event.params.time;
   requestRound.roundId = event.params.roundId;
 
-  log.warning(`New Price Request Saved: {},{},{}`, [request.time.toString(), request.latestRound, request.identifier]);
+  log.warning(`New Price Request Saved: {},{},{}`, [
+    request.time.toString(),
+    <string>request.latestRound || "",
+    request.identifier,
+  ]);
 
   requestRound.save();
   request.save();
@@ -103,7 +108,7 @@ export function handlePriceResolved(event: PriceResolved): void {
 
   log.warning(`Fetched Price Request Entity: {},{},{}`, [
     request.time.toString(),
-    request.latestRound,
+    <string>request.latestRound || "",
     request.identifier,
   ]);
   let requestRound: PriceRequestRound = getOrCreatePriceRequestRound(
@@ -132,57 +137,66 @@ export function handlePriceResolved(event: PriceResolved): void {
   requestRound.roundId = event.params.roundId;
   requestRound.votersEligibleForRewardsRatio = voterGroup.votersAmount.div(requestRound.votersAmount);
 
-  requestRound.votersEligibleForRewardsPercentage =
-    requestRound.votersEligibleForRewardsRatio.times(BIGDECIMAL_HUNDRED);
+  requestRound.votersEligibleForRewardsPercentage = defaultBigDecimal(requestRound.votersEligibleForRewardsRatio).times(
+    BIGDECIMAL_HUNDRED
+  );
   requestRound.winnerGroup = voterGroup.id;
   requestRound.gat = roundInfo.reverted ? requestRound.gat : toDecimal(roundInfo.value.value0);
 
-  requestRound.gatPercentageRaw = requestRound.gat.div(toDecimal(getTokenContract().try_totalSupply().value));
-  requestRound.gatPercentage = requestRound.gatPercentageRaw.times(BIGDECIMAL_HUNDRED);
+  requestRound.gatPercentageRaw = defaultBigDecimal(requestRound.gat).div(
+    toDecimal(getTokenContract().try_totalSupply().value)
+  );
+  requestRound.gatPercentage = defaultBigDecimal(requestRound.gatPercentageRaw).times(BIGDECIMAL_HUNDRED);
   requestRound.cumulativeActiveStakeAtRound = cumulativeActiveStakeAtRound;
+
+  let stakeholders = getOrCreateStakeholders();
+  let users = stakeholders.users;
+  log.warning(`LENGTH : {}`, [typeof users]);
 
   requestRound.save();
   request.save();
   voterGroup.save();
 
-  let stakeholders = getOrCreateStakeholders();
-  let users = stakeholders.users;
-  for (let i = 0; i < users.length; i++) {
-    let userAddress = users[i];
-    let user = getOrCreateUser(Address.fromString(userAddress as string));
+  // let stakeholders = getOrCreateStakeholders();
+  // let users = stakeholders.users;
+  // log.warning(`LENGTH : {}`, [isNaN(users.length) ? "NaN" : (<number>users.length).toString()]);
 
-    var voteId = getVoteId(
-      userAddress,
-      event.params.identifier.toString(),
-      event.params.time.toString(),
-      event.params.ancillaryData.toHexString(),
-      event.params.roundId.toString()
-    );
+  // for (let i = 0; i < users.length; i++) {
+  //   let userAddress = users[i];
+  //   let user = getOrCreateUser(Address.fromString(userAddress as string));
 
-    let voteSlashedId = getVoteIdNoRoundId(
-      userAddress,
-      event.params.identifier.toString(),
-      event.params.time.toString(),
-      event.params.ancillaryData.toHexString()
-    );
+  //   var voteId = getVoteId(
+  //     userAddress,
+  //     event.params.identifier.toString(),
+  //     event.params.time.toString(),
+  //     event.params.ancillaryData.toHexString(),
+  //     event.params.roundId.toString()
+  //   );
 
-    let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id);
+  //   let voteSlashedId = getVoteIdNoRoundId(
+  //     userAddress,
+  //     event.params.identifier.toString(),
+  //     event.params.time.toString(),
+  //     event.params.ancillaryData.toHexString()
+  //   );
 
-    if (user.votesRevealed.filter((vote) => vote === voteId)) {
-      let vote = getOrCreateRevealedVote(voteId);
-      if (event.params.price.equals(vote.price)) {
-        voteSlashed.correctness = true;
-        // TODO calculate slash
-      } else {
-        voteSlashed.correctness = false;
-        // TODO calculate slash
-      }
-    } else {
-      voteSlashed.voted = false;
-      // TODO calculate slash
-    }
-    voteSlashed.save();
-  }
+  //   let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id);
+
+  //   if (user.votesRevealed.filter((vote) => vote === voteId)) {
+  //     let vote = getOrCreateRevealedVote(voteId);
+  //     if (event.params.price.equals(vote.price)) {
+  //       voteSlashed.correctness = true;
+  //       // TODO calculate slash
+  //     } else {
+  //       voteSlashed.correctness = false;
+  //       // TODO calculate slash
+  //     }
+  //   } else {
+  //     voteSlashed.voted = false;
+  //     // TODO calculate slash
+  //   }
+  //   voteSlashed.save();
+  // }
 }
 
 // - event: VoteCommitted(indexed address,indexed address,uint256,indexed bytes32,uint256,bytes)
@@ -273,7 +287,7 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   vote.numTokens = event.params.numTokens;
   vote.group = voterGroup.id;
 
-  voter.countReveals = voter.countReveals.plus(BIGINT_ONE);
+  voter.countReveals = defaultBigInt(voter.countReveals).plus(BIGINT_ONE);
 
   voterGroup.price = event.params.price;
   voterGroup.round = requestRound.id;
@@ -290,7 +304,9 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   requestRound.tokenVoteParticipationRatio = cumulativeActiveStakeAtRound.gt(BIGDECIMAL_ZERO)
     ? requestRound.totalVotesRevealed.div(<BigDecimal>cumulativeActiveStakeAtRound)
     : BigDecimal.fromString("0");
-  requestRound.tokenVoteParticipationPercentage = requestRound.tokenVoteParticipationRatio.times(BIGDECIMAL_HUNDRED);
+  requestRound.tokenVoteParticipationPercentage = defaultBigDecimal(requestRound.tokenVoteParticipationRatio).times(
+    BIGDECIMAL_HUNDRED
+  );
 
   requestRound.save();
 
@@ -323,19 +339,15 @@ export function handleVoteRevealed(event: VoteRevealed): void {
 
 export function handleStaked(event: Staked): void {
   let user = getOrCreateUser(event.params.voter);
-  let stakeholders = getOrCreateStakeholders();
+  getOrCreateStakeholders();
   user.voterActiveStake = toDecimal(event.params.voterActiveStake);
   user.voterPendingStake = toDecimal(event.params.voterPendingStake);
   user.voterPendingUnstake = toDecimal(event.params.voterPendingUnstake);
   user.cumulativeActiveStake = toDecimal(event.params.cumulativeActiveStake);
   user.cumulativePendingStake = toDecimal(event.params.cumulativePendingStake);
-
-  let users = stakeholders.users;
-  users.push(user.id);
-  stakeholders.users = users;
+  user.stakeholders = STAKEHOLDERS;
 
   user.save();
-  stakeholders.save();
 }
 
 // event UpdatedActiveStake(

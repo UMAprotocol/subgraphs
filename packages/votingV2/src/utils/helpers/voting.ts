@@ -9,14 +9,14 @@ import {
   Stakeholders,
 } from "../../../generated/schema";
 import { BIGDECIMAL_ZERO } from "../constants";
-const STAKEHOLDERS = "stakeholders";
+export const STAKEHOLDERS = "stakeholders";
 
 export function getOrCreateStakeholders(): Stakeholders {
   let request = Stakeholders.load(STAKEHOLDERS);
 
   if (request == null) {
     request = new Stakeholders(STAKEHOLDERS);
-    request.users = [];
+    request.save();
   }
 
   return request as Stakeholders;

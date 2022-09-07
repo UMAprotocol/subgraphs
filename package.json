@@ -16,9 +16,18 @@
   "bugs": {
     "url": "https://github.com/UMAprotocol/subgraphs/issues"
   },
-  "workspaces": [
-    "packages/**"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/financial-contracts/**",
+      "packages/long-short-pair/**",
+      "packages/optimistic-oracle/**",
+      "packages/token/**",
+      "packages/voting/**"
+    ],
+    "nohoist": [
+      "packages/votingV2/**"
+    ]
+  },
   "devDependencies": {
     "ganache-cli": "^6.12.2",
     "lerna": "^3.22.1",
