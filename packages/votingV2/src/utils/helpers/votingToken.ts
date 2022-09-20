@@ -14,7 +14,8 @@ export function getOrCreateUser(id: Address, createIfNotFound: boolean = true): 
     user.address = id;
     user.countReveals = BIGINT_ZERO;
     user.countRetrievals = BIGINT_ZERO;
-    user.stakeholders = stakeholders.id;
+    user.stakesAmounts = [];
+    user.stakesTimestamp = [];
 
     user.save();
     stakeholders.save();

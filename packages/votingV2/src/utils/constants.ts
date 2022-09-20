@@ -7,4 +7,5 @@ export let BIGINT_ONE = BigInt.fromI32(1);
 export let BIGDECIMAL_ZERO = new BigDecimal(BIGINT_ZERO);
 export let BIGDECIMAL_ONE = toDecimal(BigInt.fromI32(10).pow(18));
 export let BIGDECIMAL_HUNDRED = toDecimal(BigInt.fromI32(10).pow(20));
+export let BIGDECIMAL_MINUS_ONE = toDecimal(BigInt.fromI32(-10).pow(18));
 export const ADMIN_PROPOSAL_PREFIX = "Admin ";

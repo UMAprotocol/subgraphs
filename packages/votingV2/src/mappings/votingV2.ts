@@ -1,10 +1,9 @@
-import { PriceRequestRound, RevealedVote } from "../../generated/schema";
+import { PriceRequestRound, RevealedVote, User } from "../../generated/schema";
 import {
   ExecutedUnstake,
   PriceRequestAdded,
   PriceResolved,
   Staked,
-  UpdatedActiveStake,
   UpdatedReward,
   VoteCommitted,
   VoteRevealed,
@@ -12,7 +11,7 @@ import {
   VotingV2,
   WithdrawnRewards,
 } from "../../generated/Voting/VotingV2";
-import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE, BIGINT_ZERO } from "../utils/constants";
+import { BIGDECIMAL_HUNDRED, BIGDECIMAL_MINUS_ONE, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE, BIGINT_ZERO } from "../utils/constants";
 import { defaultBigDecimal, defaultBigInt, toDecimal } from "../utils/decimals";
 import {
   getOrCreateCommittedVote,
@@ -32,16 +31,15 @@ import {
   getPriceRequestId,
   getVoteId,
   getVoteIdNoRoundId,
-  STAKEHOLDERS,
 } from "../utils/helpers/voting";
 
-// - event: PriceRequestAdded(address,indexed uint256,indexed bytes32,indexed uint256,uint256,bytes,bool)
+// - event: PriceRequestAdded(indexed address,indexed uint256,uint256,indexed bytes32,uint256,bytes,bool)
 // event PriceRequestAdded(
-//   address requester,
+//   address indexed requester,
 //   uint256 indexed roundId,
+//   uint256 priceRequestIndex,
 //   bytes32 indexed identifier,
-//   uint256 indexed time,
-//   uint256 requestIndex
+//   uint256 time,
 //   bytes ancillaryData,
 //   bool isGovernance
 // );
@@ -56,7 +54,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
 
   request.identifier = event.params.identifier.toString();
-  request.requestIndex = event.params.requestIndex;
+  request.requestIndex = event.params.priceRequestIndex;
   request.latestRound = requestRound.id;
   request.time = event.params.time;
   request.ancillaryData = event.params.ancillaryData.toHex();
@@ -83,14 +81,14 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   requestRound.save();
   request.save();
 }
-
+// - event: PriceResolved(indexed uint256,uint256,indexed bytes32,uint256,bytes,int256)
 // event PriceResolved(
 //   uint256 indexed roundId,
+//   uint256 priceRequestIndex,
 //   bytes32 indexed identifier,
 //   uint256 time,
-//   uint256 requestIndex,
-//   int256 price,
-//   bytes ancillaryData
+//   bytes ancillaryData,
+//   int256 price
 // );
 
 export function handlePriceResolved(event: PriceResolved): void {
@@ -118,7 +116,7 @@ export function handlePriceResolved(event: PriceResolved): void {
   let voterGroup = getOrCreateVoterGroup(groupId);
   let votingContract = VotingV2.bind(event.address);
   let roundInfo = votingContract.try_rounds(event.params.roundId);
-  let cumulativeActiveStakeAtRound = roundInfo.reverted
+  let cumulativeStakeAtRound = roundInfo.reverted
     ? toDecimal(BigInt.fromString("0"))
     : toDecimal(roundInfo.value.value1);
 
@@ -147,7 +145,7 @@ export function handlePriceResolved(event: PriceResolved): void {
     toDecimal(getTokenContract().try_totalSupply().value)
   );
   requestRound.gatPercentage = defaultBigDecimal(requestRound.gatPercentageRaw).times(BIGDECIMAL_HUNDRED);
-  requestRound.cumulativeActiveStakeAtRound = cumulativeActiveStakeAtRound;
+  requestRound.cumulativeStakeAtRound = cumulativeStakeAtRound;
 
   let stakeholders = getOrCreateStakeholder();
   let users = stakeholders.userAddresses;
@@ -196,21 +194,33 @@ export function handlePriceResolved(event: PriceResolved): void {
         voteSlashed.slashAmount = slashing;
       }
     } else {
+      // let roundEndTime = votingContract.try_getRoundEndTime(requestRound.roundId);
+      let activeStake = BIGINT_ZERO;
+      for (let i = user.stakesTimestamp.length - 1; i >= 0; i--) {
+        if (user.stakesTimestamp[i].lt(defaultBigInt(requestRound.lastRevealTime))) {
+          activeStake = user.stakesAmounts[i];
+        }
+      }
       voteSlashed.voted = false;
-      // TODO calculate slash
+      let slashing = activeStake
+        .toBigDecimal()
+        .times(toDecimal(slashingTrackers.value.noVoteSlashPerToken))
+        .times(BIGDECIMAL_MINUS_ONE);
+      voteSlashed.slashAmount = slashing;
     }
     voteSlashed.save();
   }
 }
 
-// - event: VoteCommitted(indexed address,indexed address,uint256,indexed bytes32,uint256,bytes)
+// - event: VoteCommitted(indexed address,indexed address,uint256,uint256,indexed bytes32,uint256,bytes)
 // event VoteCommitted(
 //   address indexed voter,
 //   address indexed caller,
 //   uint256 roundId,
+//   uint256 priceRequestIndex,
 //   bytes32 indexed identifier,
 //   uint256 time,
-//   bytes ancillaryData TODO check if we want to use this
+//   bytes ancillaryData
 // );
 
 export function handleVoteCommitted(event: VoteCommitted): void {
@@ -246,15 +256,16 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   vote.save();
   voter.save();
 }
-// - event: VoteRevealed(indexed address,indexed address,uint256,indexed bytes32,uint256,int256,bytes,uint256)
+// - event: VoteRevealed(indexed address,indexed address,uint256,uint256,indexed bytes32,uint256,bytes,int256,uint256)
 // event VoteRevealed(
 //   address indexed voter,
-//   address indexed caller,  TODO check if we want to use this
+//   address indexed caller,
 //   uint256 roundId,
+//   uint256 priceRequestIndex,
 //   bytes32 indexed identifier,
 //   uint256 time,
+//   bytes ancillaryData,
 //   int256 price,
-//   bytes ancillaryData,   TODO check if we want to use this
 //   uint256 numTokens
 // );
 
@@ -304,6 +315,7 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   requestRound.roundId = event.params.roundId;
   requestRound.totalVotesRevealed = requestRound.totalVotesRevealed.plus(toDecimal(vote.numTokens));
   requestRound.votersAmount = requestRound.votersAmount.plus(BIGDECIMAL_ONE);
+  requestRound.lastRevealTime = event.block.timestamp;
 
   requestRound.tokenVoteParticipationRatio = cumulativeActiveStakeAtRound.gt(BIGDECIMAL_ZERO)
     ? requestRound.totalVotesRevealed.div(<BigDecimal>cumulativeActiveStakeAtRound)
@@ -330,63 +342,63 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   voteSlashed.save();
 }
 
+// - event: Staked(indexed address,indexed address,uint256,uint256,uint256,uint256)
 // event Staked(
 //   address indexed voter,
 //   address indexed from,
 //   uint256 amount,
-//   uint256 voterActiveStake,
-//   uint256 voterPendingStake,
+//   uint256 voterStake,
 //   uint256 voterPendingUnstake,
-//   uint256 cumulativeActiveStake,
-//   uint256 cumulativePendingStake
+//   uint256 cumulativeStake
+// );
+
+function addStakes(user: User, newStake: BigInt, timestamp: BigInt): void {
+  let newActiveStakesAmounts = user.stakesAmounts;
+  newActiveStakesAmounts.push(newStake);
+  user.stakesAmounts = newActiveStakesAmounts;
+
+  let newActiveStakesTimestamp = user.stakesTimestamp;
+  newActiveStakesTimestamp.push(timestamp);
+  user.stakesTimestamp = newActiveStakesTimestamp;
+}
+
+// - event: Staked(indexed address,indexed address,uint256,uint256,uint256,uint256)
+// event Staked(
+//   address indexed voter,
+//   address indexed from,
+//   uint256 amount,
+//   uint256 voterStake,
+//   uint256 voterPendingUnstake,
+//   uint256 cumulativeStake
 // );
 
 export function handleStaked(event: Staked): void {
   let user = getOrCreateUser(event.params.voter);
   let stakeholders = getOrCreateStakeholder();
-  user.voterActiveStake = toDecimal(event.params.voterActiveStake);
-  user.voterPendingStake = toDecimal(event.params.voterPendingStake);
+  user.voterStake = toDecimal(event.params.voterStake);
   user.voterPendingUnstake = toDecimal(event.params.voterPendingUnstake);
-  user.cumulativeActiveStake = toDecimal(event.params.cumulativeActiveStake);
-  user.cumulativePendingStake = toDecimal(event.params.cumulativePendingStake);
-  user.stakeholders = stakeholders.id;
+  user.cumulativeStake = toDecimal(event.params.cumulativeStake);
 
   let newUserAddresses = stakeholders.userAddresses;
   if (!newUserAddresses.includes(event.params.voter.toHexString()))
     newUserAddresses.push(event.params.voter.toHexString());
   stakeholders.userAddresses = newUserAddresses;
 
+  addStakes(user, event.params.voterStake, event.block.timestamp);
+
   user.save();
   stakeholders.save();
-}
-
-// event UpdatedActiveStake(
-//   address indexed voter,
-//   uint256 voterActiveStake,
-//   uint256 voterPendingStake,
-//   uint256 cumulativeActiveStake,
-//   uint256 cumulativePendingStake
-// );
-
-export function handleUpdatedActiveStake(event: UpdatedActiveStake): void {
-  let user = getOrCreateUser(event.params.voter);
-  user.voterActiveStake = toDecimal(event.params.voterActiveStake);
-  user.voterPendingStake = toDecimal(event.params.voterPendingStake);
-  user.cumulativeActiveStake = toDecimal(event.params.cumulativeActiveStake);
-  user.cumulativePendingStake = toDecimal(event.params.cumulativePendingStake);
-  user.save();
 }
 
 // event UpdatedReward(address indexed voter, uint256 newReward, uint256 lastUpdateTime);
 
 export function handleUpdatedReward(event: UpdatedReward): void {
   let user = getOrCreateUser(event.params.voter);
-  let nextIndexToProcess = user.nextIndexToProcess;
   let votingContract = VotingV2.bind(event.address);
   let voterStake = votingContract.try_voterStakes(event.params.voter);
-  let nextIndexToProcessChain = voterStake.value.value6;
+  let nextIndexToProcessChain = voterStake.value.value5;
 
-  user.outstandingRewards = voterStake.reverted ? user.outstandingRewards : toDecimal(voterStake.value.value4);
+  user.outstandingRewards = voterStake.reverted ? user.outstandingRewards : toDecimal(voterStake.value.value3);
   user.outstandingRewardsLastUpdateTime = event.params.lastUpdateTime;
   user.nextIndexToProcess = nextIndexToProcessChain;
 
@@ -409,21 +421,20 @@ export function handleVoterSlashed(event: VoterSlashed): void {
   let user = getOrCreateUser(event.params.voter);
 
   user.cumulativeSlash = defaultBigDecimal(user.cumulativeSlash).plus(toDecimal(event.params.slashedTokens));
-  user.voterActiveStake = toDecimal(event.params.postActiveStake);
+  user.voterStake = toDecimal(event.params.postActiveStake);
+
+  addStakes(user, event.params.postActiveStake, event.block.timestamp);
 
   user.save();
 }
 
-// event ExecutedUnstake(
-//   address indexed voter,
-//   uint256 tokensSent,
-//   uint256 voterActiveStake,
-//   uint256 voterPendingStake
-// );
+// event ExecutedUnstake(address indexed voter, uint256 tokensSent, uint256 voterStake);
 
 export function handleExecutedUnstake(event: ExecutedUnstake): void {
   let user = getOrCreateUser(event.params.voter);
-  user.voterActiveStake = toDecimal(event.params.voterActiveStake);
-  user.voterPendingStake = toDecimal(event.params.voterPendingStake);
+  user.voterStake = toDecimal(event.params.voterStake);
+
+  addStakes(user, event.params.voterStake, event.block.timestamp);
+
   user.save();
 }

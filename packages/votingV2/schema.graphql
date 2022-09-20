@@ -1,6 +1,5 @@
 type Stakeholder @entity {
   id: ID!
-  users: [User!] @derivedFrom(field: "stakeholders")
   userAddresses: [String!]!
 }
 
@@ -16,17 +15,12 @@ type User @entity {
   "Provides a lower-bound on # of votes that user has correctly voted for. User may not have retrieved rewards for all of their correct votes."
   countRetrievals: BigInt
 
-  voterActiveStake: BigDecimal
-
-  voterPendingStake: BigDecimal
+  voterStake: BigDecimal
 
   voterPendingUnstake: BigDecimal
 
-  "Cumulative active stake from all stakeholders"
-  cumulativeActiveStake: BigDecimal
-
-  "Cumulative pending stake from all stakeholders"
-  cumulativePendingStake: BigDecimal
+  "Cumulative stake from all stakeholders"
+  cumulativeStake: BigDecimal
 
   "Total rewards claimed in voting token"
   claimedRewards: BigDecimal
@@ -42,13 +36,15 @@ type User @entity {
 
   nextIndexToProcess: BigInt
 
+  stakesAmounts: [BigInt!]!
+
+  stakesTimestamp: [BigInt!]!
+
   votesCommited: [CommittedVote!]! @derivedFrom(field: "voter")
 
   votesRevealed: [RevealedVote!]! @derivedFrom(field: "voter")
 
   votesSlashed: [SlashedVote!]! @derivedFrom(field: "voter")
-
-  stakeholders: Stakeholder!
 }
 
 type Collateral @entity {
@@ -140,6 +136,8 @@ type PriceRequestRound @entity {
 
   roundId: BigInt!
 
+  lastRevealTime: BigInt
+
   "Total amount of users who voted on this round"
   votersAmount: BigDecimal!
 
@@ -150,7 +148,7 @@ type PriceRequestRound @entity {
 
   totalRewardsClaimed: BigDecimal!
 
-  cumulativeActiveStakeAtRound: BigDecimal
+  cumulativeStakeAtRound: BigDecimal
 
   "Ratio of the total supply of tokens that were weighted on this vote"
   tokenVoteParticipationRatio: BigDecimal
