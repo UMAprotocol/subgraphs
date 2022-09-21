@@ -421,11 +421,17 @@ export function handleRequestedUnstake(event: RequestedUnstake): void {
 
 export function handleUpdatedReward(event: UpdatedReward): void {
   let user = getOrCreateUser(event.params.voter);
+  let globals = getOrCreateGlobals();
   let votingContract = VotingV2.bind(event.address);
   let voterStake = votingContract.try_voterStakes(event.params.voter);
   let nextIndexToProcessChain = voterStake.value.value5;
 
   user.nextIndexToProcess = nextIndexToProcessChain;
+
+  if (nextIndexToProcessChain.gt(globals.maxNextIndexToProcess)) {
+    globals.maxNextIndexToProcess = nextIndexToProcessChain;
+    globals.save();
+  }
 
   user.save();
 }

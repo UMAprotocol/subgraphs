@@ -1,14 +1,20 @@
 type Globals @entity {
   id: ID!
 
+  "List of all users addresses"
   userAddresses: [String!]!
 
   "Cumulative stake from all stakeholders"
   cumulativeStake: BigDecimal!
 
+  "Emission rate per second"
   emissionRate: BigDecimal!
 
+  "Anual Voting Token emission at current emission rate"
   anualVotingTokenEmission: BigDecimal!
+
+  "Higher index to process amoung all users"
+  maxNextIndexToProcess: BigInt!
 
   users: [User!] @derivedFrom(field: "globals")
 }
@@ -19,14 +25,15 @@ type User @entity {
 
   address: Bytes!
 
+  "Earnings percentage from staking over a 12-month period, exclusive of slashing and compound interest"
   anualPercentageReturn: BigDecimal!
 
+  "Earnings from staking over a 12-month period, exclusive of slashing and compound interest"
   anualReturn: BigDecimal!
 
   "Number of price requests that this user has revealed a vote for, and therefore participated in as a voter"
   countReveals: BigInt
 
-  "Provides a lower-bound on # of votes that user has correctly voted for. User may not have retrieved rewards for all of their correct votes."
   countNoVotes: BigInt!
 
   countWrongVotes: BigInt!
@@ -35,6 +42,7 @@ type User @entity {
 
   voterStake: BigDecimal
 
+  "Voter pending unstake during cooling-off period"
   voterPendingUnstake: BigDecimal
 
   "Total rewards withdrawn in voting token"
@@ -43,13 +51,16 @@ type User @entity {
   "Total slashed applied to the user"
   cumulativeSlash: BigDecimal
 
-  "Total slashed applied to the user"
+  "Total calculated slashed applied to the user"
   cumulativeCalculatedSlash: BigDecimal
 
+  "Next price request index to process during updateTrackers for this user"
   nextIndexToProcess: BigInt
 
+  "List of all voterStake updates"
   stakesAmounts: [BigInt!]!
 
+  "List of all voterStake updates timestamps"
   stakesTimestamp: [BigInt!]!
 
   votesCommited: [CommittedVote!]! @derivedFrom(field: "voter")

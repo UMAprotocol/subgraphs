@@ -7,7 +7,7 @@ import {
   SlashedVote,
   Globals,
 } from "../../../generated/schema";
-import { BIGDECIMAL_ZERO } from "../constants";
+import { BIGDECIMAL_ZERO, BIGINT_ZERO } from "../constants";
 export const GLOBALS = "globals";
 
 export function getOrCreateGlobals(): Globals {
@@ -19,6 +19,7 @@ export function getOrCreateGlobals(): Globals {
     request.cumulativeStake = BIGDECIMAL_ZERO;
     request.emissionRate = BIGDECIMAL_ZERO;
     request.anualVotingTokenEmission = BIGDECIMAL_ZERO;
+    request.maxNextIndexToProcess = BIGINT_ZERO;
   }
 
   return request as Globals;
