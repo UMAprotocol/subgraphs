@@ -13,7 +13,7 @@ type Globals @entity {
   "Anual Voting Token emission at current emission rate"
   anualVotingTokenEmission: BigDecimal!
 
-  "Higher index to process amoung all users"
+  "Higher index to process among all users"
   maxNextIndexToProcess: BigInt!
 
   users: [User!] @derivedFrom(field: "globals")
