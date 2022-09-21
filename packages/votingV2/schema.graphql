@@ -16,6 +16,12 @@ type Globals @entity {
   "Higher index to process among all users"
   maxNextIndexToProcess: BigInt!
 
+  countNoVotes: BigInt!
+
+  countWrongVotes: BigInt!
+
+  countCorrectVotes: BigInt!
+
   users: [User!] @derivedFrom(field: "globals")
 }
 

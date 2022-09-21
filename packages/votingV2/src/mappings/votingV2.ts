@@ -154,11 +154,8 @@ export function handlePriceResolved(event: PriceResolved): void {
   requestRound.save();
   request.save();
   voterGroup.save();
-  globals.save();
 
   let slashingTrackers = votingContract.try_requestSlashingTrackers(request.requestIndex);
-
-  // SlashingTracker(wrongVoteSlash, noVoteSlash, totalSlashed, totalCorrectVote)
 
   for (let i = 0; i < users.length; i++) {
     let userAddress = users[i];
@@ -181,31 +178,41 @@ export function handlePriceResolved(event: PriceResolved): void {
 
     let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id);
 
+    let pendingStake = votingContract.try_getVoterPendingStake(
+      Address.fromString(userAddress as string),
+      event.params.roundId
+    );
+
     if (RevealedVote.load(voteId) != null) {
       let vote = getOrCreateRevealedVote(voteId);
       if (event.params.price.equals(vote.price)) {
+        // User voted correctly
         voteSlashed.correctness = true;
-        let slashing = toDecimal(vote.numTokens)
+        let slashing = toDecimal(vote.numTokens.minus(pendingStake.value))
           .times(toDecimal(slashingTrackers.value.totalSlashed))
           .div(toDecimal(slashingTrackers.value.totalCorrectVotes));
         voteSlashed.slashAmount = slashing;
         user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
         user.countCorrectVotes = user.countCorrectVotes.plus(BigInt.fromI32(1));
+        globals.countCorrectVotes = globals.countCorrectVotes.plus(BigInt.fromI32(1));
       } else {
+        // User voted incorrectly
         voteSlashed.correctness = false;
-        let slashing = toDecimal(vote.numTokens).times(toDecimal(slashingTrackers.value.wrongVoteSlashPerToken));
+        let slashing = toDecimal(vote.numTokens.minus(pendingStake.value)).times(
+          toDecimal(slashingTrackers.value.wrongVoteSlashPerToken)
+        );
         voteSlashed.slashAmount = slashing;
         user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
-        if (!request.isGovernance) user.countWrongVotes = user.countWrongVotes.plus(BigInt.fromI32(1));
+        if (!request.isGovernance) {
+          user.countWrongVotes = user.countWrongVotes.plus(BigInt.fromI32(1));
+          globals.countWrongVotes = globals.countWrongVotes.plus(BigInt.fromI32(1));
+        }
       }
     } else {
+      // User did not vote
       let activeStake = BIGINT_ZERO;
       for (let i = user.stakesTimestamp.length - 1; i >= 0; i--) {
         if (user.stakesTimestamp[i].lt(defaultBigInt(requestRound.lastRevealTime))) {
-          let pendingStake = votingContract.try_getVoterPendingStake(
-            Address.fromString(userAddress as string),
-            event.params.roundId
-          );
           activeStake = user.stakesAmounts[i].minus(pendingStake.value);
         }
       }
@@ -215,10 +222,12 @@ export function handlePriceResolved(event: PriceResolved): void {
       voteSlashed.slashAmount = slashing;
       user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
       user.countNoVotes = user.countNoVotes.plus(BigInt.fromI32(1));
+      globals.countNoVotes = globals.countNoVotes.plus(BigInt.fromI32(1));
     }
     user.save();
     voteSlashed.save();
   }
+  globals.save();
 }
 
 // - event: VoteCommitted(indexed address,indexed address,uint256,uint256,indexed bytes32,uint256,bytes)
