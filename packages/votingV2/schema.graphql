@@ -1,10 +1,16 @@
 type Globals @entity {
   id: ID!
-  
+
   userAddresses: [String!]!
-  
+
   "Cumulative stake from all stakeholders"
   cumulativeStake: BigDecimal!
+
+  emissionRate: BigDecimal!
+
+  anualVotingTokenEmission: BigDecimal!
+
+  users: [User!] @derivedFrom(field: "globals")
 }
 
 type User @entity {
@@ -12,6 +18,10 @@ type User @entity {
   id: ID!
 
   address: Bytes!
+
+  anualPercentageReturn: BigDecimal!
+
+  anualReturn: BigDecimal!
 
   "Number of price requests that this user has revealed a vote for, and therefore participated in as a voter"
   countReveals: BigInt
@@ -33,6 +43,9 @@ type User @entity {
   "Total slashed applied to the user"
   cumulativeSlash: BigDecimal
 
+  "Total slashed applied to the user"
+  cumulativeCalculatedSlash: BigDecimal
+
   nextIndexToProcess: BigInt
 
   stakesAmounts: [BigInt!]!
@@ -44,6 +57,8 @@ type User @entity {
   votesRevealed: [RevealedVote!]! @derivedFrom(field: "voter")
 
   votesSlashed: [SlashedVote!]! @derivedFrom(field: "voter")
+
+  globals: Globals!
 }
 
 type Collateral @entity {
@@ -136,9 +151,6 @@ type PriceRequestRound @entity {
 
   "Total amount of users who voted on this round"
   votersAmount: BigDecimal!
-
-  "Total amount of users who claimed rewards on this round"
-  votersClaimedAmount: BigDecimal!
 
   totalVotesRevealed: BigDecimal!
 

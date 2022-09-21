@@ -1,5 +1,5 @@
 import { User } from "../../../generated/schema";
-import { BIGINT_ZERO } from "../constants";
+import { BIGDECIMAL_ZERO, BIGINT_ZERO } from "../constants";
 import { Address } from "@graphprotocol/graph-ts";
 import { VotingToken } from "../../../generated/Voting/VotingToken";
 import { VOTING_TOKEN_ADDRESS } from "../../../addresses";
@@ -18,6 +18,9 @@ export function getOrCreateUser(id: Address, createIfNotFound: boolean = true): 
     user.countCorrectVotes = BIGINT_ZERO;
     user.countWrongVotes = BIGINT_ZERO;
     user.countNoVotes = BIGINT_ZERO;
+    user.globals = globals.id;
+    user.anualPercentageReturn = BIGDECIMAL_ZERO;
+    user.anualReturn = BIGDECIMAL_ZERO;
 
     user.save();
     globals.save();

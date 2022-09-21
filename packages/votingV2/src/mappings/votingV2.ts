@@ -189,11 +189,13 @@ export function handlePriceResolved(event: PriceResolved): void {
           .times(toDecimal(slashingTrackers.value.totalSlashed))
           .div(toDecimal(slashingTrackers.value.totalCorrectVotes));
         voteSlashed.slashAmount = slashing;
-        user.countCorrectVotes = user.countWrongVotes.plus(BigInt.fromI32(1));
+        user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
+        user.countCorrectVotes = user.countCorrectVotes.plus(BigInt.fromI32(1));
       } else {
         voteSlashed.correctness = false;
         let slashing = toDecimal(vote.numTokens).times(toDecimal(slashingTrackers.value.wrongVoteSlashPerToken));
         voteSlashed.slashAmount = slashing;
+        user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
         if (!request.isGovernance) user.countWrongVotes = user.countWrongVotes.plus(BigInt.fromI32(1));
       }
     } else {
@@ -211,7 +213,8 @@ export function handlePriceResolved(event: PriceResolved): void {
         toDecimal(activeStake).times(toDecimal(slashingTrackers.value.noVoteSlashPerToken))
       );
       voteSlashed.slashAmount = slashing;
-      user.countWrongVotes = user.countWrongVotes.plus(BigInt.fromI32(1));
+      user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
+      user.countNoVotes = user.countNoVotes.plus(BigInt.fromI32(1));
     }
     user.save();
     voteSlashed.save();
@@ -358,26 +361,6 @@ export function handleVoteRevealed(event: VoteRevealed): void {
 //   uint256 cumulativeStake
 // );
 
-function addStakes(user: User, newStake: BigInt, timestamp: BigInt): void {
-  let newActiveStakesAmounts = user.stakesAmounts;
-  newActiveStakesAmounts.push(newStake);
-  user.stakesAmounts = newActiveStakesAmounts;
-
-  let newActiveStakesTimestamp = user.stakesTimestamp;
-  newActiveStakesTimestamp.push(timestamp);
-  user.stakesTimestamp = newActiveStakesTimestamp;
-}
-
-// - event: Staked(indexed address,indexed address,uint256,uint256,uint256,uint256)
-// event Staked(
-//   address indexed voter,
-//   address indexed from,
-//   uint256 amount,
-//   uint256 voterStake,
-//   uint256 voterPendingUnstake,
-//   uint256 cumulativeStake
-// );
-
 export function handleStaked(event: Staked): void {
   let user = getOrCreateUser(event.params.voter);
   let globals = getOrCreateGlobals();
@@ -394,6 +377,15 @@ export function handleStaked(event: Staked): void {
 
   user.save();
   globals.save();
+
+  let votingContract = VotingV2.bind(event.address);
+  let emissionRate = votingContract.try_emissionRate();
+
+  updateAprs(
+    globals.userAddresses,
+    emissionRate.reverted ? BigInt.fromI32(0) : emissionRate.value,
+    globals.cumulativeStake
+  );
 }
 
 // RequestedUnstake(address indexed voter, uint256 amount, uint256 unstakeTime, uint256 voterStake);
@@ -414,6 +406,15 @@ export function handleRequestedUnstake(event: RequestedUnstake): void {
 
   user.save();
   globals.save();
+
+  let votingContract = VotingV2.bind(event.address);
+  let emissionRate = votingContract.try_emissionRate();
+
+  updateAprs(
+    globals.userAddresses,
+    emissionRate.reverted ? BigInt.fromI32(0) : emissionRate.value,
+    globals.cumulativeStake
+  );
 }
 
 // event UpdatedReward(address indexed voter, uint256 newReward, uint256 lastUpdateTime);
@@ -461,4 +462,38 @@ export function handleExecutedUnstake(event: ExecutedUnstake): void {
   addStakes(user, event.params.voterStake, event.block.timestamp);
 
   user.save();
+}
+
+function updateAprs(users: string[], emissionRate: BigInt, cumulativeStake: BigDecimal): void {
+  const oneYear = BigInt.fromI32(31536000).toBigDecimal();
+  const anualEmission = toDecimal(emissionRate).times(oneYear);
+  let globals = getOrCreateGlobals();
+  globals.anualVotingTokenEmission = anualEmission;
+  globals.emissionRate = toDecimal(emissionRate);
+
+  for (let i = 0; i < users.length; i++) {
+    let userAddress = users[i];
+    let user = getOrCreateUser(Address.fromString(userAddress as string));
+
+    user.anualReturn = cumulativeStake.equals(BIGDECIMAL_ZERO)
+      ? BIGDECIMAL_ZERO
+      : defaultBigDecimal(user.voterStake).div(cumulativeStake).times(anualEmission);
+
+    user.anualPercentageReturn = defaultBigDecimal(user.voterStake).equals(BIGDECIMAL_ZERO)
+      ? BIGDECIMAL_ZERO
+      : user.anualReturn.div(defaultBigDecimal(user.voterStake)).times(BigInt.fromI32(100).toBigDecimal());
+
+    user.save();
+  }
+  globals.save();
+}
+
+function addStakes(user: User, newStake: BigInt, timestamp: BigInt): void {
+  let newActiveStakesAmounts = user.stakesAmounts;
+  newActiveStakesAmounts.push(newStake);
+  user.stakesAmounts = newActiveStakesAmounts;
+
+  let newActiveStakesTimestamp = user.stakesTimestamp;
+  newActiveStakesTimestamp.push(timestamp);
+  user.stakesTimestamp = newActiveStakesTimestamp;
 }

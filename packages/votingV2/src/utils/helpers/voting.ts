@@ -17,6 +17,8 @@ export function getOrCreateGlobals(): Globals {
     request = new Globals(GLOBALS);
     request.userAddresses = [];
     request.cumulativeStake = BIGDECIMAL_ZERO;
+    request.emissionRate = BIGDECIMAL_ZERO;
+    request.anualVotingTokenEmission = BIGDECIMAL_ZERO;
   }
 
   return request as Globals;
@@ -41,7 +43,6 @@ export function getOrCreatePriceRequestRound(id: String, createIfNotFound: boole
 
     requestRound.totalVotesRevealed = BIGDECIMAL_ZERO;
     requestRound.votersAmount = BIGDECIMAL_ZERO;
-    requestRound.votersClaimedAmount = BIGDECIMAL_ZERO;
   }
 
   return requestRound as PriceRequestRound;
