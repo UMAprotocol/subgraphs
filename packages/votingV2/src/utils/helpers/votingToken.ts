@@ -3,22 +3,24 @@ import { BIGINT_ZERO } from "../constants";
 import { Address } from "@graphprotocol/graph-ts";
 import { VotingToken } from "../../../generated/Voting/VotingToken";
 import { VOTING_TOKEN_ADDRESS } from "../../../addresses";
-import { getOrCreateStakeholder } from "./voting";
+import { getOrCreateGlobals } from "./voting";
 
 export function getOrCreateUser(id: Address, createIfNotFound: boolean = true): User {
   let user = User.load(id.toHexString());
 
   if (user == null && createIfNotFound) {
-    let stakeholders = getOrCreateStakeholder();
+    let globals = getOrCreateGlobals();
     user = new User(id.toHexString());
     user.address = id;
     user.countReveals = BIGINT_ZERO;
-    user.countRetrievals = BIGINT_ZERO;
     user.stakesAmounts = [];
     user.stakesTimestamp = [];
+    user.countCorrectVotes = BIGINT_ZERO;
+    user.countWrongVotes = BIGINT_ZERO;
+    user.countNoVotes = BIGINT_ZERO;
 
     user.save();
-    stakeholders.save();
+    globals.save();
   }
 
   return user as User;

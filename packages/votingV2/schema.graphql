@@ -1,6 +1,10 @@
-type Stakeholder @entity {
+type Globals @entity {
   id: ID!
+  
   userAddresses: [String!]!
+  
+  "Cumulative stake from all stakeholders"
+  cumulativeStake: BigDecimal!
 }
 
 type User @entity {
@@ -13,23 +17,18 @@ type User @entity {
   countReveals: BigInt
 
   "Provides a lower-bound on # of votes that user has correctly voted for. User may not have retrieved rewards for all of their correct votes."
-  countRetrievals: BigInt
+  countNoVotes: BigInt!
+
+  countWrongVotes: BigInt!
+
+  countCorrectVotes: BigInt!
 
   voterStake: BigDecimal
 
   voterPendingUnstake: BigDecimal
 
-  "Cumulative stake from all stakeholders"
-  cumulativeStake: BigDecimal
-
-  "Total rewards claimed in voting token"
-  claimedRewards: BigDecimal
-
-  "Outstanding rewards unclaimed in voting token"
-  outstandingRewards: BigDecimal
-
-  "Last outstandingRewards update time"
-  outstandingRewardsLastUpdateTime: BigInt
+  "Total rewards withdrawn in voting token"
+  withdrawnRewards: BigDecimal
 
   "Total slashed applied to the user"
   cumulativeSlash: BigDecimal
@@ -115,9 +114,6 @@ type PriceRequest @entity {
   "List of all the votes revealed on this request"
   revealedVotes: [RevealedVote!]! @derivedFrom(field: "request")
 
-  "List of all the rewards claimed events for this request"
-  rewardsClaimed: [RewardsClaimed!]! @derivedFrom(field: "request")
-
   "Is this request a governance action"
   isGovernance: Boolean!
 }
@@ -145,8 +141,6 @@ type PriceRequestRound @entity {
   votersClaimedAmount: BigDecimal!
 
   totalVotesRevealed: BigDecimal!
-
-  totalRewardsClaimed: BigDecimal!
 
   cumulativeStakeAtRound: BigDecimal
 
@@ -178,8 +172,6 @@ type PriceRequestRound @entity {
   revealedVotes: [RevealedVote!]! @derivedFrom(field: "round")
 
   groups: [VoterGroup!]! @derivedFrom(field: "round")
-
-  rewardsClaimed: [RewardsClaimed!]! @derivedFrom(field: "round")
 }
 
 type VoterGroup @entity {
@@ -211,9 +203,7 @@ type SlashedVote @entity {
 
   voted: Boolean!
 
-  correctness: Boolean!
-
-  processed: Boolean!
+  correctness: Boolean
 }
 
 type CommittedVote @entity {
@@ -253,25 +243,6 @@ type RevealedVote @entity {
   numTokens: BigInt!
 
   group: VoterGroup!
-}
-
-type RewardsClaimed @entity {
-  id: ID!
-
-  identifier: PriceIdentifier!
-
-  ancillaryData: String
-
-  request: PriceRequest!
-
-  time: BigInt!
-
-  round: PriceRequestRound!
-
-  claimer: User!
-
-  "NumTokens will be 0 if the claim is not 'valid'. This can happen if the function was called for a voter who didn't get the correct vote for example."
-  numTokens: BigInt!
 }
 
 type FinancialContract @entity {

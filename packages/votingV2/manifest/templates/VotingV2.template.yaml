@@ -33,6 +33,8 @@
         handler: handlePriceResolved
       - event: Staked(indexed address,indexed address,uint256,uint256,uint256,uint256)
         handler: handleStaked
+      - event: RequestedUnstake(indexed address,uint256,uint256,uint256)
+        handler: handleRequestedUnstake
       - event: ExecutedUnstake(indexed address,uint256,uint256)
         handler: handleExecutedUnstake
       - event: UpdatedReward(indexed address,uint256,uint256)

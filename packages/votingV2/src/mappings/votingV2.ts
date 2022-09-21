@@ -3,6 +3,7 @@ import {
   ExecutedUnstake,
   PriceRequestAdded,
   PriceResolved,
+  RequestedUnstake,
   Staked,
   UpdatedReward,
   VoteCommitted,
@@ -11,13 +12,7 @@ import {
   VotingV2,
   WithdrawnRewards,
 } from "../../generated/Voting/VotingV2";
-import {
-  BIGDECIMAL_HUNDRED,
-  BIGDECIMAL_ONE,
-  BIGDECIMAL_ZERO,
-  BIGINT_ONE,
-  BIGINT_ZERO,
-} from "../utils/constants";
+import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE, BIGINT_ZERO } from "../utils/constants";
 import { defaultBigDecimal, defaultBigInt, toDecimal } from "../utils/decimals";
 import {
   getOrCreateCommittedVote,
@@ -33,7 +28,7 @@ import {
 import { Address, BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
 import {
   getOrCreateSlashedVote,
-  getOrCreateStakeholder,
+  getOrCreateGlobals,
   getPriceRequestId,
   getVoteId,
   getVoteIdNoRoundId,
@@ -153,13 +148,13 @@ export function handlePriceResolved(event: PriceResolved): void {
   requestRound.gatPercentage = defaultBigDecimal(requestRound.gatPercentageRaw).times(BIGDECIMAL_HUNDRED);
   requestRound.cumulativeStakeAtRound = cumulativeStakeAtRound;
 
-  let stakeholders = getOrCreateStakeholder();
-  let users = stakeholders.userAddresses;
+  let globals = getOrCreateGlobals();
+  let users = globals.userAddresses;
 
   requestRound.save();
   request.save();
   voterGroup.save();
-  stakeholders.save();
+  globals.save();
 
   let slashingTrackers = votingContract.try_requestSlashingTrackers(request.requestIndex);
 
@@ -194,13 +189,14 @@ export function handlePriceResolved(event: PriceResolved): void {
           .times(toDecimal(slashingTrackers.value.totalSlashed))
           .div(toDecimal(slashingTrackers.value.totalCorrectVotes));
         voteSlashed.slashAmount = slashing;
+        user.countCorrectVotes = user.countWrongVotes.plus(BigInt.fromI32(1));
       } else {
         voteSlashed.correctness = false;
         let slashing = toDecimal(vote.numTokens).times(toDecimal(slashingTrackers.value.wrongVoteSlashPerToken));
         voteSlashed.slashAmount = slashing;
+        if (!request.isGovernance) user.countWrongVotes = user.countWrongVotes.plus(BigInt.fromI32(1));
       }
     } else {
-      // let roundEndTime = votingContract.try_getRoundEndTime(requestRound.roundId);
       let activeStake = BIGINT_ZERO;
       for (let i = user.stakesTimestamp.length - 1; i >= 0; i--) {
         if (user.stakesTimestamp[i].lt(defaultBigInt(requestRound.lastRevealTime))) {
@@ -211,12 +207,13 @@ export function handlePriceResolved(event: PriceResolved): void {
           activeStake = user.stakesAmounts[i].minus(pendingStake.value);
         }
       }
-      voteSlashed.voted = false;
       let slashing = BIGDECIMAL_ZERO.minus(
         toDecimal(activeStake).times(toDecimal(slashingTrackers.value.noVoteSlashPerToken))
       );
       voteSlashed.slashAmount = slashing;
+      user.countWrongVotes = user.countWrongVotes.plus(BigInt.fromI32(1));
     }
+    user.save();
     voteSlashed.save();
   }
 }
@@ -383,20 +380,40 @@ function addStakes(user: User, newStake: BigInt, timestamp: BigInt): void {
 
 export function handleStaked(event: Staked): void {
   let user = getOrCreateUser(event.params.voter);
-  let stakeholders = getOrCreateStakeholder();
+  let globals = getOrCreateGlobals();
   user.voterStake = toDecimal(event.params.voterStake);
   user.voterPendingUnstake = toDecimal(event.params.voterPendingUnstake);
-  user.cumulativeStake = toDecimal(event.params.cumulativeStake);
+  globals.cumulativeStake = toDecimal(event.params.cumulativeStake);
 
-  let newUserAddresses = stakeholders.userAddresses;
+  let newUserAddresses = globals.userAddresses;
   if (!newUserAddresses.includes(event.params.voter.toHexString()))
     newUserAddresses.push(event.params.voter.toHexString());
-  stakeholders.userAddresses = newUserAddresses;
+  globals.userAddresses = newUserAddresses;
 
   addStakes(user, event.params.voterStake, event.block.timestamp);
 
   user.save();
-  stakeholders.save();
+  globals.save();
+}
+
+// RequestedUnstake(address indexed voter, uint256 amount, uint256 unstakeTime, uint256 voterStake);
+
+export function handleRequestedUnstake(event: RequestedUnstake): void {
+  let user = getOrCreateUser(event.params.voter);
+  let globals = getOrCreateGlobals();
+  user.voterStake = toDecimal(event.params.voterStake);
+  user.voterPendingUnstake = toDecimal(event.params.amount);
+  globals.cumulativeStake = globals.cumulativeStake.minus(toDecimal(event.params.amount));
+
+  let newUserAddresses = globals.userAddresses;
+  if (!newUserAddresses.includes(event.params.voter.toHexString()))
+    newUserAddresses.push(event.params.voter.toHexString());
+  globals.userAddresses = newUserAddresses;
+
+  addStakes(user, event.params.voterStake, event.block.timestamp);
+
+  user.save();
+  globals.save();
 }
 
 // event UpdatedReward(address indexed voter, uint256 newReward, uint256 lastUpdateTime);
@@ -407,8 +424,6 @@ export function handleUpdatedReward(event: UpdatedReward): void {
   let voterStake = votingContract.try_voterStakes(event.params.voter);
   let nextIndexToProcessChain = voterStake.value.value5;
 
-  user.outstandingRewards = voterStake.reverted ? user.outstandingRewards : toDecimal(voterStake.value.value3);
-  user.outstandingRewardsLastUpdateTime = event.params.lastUpdateTime;
   user.nextIndexToProcess = nextIndexToProcessChain;
 
   user.save();
@@ -419,7 +434,7 @@ export function handleUpdatedReward(event: UpdatedReward): void {
 export function handleWithdrawnRewards(event: WithdrawnRewards): void {
   let user = getOrCreateUser(event.params.voter);
 
-  user.claimedRewards = defaultBigDecimal(user.claimedRewards).plus(toDecimal(event.params.tokensWithdrawn));
+  user.withdrawnRewards = defaultBigDecimal(user.withdrawnRewards).plus(toDecimal(event.params.tokensWithdrawn));
 
   user.save();
 }

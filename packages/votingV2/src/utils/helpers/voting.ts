@@ -3,23 +3,23 @@ import {
   PriceRequestRound,
   CommittedVote,
   RevealedVote,
-  RewardsClaimed,
   VoterGroup,
   SlashedVote,
-  Stakeholder,
+  Globals,
 } from "../../../generated/schema";
 import { BIGDECIMAL_ZERO } from "../constants";
-export const STAKEHOLDERS = "stakeholders";
+export const GLOBALS = "globals";
 
-export function getOrCreateStakeholder(): Stakeholder {
-  let request = Stakeholder.load(STAKEHOLDERS);
+export function getOrCreateGlobals(): Globals {
+  let request = Globals.load(GLOBALS);
 
   if (request == null) {
-    request = new Stakeholder(STAKEHOLDERS);
+    request = new Globals(GLOBALS);
     request.userAddresses = [];
+    request.cumulativeStake = BIGDECIMAL_ZERO;
   }
 
-  return request as Stakeholder;
+  return request as Globals;
 }
 
 export function getOrCreatePriceRequest(id: String, createIfNotFound: boolean = true): PriceRequest {
@@ -40,7 +40,6 @@ export function getOrCreatePriceRequestRound(id: String, createIfNotFound: boole
     requestRound = new PriceRequestRound(id);
 
     requestRound.totalVotesRevealed = BIGDECIMAL_ZERO;
-    requestRound.totalRewardsClaimed = BIGDECIMAL_ZERO;
     requestRound.votersAmount = BIGDECIMAL_ZERO;
     requestRound.votersClaimedAmount = BIGDECIMAL_ZERO;
   }
@@ -61,8 +60,6 @@ export function getOrCreateSlashedVote(
     vote.voter = voterId;
     vote.request = requestId;
     vote.slashAmount = BIGDECIMAL_ZERO;
-    vote.correctness = false;
-    vote.processed = false;
     vote.voted = false;
   }
 
