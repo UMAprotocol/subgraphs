@@ -11,7 +11,13 @@ import {
   VotingV2,
   WithdrawnRewards,
 } from "../../generated/Voting/VotingV2";
-import { BIGDECIMAL_HUNDRED, BIGDECIMAL_MINUS_ONE, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE, BIGINT_ZERO } from "../utils/constants";
+import {
+  BIGDECIMAL_HUNDRED,
+  BIGDECIMAL_ONE,
+  BIGDECIMAL_ZERO,
+  BIGINT_ONE,
+  BIGINT_ZERO,
+} from "../utils/constants";
 import { defaultBigDecimal, defaultBigInt, toDecimal } from "../utils/decimals";
 import {
   getOrCreateCommittedVote,
@@ -198,14 +204,17 @@ export function handlePriceResolved(event: PriceResolved): void {
       let activeStake = BIGINT_ZERO;
       for (let i = user.stakesTimestamp.length - 1; i >= 0; i--) {
         if (user.stakesTimestamp[i].lt(defaultBigInt(requestRound.lastRevealTime))) {
-          activeStake = user.stakesAmounts[i];
+          let pendingStake = votingContract.try_getVoterPendingStake(
+            Address.fromString(userAddress as string),
+            event.params.roundId
+          );
+          activeStake = user.stakesAmounts[i].minus(pendingStake.value);
         }
       }
       voteSlashed.voted = false;
-      let slashing = activeStake
-        .toBigDecimal()
-        .times(toDecimal(slashingTrackers.value.noVoteSlashPerToken))
-        .times(BIGDECIMAL_MINUS_ONE);
+      let slashing = BIGDECIMAL_ZERO.minus(
+        toDecimal(activeStake).times(toDecimal(slashingTrackers.value.noVoteSlashPerToken))
+      );
       voteSlashed.slashAmount = slashing;
     }
     voteSlashed.save();
