@@ -20,6 +20,9 @@ export function getOrCreateGlobals(): Globals {
     request.emissionRate = BIGDECIMAL_ZERO;
     request.anualVotingTokenEmission = BIGDECIMAL_ZERO;
     request.maxNextIndexToProcess = BIGINT_ZERO;
+    request.countCorrectVotes = BIGINT_ZERO;
+    request.countWrongVotes = BIGINT_ZERO;
+    request.countNoVotes = BIGINT_ZERO;
   }
 
   return request as Globals;
