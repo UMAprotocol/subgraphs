@@ -47,6 +47,12 @@ export function getOrCreatePriceRequestRound(id: String, createIfNotFound: boole
 
     requestRound.totalVotesRevealed = BIGDECIMAL_ZERO;
     requestRound.votersAmount = BIGDECIMAL_ZERO;
+    requestRound.countCorrectVotes = BIGINT_ZERO;
+    requestRound.countWrongVotes = BIGINT_ZERO;
+    requestRound.countNoVotes = BIGINT_ZERO;
+    requestRound.cumulativeCorrectVoteSlash = BIGDECIMAL_ZERO;
+    requestRound.cumulativeWrongVoteSlash = BIGDECIMAL_ZERO;
+    requestRound.cumulativeNoVoteSlash = BIGDECIMAL_ZERO;
   }
 
   return requestRound as PriceRequestRound;

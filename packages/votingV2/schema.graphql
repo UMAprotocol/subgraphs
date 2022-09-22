@@ -4,7 +4,7 @@ type Globals @entity {
   "List of all users addresses"
   userAddresses: [String!]!
 
-  "Cumulative stake from all stakeholders"
+  "Cumulative stake from all users"
   cumulativeStake: BigDecimal!
 
   "Emission rate per second"
@@ -173,17 +173,23 @@ type PriceRequestRound @entity {
 
   cumulativeStakeAtRound: BigDecimal
 
+  countNoVotes: BigInt!
+
+  countWrongVotes: BigInt!
+
+  countCorrectVotes: BigInt!
+
+  cumulativeCorrectVoteSlash: BigDecimal!
+
+  cumulativeWrongVoteSlash: BigDecimal!
+
+  cumulativeNoVoteSlash: BigDecimal!
+
   "Ratio of the total supply of tokens that were weighted on this vote"
   tokenVoteParticipationRatio: BigDecimal
 
   "Percentage of the total supply of tokens that were weighted on this vote"
   tokenVoteParticipationPercentage: BigDecimal
-
-  "Ratio of correct voters over total voters on this price request"
-  votersEligibleForRewardsRatio: BigDecimal
-
-  "Percentage of correct voters over total voters on this price request"
-  votersEligibleForRewardsPercentage: BigDecimal
 
   "gat expressed exactly as in the contract"
   gat: BigDecimal
