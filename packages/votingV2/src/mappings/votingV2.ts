@@ -500,6 +500,10 @@ export function handleUpdatedReward(event: UpdatedReward): void {
   user.nextIndexToProcess = nextIndexToProcessChain;
 
   if (nextIndexToProcessChain.gt(globals.maxNextIndexToProcess)) {
+    // This value can be compared to the users' nextIndexToProcess to see if the users'
+    // trackers are up to date. This is also demonstrated by the user.cumulativeSlash versus
+    // user.cumulativeCalculatedSlash comparison; if they differ, the user's trackers are out of date.
+    // It should be noted that user.cumulativeCalculatedSlash is always updated for all users.
     globals.maxNextIndexToProcess = nextIndexToProcessChain;
     globals.save();
   }

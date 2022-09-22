@@ -57,7 +57,7 @@ type User @entity {
   "Total slashed applied to the user"
   cumulativeSlash: BigDecimal
 
-  "Total calculated slashed applied to the user"
+  "Total calculated slashed applied to the user. Differs from cumulativeSlash when the user has updatedTrackers"
   cumulativeCalculatedSlash: BigDecimal
 
   "Next price request index to process during updateTrackers for this user"
