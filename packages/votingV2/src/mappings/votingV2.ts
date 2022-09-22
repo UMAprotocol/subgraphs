@@ -216,6 +216,7 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
           .div(toDecimal(slashingTrackers.value.totalCorrectVotes));
 
         // Update all the slashing trackers
+        voteSlashed.voted = true;
         voteSlashed.correctness = true;
         voteSlashed.slashAmount = slashing;
         user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
@@ -237,6 +238,7 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
         );
 
         // Update all the slashing trackers
+        voteSlashed.voted = true;
         voteSlashed.correctness = false;
         voteSlashed.slashAmount = slashing;
         user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
