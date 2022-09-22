@@ -169,6 +169,13 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
 
   let slashingTrackers = votingContract.try_requestSlashingTrackers(request.requestIndex);
 
+  log.warning(`Updating slashing trackers: {},{},{}`, [
+    requestId,
+    users.length.toString(),
+    event.params.roundId.toString(),
+  ]);
+
+  // loop through all users and update their slashing trackers
   for (let i = 0; i < users.length; i++) {
     let userAddress = users[i];
     let user = getOrCreateUser(Address.fromString(userAddress as string));
@@ -190,19 +197,26 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
 
     let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id);
 
+    // the pending stake of the user during the voting round
+    // must be subtracted from the user stake amount during the reveal phase
     let pendingStake = votingContract.try_getVoterPendingStake(
       Address.fromString(userAddress as string),
       event.params.roundId
     );
 
+    // Check if the user voted in the round
     if (RevealedVote.load(voteId) != null) {
       let vote = getOrCreateRevealedVote(voteId);
       if (event.params.price.equals(vote.price)) {
         // User voted correctly
-        voteSlashed.correctness = true;
+
+        // This is the slashing calculated as in the contract for correct votes
         let slashing = toDecimal(vote.numTokens.minus(pendingStake.value))
           .times(toDecimal(slashingTrackers.value.totalSlashed))
           .div(toDecimal(slashingTrackers.value.totalCorrectVotes));
+
+        // Update all the slashing trackers
+        voteSlashed.correctness = true;
         voteSlashed.slashAmount = slashing;
         user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
         user.countCorrectVotes = user.countCorrectVotes.plus(BigInt.fromI32(1));
@@ -213,13 +227,24 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
         );
       } else {
         // User voted incorrectly
-        voteSlashed.correctness = false;
-        let slashing = toDecimal(vote.numTokens.minus(pendingStake.value)).times(
-          toDecimal(slashingTrackers.value.wrongVoteSlashPerToken)
+
+        // This is the slashing calculated as in the contract for incorrect votes
+        // Should be zero if we are in a governance vote
+        let slashing = BIGDECIMAL_ZERO.minus(
+          toDecimal(vote.numTokens.minus(pendingStake.value)).times(
+            toDecimal(slashingTrackers.value.wrongVoteSlashPerToken)
+          )
         );
+
+        // Update all the slashing trackers
+        voteSlashed.correctness = false;
         voteSlashed.slashAmount = slashing;
         user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
         requestRound.cumulativeWrongVoteSlash = defaultBigDecimal(requestRound.cumulativeWrongVoteSlash).plus(slashing);
+
+        // Only if not a governance vote we update the wrong votes counter
+        // In a governance vote there is no notion of correct or incorrect votes
+        // and the incorrect vote slashing is zero
         if (!request.isGovernance) {
           user.countWrongVotes = user.countWrongVotes.plus(BigInt.fromI32(1));
           globals.countWrongVotes = globals.countWrongVotes.plus(BigInt.fromI32(1));
@@ -228,15 +253,24 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
       }
     } else {
       // User did not vote
+
+      // We need to find the user's stake amount in the reveal phase of this round
+      // The only way to get this information is to store all the user's stake history
+      // This is the main reason of having stakesTimestamps and stakesAmounts
+      // so we can loop through it to find the stake amount in the reveal phase of this round
+      // TODO find a better way to do this
       let activeStake = BIGINT_ZERO;
       for (let i = user.stakesTimestamp.length - 1; i >= 0; i--) {
         if (user.stakesTimestamp[i].lt(defaultBigInt(requestRound.lastRevealTime))) {
           activeStake = user.stakesAmounts[i].minus(pendingStake.value);
         }
       }
+      // This is the slashing calculated as in the contract for not voting
       let slashing = BIGDECIMAL_ZERO.minus(
         toDecimal(activeStake).times(toDecimal(slashingTrackers.value.noVoteSlashPerToken))
       );
+
+      // Update all the slashing trackers
       voteSlashed.slashAmount = slashing;
       user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
       user.countNoVotes = user.countNoVotes.plus(BigInt.fromI32(1));
@@ -247,6 +281,12 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
     user.save();
     voteSlashed.save();
   }
+
+  log.warning(`Finished updating slashing trackers: {},{},{}`, [
+    requestId,
+    users.length.toString(),
+    event.params.roundId.toString(),
+  ]);
 
   requestRound.save();
   globals.save();
@@ -525,12 +565,14 @@ function updateAprs(users: string[], emissionRate: BigInt, cumulativeStake: BigD
   globals.save();
 }
 
+// Stores the historic of the user's stake
+// This is required to calculate the user stake at a specific time if they didn't vote
 function addStakes(user: User, newStake: BigInt, timestamp: BigInt): void {
-  let newActiveStakesAmounts = user.stakesAmounts;
-  newActiveStakesAmounts.push(newStake);
-  user.stakesAmounts = newActiveStakesAmounts;
+  let newStakesAmounts = user.stakesAmounts;
+  newStakesAmounts.push(newStake);
+  user.stakesAmounts = newStakesAmounts;
 
-  let newActiveStakesTimestamp = user.stakesTimestamp;
-  newActiveStakesTimestamp.push(timestamp);
-  user.stakesTimestamp = newActiveStakesTimestamp;
+  let newStakesTimestamp = user.stakesTimestamp;
+  newStakesTimestamp.push(timestamp);
+  user.stakesTimestamp = newStakesTimestamp;
 }
