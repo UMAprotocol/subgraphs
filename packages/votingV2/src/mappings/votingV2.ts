@@ -413,13 +413,9 @@ export function handleVoteRevealed(event: VoteRevealed): void {
     event.params.ancillaryData.toHexString()
   );
 
-  let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, voter.id);
-  voteSlashed.voted = true;
-
   vote.save();
   voter.save();
   voterGroup.save();
-  voteSlashed.save();
 }
 
 // - event: Staked(indexed address,indexed address,uint256,uint256,uint256,uint256)
