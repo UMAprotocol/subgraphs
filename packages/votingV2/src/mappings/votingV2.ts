@@ -261,15 +261,15 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
       // This is the main reason of having stakesTimestamps and stakesAmounts
       // so we can loop through it to find the stake amount in the reveal phase of this round
       // TODO find a better way to do this
-      let activeStake = BIGINT_ZERO;
+      let effectiveStake = BIGINT_ZERO;
       for (let i = user.stakesTimestamp.length - 1; i >= 0; i--) {
         if (user.stakesTimestamp[i].lt(defaultBigInt(requestRound.lastRevealTime))) {
-          activeStake = user.stakesAmounts[i].minus(pendingStake.value);
+          effectiveStake = user.stakesAmounts[i].minus(pendingStake.value);
         }
       }
       // This is the slashing calculated as in the contract for not voting
       let slashing = BIGDECIMAL_ZERO.minus(
-        toDecimal(activeStake).times(toDecimal(slashingTrackers.value.noVoteSlashPerToken))
+        toDecimal(effectiveStake).times(toDecimal(slashingTrackers.value.noVoteSlashPerToken))
       );
 
       // Update all the slashing trackers
@@ -371,7 +371,7 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   let voterGroup = getOrCreateVoterGroup(groupId);
   let votingContract = VotingV2.bind(event.address);
   let roundInfo = votingContract.try_rounds(event.params.roundId);
-  let cumulativeActiveStakeAtRound = roundInfo.reverted
+  let cumulativeStakeAtRound = roundInfo.reverted
     ? toDecimal(BigInt.fromString("0"))
     : toDecimal(roundInfo.value.value1);
 
@@ -399,8 +399,8 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   requestRound.votersAmount = requestRound.votersAmount.plus(BIGDECIMAL_ONE);
   requestRound.lastRevealTime = event.block.timestamp;
 
-  requestRound.tokenVoteParticipationRatio = cumulativeActiveStakeAtRound.gt(BIGDECIMAL_ZERO)
-    ? requestRound.totalVotesRevealed.div(<BigDecimal>cumulativeActiveStakeAtRound)
+  requestRound.tokenVoteParticipationRatio = cumulativeStakeAtRound.gt(BIGDECIMAL_ZERO)
+    ? requestRound.totalVotesRevealed.div(<BigDecimal>cumulativeStakeAtRound)
     : BigDecimal.fromString("0");
   requestRound.tokenVoteParticipationPercentage = defaultBigDecimal(requestRound.tokenVoteParticipationRatio).times(
     BIGDECIMAL_HUNDRED
