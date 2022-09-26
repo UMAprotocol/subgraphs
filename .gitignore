@@ -2,4 +2,3 @@ node_modules
 build
 generated
 .env
-packages/votingV2/data/*
