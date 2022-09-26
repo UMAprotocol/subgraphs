@@ -56,6 +56,7 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
 
   request.identifier = event.params.identifier.toString();
   request.requestIndex = event.params.priceRequestIndex;
+  request.requestTransaction = event.transaction.hash;
   request.latestRound = requestRound.id;
   request.time = event.params.time;
   request.ancillaryData = event.params.ancillaryData.toHex();
