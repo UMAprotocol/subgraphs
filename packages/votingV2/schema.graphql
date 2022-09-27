@@ -46,22 +46,31 @@ type User @entity {
 
   countCorrectVotes: BigInt!
 
-  voterStake: BigDecimal
+  voterStake: BigDecimal!
 
   "Voter pending unstake during cooling-off period"
-  voterPendingUnstake: BigDecimal
+  voterPendingUnstake: BigDecimal!
 
   "Total rewards withdrawn in voting token"
-  withdrawnRewards: BigDecimal
+  withdrawnRewards: BigDecimal!
 
   "Total slashed applied to the user"
-  cumulativeSlash: BigDecimal
+  cumulativeSlash: BigDecimal!
+
+  "Total slash applied to the user in percentage compared to cumulativeStake"
+  cumulativeSlashPercentage: BigDecimal!
 
   "Total calculated slashed applied to the user. Differs from cumulativeSlash when the user has updatedTrackers"
-  cumulativeCalculatedSlash: BigDecimal
+  cumulativeCalculatedSlash: BigDecimal!
+
+  "Total calculated slash applied to the user in percentage compared to cumulativeStake"
+  cumulativeCalculatedSlashPercentage: BigDecimal!
 
   "Next price request index to process during updateTrackers for this user"
   nextIndexToProcess: BigInt
+
+  "Cumulative resulting stake of all the stakes and unstakes of the user but not including the slashing"
+  cumulativeStakeNoSlashing: BigDecimal!
 
   "List of all voterStake updates"
   stakesAmounts: [BigInt!]!
@@ -242,6 +251,8 @@ type SlashedVote @entity {
   voted: Boolean!
 
   correctness: Boolean
+
+  staking: Boolean
 }
 
 type CommittedVote @entity {

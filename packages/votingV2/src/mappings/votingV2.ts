@@ -220,7 +220,11 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
         voteSlashed.voted = true;
         voteSlashed.correctness = true;
         voteSlashed.slashAmount = slashing;
+        voteSlashed.staking = vote.numTokens.minus(pendingStake.value).gt(BIGINT_ZERO) ? true : false;
         user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
+        user.cumulativeCalculatedSlashPercentage = defaultBigDecimal(user.cumulativeCalculatedSlash)
+          .div(user.cumulativeStakeNoSlashing)
+          .times(BigInt.fromI32(100).toBigDecimal());
         user.countCorrectVotes = user.countCorrectVotes.plus(BigInt.fromI32(1));
         globals.countCorrectVotes = globals.countCorrectVotes.plus(BigInt.fromI32(1));
         requestRound.countCorrectVotes = defaultBigInt(requestRound.countCorrectVotes).plus(BigInt.fromI32(1));
@@ -242,7 +246,11 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
         voteSlashed.voted = true;
         voteSlashed.correctness = false;
         voteSlashed.slashAmount = slashing;
+        voteSlashed.staking = vote.numTokens.minus(pendingStake.value).gt(BIGINT_ZERO) ? true : false;
         user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
+        user.cumulativeCalculatedSlashPercentage = defaultBigDecimal(user.cumulativeCalculatedSlash)
+          .div(user.cumulativeStakeNoSlashing)
+          .times(BigInt.fromI32(100).toBigDecimal());
         requestRound.cumulativeWrongVoteSlash = defaultBigDecimal(requestRound.cumulativeWrongVoteSlash).plus(slashing);
 
         // Only if not a governance vote we update the wrong votes counter
@@ -275,7 +283,11 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
 
       // Update all the slashing trackers
       voteSlashed.slashAmount = slashing;
+      voteSlashed.staking = effectiveStake.gt(BIGINT_ZERO) ? true : false;
       user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
+      user.cumulativeCalculatedSlashPercentage = defaultBigDecimal(user.cumulativeCalculatedSlash)
+        .div(user.cumulativeStakeNoSlashing)
+        .times(BigInt.fromI32(100).toBigDecimal());
       user.countNoVotes = user.countNoVotes.plus(BigInt.fromI32(1));
       globals.countNoVotes = globals.countNoVotes.plus(BigInt.fromI32(1));
       requestRound.countNoVotes = defaultBigInt(requestRound.countNoVotes).plus(BigInt.fromI32(1));
@@ -436,6 +448,9 @@ export function handleStaked(event: Staked): void {
   let globals = getOrCreateGlobals();
   user.voterStake = toDecimal(event.params.voterStake);
   user.voterPendingUnstake = toDecimal(event.params.voterPendingUnstake);
+  user.cumulativeStakeNoSlashing = defaultBigDecimal(user.cumulativeStakeNoSlashing).plus(
+    toDecimal(event.params.amount)
+  );
   globals.cumulativeStake = toDecimal(event.params.cumulativeStake);
 
   let newUserAddresses = globals.userAddresses;
@@ -465,6 +480,9 @@ export function handleRequestedUnstake(event: RequestedUnstake): void {
   let globals = getOrCreateGlobals();
   user.voterStake = toDecimal(event.params.voterStake);
   user.voterPendingUnstake = toDecimal(event.params.amount);
+  user.cumulativeStakeNoSlashing = defaultBigDecimal(user.cumulativeStakeNoSlashing).minus(
+    toDecimal(event.params.amount)
+  );
   globals.cumulativeStake = globals.cumulativeStake.minus(toDecimal(event.params.amount));
 
   let newUserAddresses = globals.userAddresses;
@@ -526,6 +544,9 @@ export function handleVoterSlashed(event: VoterSlashed): void {
   let user = getOrCreateUser(event.params.voter);
 
   user.cumulativeSlash = defaultBigDecimal(user.cumulativeSlash).plus(toDecimal(event.params.slashedTokens));
+  user.cumulativeSlashPercentage = defaultBigDecimal(user.cumulativeSlash)
+    .div(user.cumulativeStakeNoSlashing)
+    .times(BigInt.fromI32(100).toBigDecimal());
   user.voterStake = toDecimal(event.params.postActiveStake);
 
   addStakes(user, event.params.postActiveStake, event.block.timestamp);
