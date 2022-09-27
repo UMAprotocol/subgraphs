@@ -6,10 +6,11 @@
     "ganache": "ganache-cli -h 0.0.0.0",
     "codegen": "graph codegen",
     "build": "graph build",
-    "prepare:goerli": "scripts/build-manifest.sh goerli && yarn codegen && yarn build",
-    "prepare:mainnet": "scripts/build-manifest.sh mainnet && yarn codegen && yarn build",
-    "prepare:kovan": "scripts/build-manifest.sh kovan && yarn codegen && yarn build",
-    "prepare:polygon": "scripts/build-manifest.sh polygon && yarn codegen && yarn build",
+    "importAbi": "scripts/copy-contracts-abis.sh",
+    "prepare:goerli": "npm run importAbi && scripts/build-manifest.sh goerli && yarn codegen && yarn build",
+    "prepare:mainnet": "npm run importAbi && scripts/build-manifest.sh mainnet && yarn codegen && yarn build",
+    "prepare:kovan": "npm run importAbi && scripts/build-manifest.sh kovan && yarn codegen && yarn build",
+    "prepare:polygon": "npm run importAbi && scripts/build-manifest.sh polygon && yarn codegen && yarn build",
     "deploy:kovan": "env STAGING=true scripts/deploy.sh kovan",
     "deploy:goerli": "env STAGING=true scripts/deploy.sh goerli",
     "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",
@@ -30,8 +31,9 @@
   },
   "homepage": "https://github.com/UMAprotocol/subgraphs#readme",
   "dependencies": {
-    "@graphprotocol/graph-cli": "^0.20.0",
-    "@graphprotocol/graph-ts": "^0.20.0",
+    "@graphprotocol/graph-cli": "^0.33.1",
+    "@graphprotocol/graph-ts": "^0.27.0",
+    "@uma/contracts-node": "^0.3.16",
     "mustache": "^4.2.0"
   }
 }

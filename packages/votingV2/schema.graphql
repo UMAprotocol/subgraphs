@@ -1,42 +1,90 @@
+type Globals @entity {
+  id: ID!
+
+  "List of all users addresses"
+  userAddresses: [String!]!
+
+  "Cumulative stake from all users"
+  cumulativeStake: BigDecimal!
+
+  "Emission rate per second"
+  emissionRate: BigDecimal!
+
+  "Anual Voting Token emission at current emission rate"
+  anualVotingTokenEmission: BigDecimal!
+
+  "Higher index to process among all users"
+  maxNextIndexToProcess: BigInt!
+
+  countNoVotes: BigInt!
+
+  countWrongVotes: BigInt!
+
+  countCorrectVotes: BigInt!
+
+  users: [User!] @derivedFrom(field: "globals")
+}
+
 type User @entity {
   "Utility entity that links data from a single ethereum address. Id of the entity is the ethereum address itself"
   id: ID!
 
   address: Bytes!
 
+  "Earnings percentage from staking over a 12-month period, exclusive of slashing and compound interest"
+  anualPercentageReturn: BigDecimal!
+
+  "Earnings from staking over a 12-month period, exclusive of slashing and compound interest"
+  anualReturn: BigDecimal!
+
   "Number of price requests that this user has revealed a vote for, and therefore participated in as a voter"
   countReveals: BigInt
 
-  "Provides a lower-bound on # of votes that user has correctly voted for. User may not have retrieved rewards for all of their correct votes."
-  countRetrievals: BigInt
+  countNoVotes: BigInt!
 
-  voterActiveStake: BigDecimal
+  countWrongVotes: BigInt!
 
-  voterPendingStake: BigDecimal
+  countCorrectVotes: BigInt!
 
-  voterPendingUnstake: BigDecimal
+  voterStake: BigDecimal!
 
-  "Cumulative active stake from all stakeholders"
-  cumulativeActiveStake: BigDecimal
+  "Voter pending unstake during cooling-off period"
+  voterPendingUnstake: BigDecimal!
 
-  "Cumulative pending stake from all stakeholders"
-  cumulativePendingStake: BigDecimal
-
-  "Total rewards claimed in voting token"
-  claimedRewards: BigDecimal
-
-  "Outstanding rewards unclaimed in voting token"
-  outstandingRewards: BigDecimal
-
-  "Last outstandingRewards update time"
-  outstandingRewardsLastUpdateTime: BigInt
+  "Total rewards withdrawn in voting token"
+  withdrawnRewards: BigDecimal!
 
   "Total slashed applied to the user"
-  cumulativeSlash: BigDecimal
+  cumulativeSlash: BigDecimal!
+
+  "Total slash applied to the user in percentage compared to cumulativeStake"
+  cumulativeSlashPercentage: BigDecimal!
+
+  "Total calculated slashed applied to the user. Differs from cumulativeSlash when the user has updatedTrackers"
+  cumulativeCalculatedSlash: BigDecimal!
+
+  "Total calculated slash applied to the user in percentage compared to cumulativeStake"
+  cumulativeCalculatedSlashPercentage: BigDecimal!
+
+  "Next price request index to process during updateTrackers for this user"
+  nextIndexToProcess: BigInt
+
+  "Cumulative resulting stake of all the stakes and unstakes of the user but not including the slashing"
+  cumulativeStakeNoSlashing: BigDecimal!
+
+  "List of all voterStake updates"
+  stakesAmounts: [BigInt!]!
+
+  "List of all voterStake updates timestamps"
+  stakesTimestamp: [BigInt!]!
 
   votesCommited: [CommittedVote!]! @derivedFrom(field: "voter")
 
   votesRevealed: [RevealedVote!]! @derivedFrom(field: "voter")
+
+  votesSlashed: [SlashedVote!]! @derivedFrom(field: "voter")
+
+  globals: Globals!
 }
 
 type Collateral @entity {
@@ -89,6 +137,9 @@ type PriceRequest @entity {
 
   ancillaryData: String
 
+  "Transaction where the creation of the request took place"
+  requestTransaction: Bytes
+
   "Transaction where the resolution of the request took place"
   resolutionTransaction: Bytes
 
@@ -106,9 +157,6 @@ type PriceRequest @entity {
 
   "List of all the votes revealed on this request"
   revealedVotes: [RevealedVote!]! @derivedFrom(field: "request")
-
-  "List of all the rewards claimed events for this request"
-  rewardsClaimed: [RewardsClaimed!]! @derivedFrom(field: "request")
 
   "Is this request a governance action"
   isGovernance: Boolean!
@@ -128,29 +176,32 @@ type PriceRequestRound @entity {
 
   roundId: BigInt!
 
+  lastRevealTime: BigInt
+
   "Total amount of users who voted on this round"
   votersAmount: BigDecimal!
 
-  "Total amount of users who claimed rewards on this round"
-  votersClaimedAmount: BigDecimal!
-
   totalVotesRevealed: BigDecimal!
 
-  totalRewardsClaimed: BigDecimal!
+  cumulativeStakeAtRound: BigDecimal
 
-  cumulativeActiveStakeAtRound: BigDecimal
+  countNoVotes: BigInt!
+
+  countWrongVotes: BigInt!
+
+  countCorrectVotes: BigInt!
+
+  cumulativeCorrectVoteSlash: BigDecimal!
+
+  cumulativeWrongVoteSlash: BigDecimal!
+
+  cumulativeNoVoteSlash: BigDecimal!
 
   "Ratio of the total supply of tokens that were weighted on this vote"
   tokenVoteParticipationRatio: BigDecimal
 
   "Percentage of the total supply of tokens that were weighted on this vote"
   tokenVoteParticipationPercentage: BigDecimal
-
-  "Ratio of correct voters over total voters on this price request"
-  votersEligibleForRewardsRatio: BigDecimal
-
-  "Percentage of correct voters over total voters on this price request"
-  votersEligibleForRewardsPercentage: BigDecimal
 
   "gat expressed exactly as in the contract"
   gat: BigDecimal
@@ -168,8 +219,6 @@ type PriceRequestRound @entity {
   revealedVotes: [RevealedVote!]! @derivedFrom(field: "round")
 
   groups: [VoterGroup!]! @derivedFrom(field: "round")
-
-  rewardsClaimed: [RewardsClaimed!]! @derivedFrom(field: "round")
 }
 
 type VoterGroup @entity {
@@ -187,6 +236,23 @@ type VoterGroup @entity {
   votersAmount: BigDecimal!
 
   won: Boolean!
+}
+
+type SlashedVote @entity {
+  "Commited votes won't show the price until a reveal happens and a RevealedVote is created"
+  id: ID!
+
+  request: PriceRequest!
+
+  voter: User!
+
+  slashAmount: BigDecimal!
+
+  voted: Boolean!
+
+  correctness: Boolean
+
+  staking: Boolean
 }
 
 type CommittedVote @entity {
@@ -226,25 +292,6 @@ type RevealedVote @entity {
   numTokens: BigInt!
 
   group: VoterGroup!
-}
-
-type RewardsClaimed @entity {
-  id: ID!
-
-  identifier: PriceIdentifier!
-
-  ancillaryData: String
-
-  request: PriceRequest!
-
-  time: BigInt!
-
-  round: PriceRequestRound!
-
-  claimer: User!
-
-  "NumTokens will be 0 if the claim is not 'valid'. This can happen if the function was called for a voter who didn't get the correct vote for example."
-  numTokens: BigInt!
 }
 
 type FinancialContract @entity {

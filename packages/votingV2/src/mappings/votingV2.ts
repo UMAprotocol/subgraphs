@@ -1,10 +1,10 @@
-import { PriceRequestRound } from "../../generated/schema";
+import { PriceRequestRound, RevealedVote, User } from "../../generated/schema";
 import {
   ExecutedUnstake,
   PriceRequestAdded,
   PriceResolved,
+  RequestedUnstake,
   Staked,
-  UpdatedActiveStake,
   UpdatedReward,
   VoteCommitted,
   VoteRevealed,
@@ -12,7 +12,7 @@ import {
   VotingV2,
   WithdrawnRewards,
 } from "../../generated/Voting/VotingV2";
-import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE } from "../utils/constants";
+import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE, BIGINT_ZERO } from "../utils/constants";
 import { defaultBigDecimal, defaultBigInt, toDecimal } from "../utils/decimals";
 import {
   getOrCreateCommittedVote,
@@ -25,26 +25,38 @@ import {
   getTokenContract,
 } from "../utils/helpers";
 
-import { BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
+import {
+  getOrCreateSlashedVote,
+  getOrCreateGlobals,
+  getPriceRequestId,
+  getVoteId,
+  getVoteIdNoRoundId,
+} from "../utils/helpers/voting";
 
-// - event: PriceRequestAdded(address,indexed uint256,indexed bytes32,indexed uint256,uint256,bytes,bool)
+// - event: PriceRequestAdded(indexed address,indexed uint256,uint256,indexed bytes32,uint256,bytes,bool)
 // event PriceRequestAdded(
-//   address requester,
+//   address indexed requester,
 //   uint256 indexed roundId,
+//   uint256 priceRequestIndex,
 //   bytes32 indexed identifier,
-//   uint256 indexed time,
-//   uint256 requestIndex
+//   uint256 time,
 //   bytes ancillaryData,
 //   bool isGovernance
 // );
 
 export function handlePriceRequestAdded(event: PriceRequestAdded): void {
-  let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
+  let requestId = getPriceRequestId(
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString()
+  );
   let request = getOrCreatePriceRequest(requestId);
   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
 
   request.identifier = event.params.identifier.toString();
-  request.requestIndex = event.params.requestIndex;
+  request.requestIndex = event.params.priceRequestIndex;
+  request.requestTransaction = event.transaction.hash;
   request.latestRound = requestRound.id;
   request.time = event.params.time;
   request.ancillaryData = event.params.ancillaryData.toHex();
@@ -62,19 +74,23 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   requestRound.time = event.params.time;
   requestRound.roundId = event.params.roundId;
 
-  log.warning(`New Price Request Saved: {},{},{}`, [request.time.toString(), request.latestRound, request.identifier]);
+  log.warning(`New Price Request Saved: {},{},{}`, [
+    request.time.toString(),
+    <string>request.latestRound || "",
+    request.identifier,
+  ]);
 
   requestRound.save();
   request.save();
 }
-
+// - event: PriceResolved(indexed uint256,uint256,indexed bytes32,uint256,bytes,int256)
 // event PriceResolved(
 //   uint256 indexed roundId,
+//   uint256 priceRequestIndex,
 //   bytes32 indexed identifier,
 //   uint256 time,
-//   uint256 requestIndex,
-//   int256 price,
-//   bytes ancillaryData
+//   bytes ancillaryData,
+//   int256 price
 // );
 
 export function handlePriceResolved(event: PriceResolved): void {
@@ -83,12 +99,16 @@ export function handlePriceResolved(event: PriceResolved): void {
     event.params.identifier.toString(),
     event.params.roundId.toString(),
   ]);
-  let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
+  let requestId = getPriceRequestId(
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString()
+  );
   let request = getOrCreatePriceRequest(requestId);
 
   log.warning(`Fetched Price Request Entity: {},{},{}`, [
     request.time.toString(),
-    request.latestRound,
+    <string>request.latestRound || "",
     request.identifier,
   ]);
   let requestRound: PriceRequestRound = getOrCreatePriceRequestRound(
@@ -98,7 +118,7 @@ export function handlePriceResolved(event: PriceResolved): void {
   let voterGroup = getOrCreateVoterGroup(groupId);
   let votingContract = VotingV2.bind(event.address);
   let roundInfo = votingContract.try_rounds(event.params.roundId);
-  let cumulativeActiveStakeAtRound = roundInfo.reverted
+  let cumulativeStakeAtRound = roundInfo.reverted
     ? toDecimal(BigInt.fromString("0"))
     : toDecimal(roundInfo.value.value1);
 
@@ -115,44 +135,205 @@ export function handlePriceResolved(event: PriceResolved): void {
   requestRound.identifier = event.params.identifier.toString();
   requestRound.time = event.params.time;
   requestRound.roundId = event.params.roundId;
-  requestRound.votersEligibleForRewardsRatio = voterGroup.votersAmount.div(requestRound.votersAmount);
-
-  requestRound.votersEligibleForRewardsPercentage =
-    requestRound.votersEligibleForRewardsRatio.times(BIGDECIMAL_HUNDRED);
   requestRound.winnerGroup = voterGroup.id;
   requestRound.gat = roundInfo.reverted ? requestRound.gat : toDecimal(roundInfo.value.value0);
 
-  requestRound.gatPercentageRaw = requestRound.gat.div(toDecimal(getTokenContract().try_totalSupply().value));
-  requestRound.gatPercentage = requestRound.gatPercentageRaw.times(BIGDECIMAL_HUNDRED);
-  requestRound.cumulativeActiveStakeAtRound = cumulativeActiveStakeAtRound;
+  requestRound.gatPercentageRaw = defaultBigDecimal(requestRound.gat).div(
+    toDecimal(getTokenContract().try_totalSupply().value)
+  );
+  requestRound.gatPercentage = defaultBigDecimal(requestRound.gatPercentageRaw).times(BIGDECIMAL_HUNDRED);
+  requestRound.cumulativeStakeAtRound = cumulativeStakeAtRound;
 
   requestRound.save();
   request.save();
   voterGroup.save();
+
+  updateUsersSlashingTrackers(event);
 }
 
-// - event: VoteCommitted(indexed address,indexed address,uint256,indexed bytes32,uint256,bytes)
+function updateUsersSlashingTrackers(event: PriceResolved): void {
+  let votingContract = VotingV2.bind(event.address);
+  let globals = getOrCreateGlobals();
+  let users = globals.userAddresses;
+
+  let requestId = getPriceRequestId(
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString()
+  );
+
+  let request = getOrCreatePriceRequest(requestId);
+
+  let requestRound: PriceRequestRound = getOrCreatePriceRequestRound(
+    requestId.concat("-").concat(event.params.roundId.toString())
+  );
+
+  let slashingTrackers = votingContract.try_requestSlashingTrackers(request.requestIndex);
+
+  log.warning(`Updating slashing trackers: {},{},{}`, [
+    requestId,
+    users.length.toString(),
+    event.params.roundId.toString(),
+  ]);
+
+  // loop through all users and update their slashing trackers
+  for (let i = 0; i < users.length; i++) {
+    let userAddress = users[i];
+    let user = getOrCreateUser(Address.fromString(userAddress as string));
+
+    var voteId = getVoteId(
+      userAddress,
+      event.params.identifier.toString(),
+      event.params.time.toString(),
+      event.params.ancillaryData.toHexString(),
+      event.params.roundId.toString()
+    );
+
+    let voteSlashedId = getVoteIdNoRoundId(
+      userAddress,
+      event.params.identifier.toString(),
+      event.params.time.toString(),
+      event.params.ancillaryData.toHexString()
+    );
+
+    let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id);
+
+    // the pending stake of the user during the voting round
+    // must be subtracted from the user stake amount during the reveal phase
+    let pendingStake = votingContract.try_getVoterPendingStake(
+      Address.fromString(userAddress as string),
+      event.params.roundId
+    );
+
+    // Check if the user voted in the round
+    if (RevealedVote.load(voteId) != null) {
+      let vote = getOrCreateRevealedVote(voteId);
+      if (event.params.price.equals(vote.price)) {
+        // User voted correctly
+
+        // This is the slashing calculated as in the contract for correct votes
+        let slashing = toDecimal(vote.numTokens.minus(pendingStake.value))
+          .times(toDecimal(slashingTrackers.value.totalSlashed))
+          .div(toDecimal(slashingTrackers.value.totalCorrectVotes));
+
+        // Update all the slashing trackers
+        voteSlashed.voted = true;
+        voteSlashed.correctness = true;
+        voteSlashed.slashAmount = slashing;
+        voteSlashed.staking = vote.numTokens.minus(pendingStake.value).gt(BIGINT_ZERO) ? true : false;
+        user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
+        user.cumulativeCalculatedSlashPercentage = defaultBigDecimal(user.cumulativeCalculatedSlash)
+          .div(user.cumulativeStakeNoSlashing)
+          .times(BigInt.fromI32(100).toBigDecimal());
+        user.countCorrectVotes = user.countCorrectVotes.plus(BigInt.fromI32(1));
+        globals.countCorrectVotes = globals.countCorrectVotes.plus(BigInt.fromI32(1));
+        requestRound.countCorrectVotes = defaultBigInt(requestRound.countCorrectVotes).plus(BigInt.fromI32(1));
+        requestRound.cumulativeCorrectVoteSlash = defaultBigDecimal(requestRound.cumulativeCorrectVoteSlash).plus(
+          slashing
+        );
+      } else {
+        // User voted incorrectly
+
+        // This is the slashing calculated as in the contract for incorrect votes
+        // Should be zero if we are in a governance vote
+        let slashing = BIGDECIMAL_ZERO.minus(
+          toDecimal(vote.numTokens.minus(pendingStake.value)).times(
+            toDecimal(slashingTrackers.value.wrongVoteSlashPerToken)
+          )
+        );
+
+        // Update all the slashing trackers
+        voteSlashed.voted = true;
+        voteSlashed.correctness = false;
+        voteSlashed.slashAmount = slashing;
+        voteSlashed.staking = vote.numTokens.minus(pendingStake.value).gt(BIGINT_ZERO) ? true : false;
+        user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
+        user.cumulativeCalculatedSlashPercentage = defaultBigDecimal(user.cumulativeCalculatedSlash)
+          .div(user.cumulativeStakeNoSlashing)
+          .times(BigInt.fromI32(100).toBigDecimal());
+        requestRound.cumulativeWrongVoteSlash = defaultBigDecimal(requestRound.cumulativeWrongVoteSlash).plus(slashing);
+
+        // Only if not a governance vote we update the wrong votes counter
+        // In a governance vote there is no notion of correct or incorrect votes
+        // and the incorrect vote slashing is zero
+        if (!request.isGovernance) {
+          user.countWrongVotes = user.countWrongVotes.plus(BigInt.fromI32(1));
+          globals.countWrongVotes = globals.countWrongVotes.plus(BigInt.fromI32(1));
+          requestRound.countWrongVotes = defaultBigInt(requestRound.countWrongVotes).plus(BigInt.fromI32(1));
+        }
+      }
+    } else {
+      // User did not vote
+
+      // We need to find the user's stake amount in the reveal phase of this round
+      // The only way to get this information is to store all the user's stake history
+      // This is the main reason of having stakesTimestamps and stakesAmounts
+      // so we can loop through it to find the stake amount in the reveal phase of this round
+      // TODO find a better way to do this
+      let effectiveStake = BIGINT_ZERO;
+      for (let i = user.stakesTimestamp.length - 1; i >= 0; i--) {
+        if (user.stakesTimestamp[i].lt(defaultBigInt(requestRound.lastRevealTime))) {
+          effectiveStake = user.stakesAmounts[i].minus(pendingStake.value);
+        }
+      }
+      // This is the slashing calculated as in the contract for not voting
+      let slashing = BIGDECIMAL_ZERO.minus(
+        toDecimal(effectiveStake).times(toDecimal(slashingTrackers.value.noVoteSlashPerToken))
+      );
+
+      // Update all the slashing trackers
+      voteSlashed.slashAmount = slashing;
+      voteSlashed.staking = effectiveStake.gt(BIGINT_ZERO) ? true : false;
+      user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
+      user.cumulativeCalculatedSlashPercentage = defaultBigDecimal(user.cumulativeCalculatedSlash)
+        .div(user.cumulativeStakeNoSlashing)
+        .times(BigInt.fromI32(100).toBigDecimal());
+      user.countNoVotes = user.countNoVotes.plus(BigInt.fromI32(1));
+      globals.countNoVotes = globals.countNoVotes.plus(BigInt.fromI32(1));
+      requestRound.countNoVotes = defaultBigInt(requestRound.countNoVotes).plus(BigInt.fromI32(1));
+      requestRound.cumulativeNoVoteSlash = defaultBigDecimal(requestRound.cumulativeNoVoteSlash).plus(slashing);
+    }
+    user.save();
+    voteSlashed.save();
+  }
+
+  log.warning(`Finished updating slashing trackers: {},{},{}`, [
+    requestId,
+    users.length.toString(),
+    event.params.roundId.toString(),
+  ]);
+
+  requestRound.save();
+  globals.save();
+}
+
+// - event: VoteCommitted(indexed address,indexed address,uint256,uint256,indexed bytes32,uint256,bytes)
 // event VoteCommitted(
 //   address indexed voter,
 //   address indexed caller,
 //   uint256 roundId,
+//   uint256 priceRequestIndex,
 //   bytes32 indexed identifier,
 //   uint256 time,
-//   bytes ancillaryData TODO check if we want to use this
+//   bytes ancillaryData
 // );
 
 export function handleVoteCommitted(event: VoteCommitted): void {
-  let voteId = event.params.voter
-    .toHexString()
-    .concat("-")
-    .concat(event.params.identifier.toString())
-    .concat("-")
-    .concat(event.params.time.toString())
-    .concat("-")
-    .concat(event.params.roundId.toString());
+  let voteId = getVoteId(
+    event.params.voter.toHexString(),
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString(),
+    event.params.roundId.toString()
+  );
   let vote = getOrCreateCommittedVote(voteId);
   let voter = getOrCreateUser(event.params.voter);
-  let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
+
+  let requestId = getPriceRequestId(
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString()
+  );
   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
 
   vote.voter = voter.id;
@@ -170,36 +351,40 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   vote.save();
   voter.save();
 }
-// - event: VoteRevealed(indexed address,indexed address,uint256,indexed bytes32,uint256,int256,bytes,uint256)
+// - event: VoteRevealed(indexed address,indexed address,uint256,uint256,indexed bytes32,uint256,bytes,int256,uint256)
 // event VoteRevealed(
 //   address indexed voter,
-//   address indexed caller,  TODO check if we want to use this
+//   address indexed caller,
 //   uint256 roundId,
+//   uint256 priceRequestIndex,
 //   bytes32 indexed identifier,
 //   uint256 time,
+//   bytes ancillaryData,
 //   int256 price,
-//   bytes ancillaryData,   TODO check if we want to use this
 //   uint256 numTokens
 // );
 
 export function handleVoteRevealed(event: VoteRevealed): void {
-  let voteId = event.params.voter
-    .toHexString()
-    .concat("-")
-    .concat(event.params.identifier.toString())
-    .concat("-")
-    .concat(event.params.time.toString())
-    .concat("-")
-    .concat(event.params.roundId.toString());
+  let voteId = getVoteId(
+    event.params.voter.toHexString(),
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString(),
+    event.params.roundId.toString()
+  );
   let vote = getOrCreateRevealedVote(voteId);
   let voter = getOrCreateUser(event.params.voter);
-  let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
+  let requestId = getPriceRequestId(
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString()
+  );
   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
   let groupId = requestRound.id.concat("-").concat(event.params.price.toString());
   let voterGroup = getOrCreateVoterGroup(groupId);
   let votingContract = VotingV2.bind(event.address);
   let roundInfo = votingContract.try_rounds(event.params.roundId);
-  let cumulativeActiveStakeAtRound = roundInfo.reverted
+  let cumulativeStakeAtRound = roundInfo.reverted
     ? toDecimal(BigInt.fromString("0"))
     : toDecimal(roundInfo.value.value1);
 
@@ -212,7 +397,7 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   vote.numTokens = event.params.numTokens;
   vote.group = voterGroup.id;
 
-  voter.countReveals = voter.countReveals.plus(BIGINT_ONE);
+  voter.countReveals = defaultBigInt(voter.countReveals).plus(BIGINT_ONE);
 
   voterGroup.price = event.params.price;
   voterGroup.round = requestRound.id;
@@ -225,65 +410,120 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   requestRound.roundId = event.params.roundId;
   requestRound.totalVotesRevealed = requestRound.totalVotesRevealed.plus(toDecimal(vote.numTokens));
   requestRound.votersAmount = requestRound.votersAmount.plus(BIGDECIMAL_ONE);
+  requestRound.lastRevealTime = event.block.timestamp;
 
-  requestRound.tokenVoteParticipationRatio = cumulativeActiveStakeAtRound.gt(BIGDECIMAL_ZERO)
-    ? requestRound.totalVotesRevealed.div(<BigDecimal>cumulativeActiveStakeAtRound)
+  requestRound.tokenVoteParticipationRatio = cumulativeStakeAtRound.gt(BIGDECIMAL_ZERO)
+    ? requestRound.totalVotesRevealed.div(<BigDecimal>cumulativeStakeAtRound)
     : BigDecimal.fromString("0");
-  requestRound.tokenVoteParticipationPercentage = requestRound.tokenVoteParticipationRatio.times(BIGDECIMAL_HUNDRED);
+  requestRound.tokenVoteParticipationPercentage = defaultBigDecimal(requestRound.tokenVoteParticipationRatio).times(
+    BIGDECIMAL_HUNDRED
+  );
 
   requestRound.save();
+
+  let voteSlashedId = getVoteIdNoRoundId(
+    event.params.voter.toHexString(),
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString()
+  );
+
   vote.save();
   voter.save();
   voterGroup.save();
 }
 
+// - event: Staked(indexed address,indexed address,uint256,uint256,uint256,uint256)
 // event Staked(
 //   address indexed voter,
 //   address indexed from,
 //   uint256 amount,
-//   uint256 voterActiveStake,
-//   uint256 voterPendingStake,
+//   uint256 voterStake,
 //   uint256 voterPendingUnstake,
-//   uint256 cumulativeActiveStake,
-//   uint256 cumulativePendingStake
+//   uint256 cumulativeStake
 // );
 
 export function handleStaked(event: Staked): void {
   let user = getOrCreateUser(event.params.voter);
-  user.voterActiveStake = toDecimal(event.params.voterActiveStake);
-  user.voterPendingStake = toDecimal(event.params.voterPendingStake);
+  let globals = getOrCreateGlobals();
+  user.voterStake = toDecimal(event.params.voterStake);
   user.voterPendingUnstake = toDecimal(event.params.voterPendingUnstake);
-  user.cumulativeActiveStake = toDecimal(event.params.cumulativeActiveStake);
-  user.cumulativePendingStake = toDecimal(event.params.cumulativePendingStake);
+  user.cumulativeStakeNoSlashing = defaultBigDecimal(user.cumulativeStakeNoSlashing).plus(
+    toDecimal(event.params.amount)
+  );
+  globals.cumulativeStake = toDecimal(event.params.cumulativeStake);
+
+  let newUserAddresses = globals.userAddresses;
+  if (!newUserAddresses.includes(event.params.voter.toHexString()))
+    newUserAddresses.push(event.params.voter.toHexString());
+  globals.userAddresses = newUserAddresses;
+
+  addStakes(user, event.params.voterStake, event.block.timestamp);
+
   user.save();
+  globals.save();
+
+  let votingContract = VotingV2.bind(event.address);
+  let emissionRate = votingContract.try_emissionRate();
+
+  updateAprs(
+    globals.userAddresses,
+    emissionRate.reverted ? BigInt.fromI32(0) : emissionRate.value,
+    globals.cumulativeStake
+  );
 }
 
-// event UpdatedActiveStake(
-//   address indexed voter,
-//   uint256 voterActiveStake,
-//   uint256 voterPendingStake,
-//   uint256 cumulativeActiveStake,
-//   uint256 cumulativePendingStake
-// );
+// RequestedUnstake(address indexed voter, uint256 amount, uint256 unstakeTime, uint256 voterStake);
 
-export function handleUpdatedActiveStake(event: UpdatedActiveStake): void {
+export function handleRequestedUnstake(event: RequestedUnstake): void {
   let user = getOrCreateUser(event.params.voter);
-  user.voterActiveStake = toDecimal(event.params.voterActiveStake);
-  user.voterPendingStake = toDecimal(event.params.voterPendingStake);
-  user.cumulativeActiveStake = toDecimal(event.params.cumulativeActiveStake);
-  user.cumulativePendingStake = toDecimal(event.params.cumulativePendingStake);
+  let globals = getOrCreateGlobals();
+  user.voterStake = toDecimal(event.params.voterStake);
+  user.voterPendingUnstake = toDecimal(event.params.amount);
+  user.cumulativeStakeNoSlashing = defaultBigDecimal(user.cumulativeStakeNoSlashing).minus(
+    toDecimal(event.params.amount)
+  );
+  globals.cumulativeStake = globals.cumulativeStake.minus(toDecimal(event.params.amount));
+
+  let newUserAddresses = globals.userAddresses;
+  if (!newUserAddresses.includes(event.params.voter.toHexString()))
+    newUserAddresses.push(event.params.voter.toHexString());
+  globals.userAddresses = newUserAddresses;
+
+  addStakes(user, event.params.voterStake, event.block.timestamp);
+
   user.save();
+  globals.save();
+
+  let votingContract = VotingV2.bind(event.address);
+  let emissionRate = votingContract.try_emissionRate();
+
+  updateAprs(
+    globals.userAddresses,
+    emissionRate.reverted ? BigInt.fromI32(0) : emissionRate.value,
+    globals.cumulativeStake
+  );
 }
 
 // event UpdatedReward(address indexed voter, uint256 newReward, uint256 lastUpdateTime);
 
 export function handleUpdatedReward(event: UpdatedReward): void {
   let user = getOrCreateUser(event.params.voter);
+  let globals = getOrCreateGlobals();
   let votingContract = VotingV2.bind(event.address);
   let voterStake = votingContract.try_voterStakes(event.params.voter);
+  let nextIndexToProcessChain = voterStake.value.value5;
 
-  user.outstandingRewards = voterStake.reverted ? user.outstandingRewards : toDecimal(voterStake.value.value4);
-  user.outstandingRewardsLastUpdateTime = event.params.lastUpdateTime;
+  user.nextIndexToProcess = nextIndexToProcessChain;
+
+  if (nextIndexToProcessChain.gt(globals.maxNextIndexToProcess)) {
+    // This value can be compared to the users' nextIndexToProcess to see if the users'
+    // trackers are up to date. This is also demonstrated by the user.cumulativeSlash versus
+    // user.cumulativeCalculatedSlash comparison; if they differ, the user's trackers are out of date.
+    // It should be noted that user.cumulativeCalculatedSlash is always updated for all users.
+    globals.maxNextIndexToProcess = nextIndexToProcessChain;
+    globals.save();
+  }
 
   user.save();
 }
@@ -293,7 +533,7 @@ export function handleUpdatedReward(event: UpdatedReward): void {
 export function handleWithdrawnRewards(event: WithdrawnRewards): void {
   let user = getOrCreateUser(event.params.voter);
 
-  user.claimedRewards = defaultBigDecimal(user.claimedRewards).plus(toDecimal(event.params.tokensWithdrawn));
+  user.withdrawnRewards = defaultBigDecimal(user.withdrawnRewards).plus(toDecimal(event.params.tokensWithdrawn));
 
   user.save();
 }
@@ -304,21 +544,59 @@ export function handleVoterSlashed(event: VoterSlashed): void {
   let user = getOrCreateUser(event.params.voter);
 
   user.cumulativeSlash = defaultBigDecimal(user.cumulativeSlash).plus(toDecimal(event.params.slashedTokens));
-  user.voterActiveStake = toDecimal(event.params.postActiveStake);
+  user.cumulativeSlashPercentage = defaultBigDecimal(user.cumulativeSlash)
+    .div(user.cumulativeStakeNoSlashing)
+    .times(BigInt.fromI32(100).toBigDecimal());
+  user.voterStake = toDecimal(event.params.postActiveStake);
+
+  addStakes(user, event.params.postActiveStake, event.block.timestamp);
 
   user.save();
 }
 
-// event ExecutedUnstake(
-//   address indexed voter,
-//   uint256 tokensSent,
-//   uint256 voterActiveStake,
-//   uint256 voterPendingStake
-// );
+// event ExecutedUnstake(address indexed voter, uint256 tokensSent, uint256 voterStake);
 
 export function handleExecutedUnstake(event: ExecutedUnstake): void {
   let user = getOrCreateUser(event.params.voter);
-  user.voterActiveStake = toDecimal(event.params.voterActiveStake);
-  user.voterPendingStake = toDecimal(event.params.voterPendingStake);
+  user.voterStake = toDecimal(event.params.voterStake);
+
+  addStakes(user, event.params.voterStake, event.block.timestamp);
+
   user.save();
+}
+
+function updateAprs(users: string[], emissionRate: BigInt, cumulativeStake: BigDecimal): void {
+  const oneYear = BigInt.fromI32(31536000).toBigDecimal();
+  const anualEmission = toDecimal(emissionRate).times(oneYear);
+  let globals = getOrCreateGlobals();
+  globals.anualVotingTokenEmission = anualEmission;
+  globals.emissionRate = toDecimal(emissionRate);
+
+  for (let i = 0; i < users.length; i++) {
+    let userAddress = users[i];
+    let user = getOrCreateUser(Address.fromString(userAddress as string));
+
+    user.anualReturn = cumulativeStake.equals(BIGDECIMAL_ZERO)
+      ? BIGDECIMAL_ZERO
+      : defaultBigDecimal(user.voterStake).div(cumulativeStake).times(anualEmission);
+
+    user.anualPercentageReturn = defaultBigDecimal(user.voterStake).equals(BIGDECIMAL_ZERO)
+      ? BIGDECIMAL_ZERO
+      : user.anualReturn.div(defaultBigDecimal(user.voterStake)).times(BigInt.fromI32(100).toBigDecimal());
+
+    user.save();
+  }
+  globals.save();
+}
+
+// Stores the historic of the user's stake
+// This is required to calculate the user stake at a specific time if they didn't vote
+function addStakes(user: User, newStake: BigInt, timestamp: BigInt): void {
+  let newStakesAmounts = user.stakesAmounts;
+  newStakesAmounts.push(newStake);
+  user.stakesAmounts = newStakesAmounts;
+
+  let newStakesTimestamp = user.stakesTimestamp;
+  newStakesTimestamp.push(timestamp);
+  user.stakesTimestamp = newStakesTimestamp;
 }

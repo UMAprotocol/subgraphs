@@ -4,7 +4,8 @@ export {
   handlePriceRequestAdded,
   handlePriceResolved,
   handleStaked,
-  handleUpdatedActiveStake,
+  handleRequestedUnstake,
+  handleExecutedUnstake,
   handleUpdatedReward,
   handleWithdrawnRewards,
   handleVoterSlashed

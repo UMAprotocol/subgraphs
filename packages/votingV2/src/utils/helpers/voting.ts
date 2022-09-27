@@ -3,10 +3,30 @@ import {
   PriceRequestRound,
   CommittedVote,
   RevealedVote,
-  RewardsClaimed,
   VoterGroup,
+  SlashedVote,
+  Globals,
 } from "../../../generated/schema";
-import { BIGDECIMAL_ZERO } from "../constants";
+import { BIGDECIMAL_ZERO, BIGINT_ZERO } from "../constants";
+export const GLOBALS = "globals";
+
+export function getOrCreateGlobals(): Globals {
+  let request = Globals.load(GLOBALS);
+
+  if (request == null) {
+    request = new Globals(GLOBALS);
+    request.userAddresses = [];
+    request.cumulativeStake = BIGDECIMAL_ZERO;
+    request.emissionRate = BIGDECIMAL_ZERO;
+    request.anualVotingTokenEmission = BIGDECIMAL_ZERO;
+    request.maxNextIndexToProcess = BIGINT_ZERO;
+    request.countCorrectVotes = BIGINT_ZERO;
+    request.countWrongVotes = BIGINT_ZERO;
+    request.countNoVotes = BIGINT_ZERO;
+  }
+
+  return request as Globals;
+}
 
 export function getOrCreatePriceRequest(id: String, createIfNotFound: boolean = true): PriceRequest {
   let request = PriceRequest.load(id);
@@ -26,12 +46,35 @@ export function getOrCreatePriceRequestRound(id: String, createIfNotFound: boole
     requestRound = new PriceRequestRound(id);
 
     requestRound.totalVotesRevealed = BIGDECIMAL_ZERO;
-    requestRound.totalRewardsClaimed = BIGDECIMAL_ZERO;
     requestRound.votersAmount = BIGDECIMAL_ZERO;
-    requestRound.votersClaimedAmount = BIGDECIMAL_ZERO;
+    requestRound.countCorrectVotes = BIGINT_ZERO;
+    requestRound.countWrongVotes = BIGINT_ZERO;
+    requestRound.countNoVotes = BIGINT_ZERO;
+    requestRound.cumulativeCorrectVoteSlash = BIGDECIMAL_ZERO;
+    requestRound.cumulativeWrongVoteSlash = BIGDECIMAL_ZERO;
+    requestRound.cumulativeNoVoteSlash = BIGDECIMAL_ZERO;
   }
 
   return requestRound as PriceRequestRound;
+}
+
+export function getOrCreateSlashedVote(
+  id: String,
+  requestId: string,
+  voterId: string,
+  createIfNotFound: boolean = true
+): SlashedVote {
+  let vote = SlashedVote.load(id);
+
+  if (vote == null && createIfNotFound) {
+    vote = new SlashedVote(id);
+    vote.voter = voterId;
+    vote.request = requestId;
+    vote.slashAmount = BIGDECIMAL_ZERO;
+    vote.voted = false;
+  }
+
+  return vote as SlashedVote;
 }
 
 export function getOrCreateCommittedVote(id: String, createIfNotFound: boolean = true): CommittedVote {
@@ -75,4 +118,30 @@ export function getOrCreateVoterGroup(id: String, createIfNotFound: boolean = tr
   }
 
   return group as VoterGroup;
+}
+
+export function getVoteId(
+  voter: string,
+  identifier: string,
+  time: string,
+  ancillaryData: string,
+  roundId: string
+): string {
+  return voter
+    .concat("-")
+    .concat(identifier)
+    .concat("-")
+    .concat(time)
+    .concat("-")
+    .concat(ancillaryData)
+    .concat("-")
+    .concat(roundId);
+}
+
+export function getVoteIdNoRoundId(voter: string, identifier: string, time: string, ancillaryData: string): string {
+  return voter.concat("-").concat(identifier).concat("-").concat(time).concat("-").concat(ancillaryData);
+}
+
+export function getPriceRequestId(identifier: string, time: string, ancillaryData: string): string {
+  return identifier.concat("-").concat(time).concat("-").concat(ancillaryData);
 }
