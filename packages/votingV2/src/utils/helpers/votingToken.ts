@@ -21,6 +21,14 @@ export function getOrCreateUser(id: Address, createIfNotFound: boolean = true): 
     user.globals = globals.id;
     user.anualPercentageReturn = BIGDECIMAL_ZERO;
     user.anualReturn = BIGDECIMAL_ZERO;
+    user.cumulativeCalculatedSlash = BIGDECIMAL_ZERO;
+    user.cumulativeSlashPercentage = BIGDECIMAL_ZERO;
+    user.cumulativeCalculatedSlashPercentage = BIGDECIMAL_ZERO;
+    user.cumulativeStakeNoSlashing = BIGDECIMAL_ZERO;
+    user.voterStake = BIGDECIMAL_ZERO;
+    user.voterPendingUnstake = BIGDECIMAL_ZERO;
+    user.withdrawnRewards = BIGDECIMAL_ZERO;
+    user.cumulativeSlash = BIGDECIMAL_ZERO;
 
     user.save();
     globals.save();
