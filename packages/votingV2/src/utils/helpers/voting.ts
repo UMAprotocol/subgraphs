@@ -18,7 +18,7 @@ export function getOrCreateGlobals(): Globals {
     request.userAddresses = [];
     request.cumulativeStake = BIGDECIMAL_ZERO;
     request.emissionRate = BIGDECIMAL_ZERO;
-    request.anualVotingTokenEmission = BIGDECIMAL_ZERO;
+    request.annualVotingTokenEmission = BIGDECIMAL_ZERO;
     request.maxNextIndexToProcess = BIGINT_ZERO;
     request.countCorrectVotes = BIGINT_ZERO;
     request.countWrongVotes = BIGINT_ZERO;

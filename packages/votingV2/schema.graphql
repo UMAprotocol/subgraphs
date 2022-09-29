@@ -10,8 +10,8 @@ type Globals @entity {
   "Emission rate per second"
   emissionRate: BigDecimal!
 
-  "Anual Voting Token emission at current emission rate"
-  anualVotingTokenEmission: BigDecimal!
+  "Annual Voting Token emission at current emission rate"
+  annualVotingTokenEmission: BigDecimal!
 
   "Higher index to process among all users"
   maxNextIndexToProcess: BigInt!
@@ -32,10 +32,10 @@ type User @entity {
   address: Bytes!
 
   "Earnings percentage from staking over a 12-month period, exclusive of slashing and compound interest"
-  anualPercentageReturn: BigDecimal!
+  annualPercentageReturn: BigDecimal!
 
   "Earnings from staking over a 12-month period, exclusive of slashing and compound interest"
-  anualReturn: BigDecimal!
+  annualReturn: BigDecimal!
 
   "Number of price requests that this user has revealed a vote for, and therefore participated in as a voter"
   countReveals: BigInt
