@@ -567,22 +567,22 @@ export function handleExecutedUnstake(event: ExecutedUnstake): void {
 
 function updateAprs(users: string[], emissionRate: BigInt, cumulativeStake: BigDecimal): void {
   const oneYear = BigInt.fromI32(31536000).toBigDecimal();
-  const anualEmission = toDecimal(emissionRate).times(oneYear);
+  const annualEmission = toDecimal(emissionRate).times(oneYear);
   let globals = getOrCreateGlobals();
-  globals.anualVotingTokenEmission = anualEmission;
+  globals.annualVotingTokenEmission = annualEmission;
   globals.emissionRate = toDecimal(emissionRate);
 
   for (let i = 0; i < users.length; i++) {
     let userAddress = users[i];
     let user = getOrCreateUser(Address.fromString(userAddress as string));
 
-    user.anualReturn = cumulativeStake.equals(BIGDECIMAL_ZERO)
+    user.annualReturn = cumulativeStake.equals(BIGDECIMAL_ZERO)
       ? BIGDECIMAL_ZERO
-      : defaultBigDecimal(user.voterStake).div(cumulativeStake).times(anualEmission);
+      : defaultBigDecimal(user.voterStake).div(cumulativeStake).times(annualEmission);
 
-    user.anualPercentageReturn = defaultBigDecimal(user.voterStake).equals(BIGDECIMAL_ZERO)
+    user.annualPercentageReturn = defaultBigDecimal(user.voterStake).equals(BIGDECIMAL_ZERO)
       ? BIGDECIMAL_ZERO
-      : user.anualReturn.div(defaultBigDecimal(user.voterStake)).times(BigInt.fromI32(100).toBigDecimal());
+      : user.annualReturn.div(defaultBigDecimal(user.voterStake)).times(BigInt.fromI32(100).toBigDecimal());
 
     user.save();
   }
