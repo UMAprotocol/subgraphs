@@ -32,3 +32,11 @@ export function defaultBigInt(value: BigInt | null): BigInt {
 export function defaultBigDecimal(value: BigDecimal | null): BigDecimal {
   return value === null ? BIGDECIMAL_ZERO : <BigDecimal>value;
 }
+
+export function safeDivBigDecimal(a: BigDecimal, b: BigDecimal): BigDecimal {
+  if (b.equals(BigDecimal.fromString("0"))) {
+    return BigDecimal.fromString("0");
+  }
+
+  return a.div(b);
+}

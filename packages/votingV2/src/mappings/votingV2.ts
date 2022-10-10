@@ -13,7 +13,7 @@ import {
   WithdrawnRewards,
 } from "../../generated/Voting/VotingV2";
 import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE, BIGINT_ZERO } from "../utils/constants";
-import { defaultBigDecimal, defaultBigInt, toDecimal } from "../utils/decimals";
+import { defaultBigDecimal, defaultBigInt, safeDivBigDecimal, toDecimal } from "../utils/decimals";
 import {
   getOrCreateCommittedVote,
   getOrCreatePriceIdentifier,
@@ -138,7 +138,8 @@ export function handlePriceResolved(event: PriceResolved): void {
   requestRound.winnerGroup = voterGroup.id;
   requestRound.gat = roundInfo.reverted ? requestRound.gat : toDecimal(roundInfo.value.value0);
 
-  requestRound.gatPercentageRaw = defaultBigDecimal(requestRound.gat).div(
+  requestRound.gatPercentageRaw = safeDivBigDecimal(
+    defaultBigDecimal(requestRound.gat),
     toDecimal(getTokenContract().try_totalSupply().value)
   );
   requestRound.gatPercentage = defaultBigDecimal(requestRound.gatPercentageRaw).times(BIGDECIMAL_HUNDRED);
@@ -212,19 +213,20 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
         // User voted correctly
 
         // This is the slashing calculated as in the contract for correct votes
-        let slashing = toDecimal(vote.numTokens.minus(pendingStake.value))
-          .times(toDecimal(slashingTrackers.value.totalSlashed))
-          .div(toDecimal(slashingTrackers.value.totalCorrectVotes));
-
+        let slashing = safeDivBigDecimal(
+          toDecimal(vote.numTokens.minus(pendingStake.value)).times(toDecimal(slashingTrackers.value.totalSlashed)),
+          toDecimal(slashingTrackers.value.totalCorrectVotes)
+        );
         // Update all the slashing trackers
         voteSlashed.voted = true;
         voteSlashed.correctness = true;
         voteSlashed.slashAmount = slashing;
         voteSlashed.staking = vote.numTokens.minus(pendingStake.value).gt(BIGINT_ZERO) ? true : false;
         user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
-        user.cumulativeCalculatedSlashPercentage = defaultBigDecimal(user.cumulativeCalculatedSlash)
-          .div(user.cumulativeStakeNoSlashing)
-          .times(BigInt.fromI32(100).toBigDecimal());
+        user.cumulativeCalculatedSlashPercentage = safeDivBigDecimal(
+          defaultBigDecimal(user.cumulativeCalculatedSlash),
+          user.cumulativeStakeNoSlashing
+        ).times(BigInt.fromI32(100).toBigDecimal());
         user.countCorrectVotes = user.countCorrectVotes.plus(BigInt.fromI32(1));
         globals.countCorrectVotes = globals.countCorrectVotes.plus(BigInt.fromI32(1));
         requestRound.countCorrectVotes = defaultBigInt(requestRound.countCorrectVotes).plus(BigInt.fromI32(1));
@@ -248,9 +250,10 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
         voteSlashed.slashAmount = slashing;
         voteSlashed.staking = vote.numTokens.minus(pendingStake.value).gt(BIGINT_ZERO) ? true : false;
         user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
-        user.cumulativeCalculatedSlashPercentage = defaultBigDecimal(user.cumulativeCalculatedSlash)
-          .div(user.cumulativeStakeNoSlashing)
-          .times(BigInt.fromI32(100).toBigDecimal());
+        user.cumulativeCalculatedSlashPercentage = safeDivBigDecimal(
+          defaultBigDecimal(user.cumulativeCalculatedSlash),
+          user.cumulativeStakeNoSlashing
+        ).times(BigInt.fromI32(100).toBigDecimal());
         requestRound.cumulativeWrongVoteSlash = defaultBigDecimal(requestRound.cumulativeWrongVoteSlash).plus(slashing);
 
         // Only if not a governance vote we update the wrong votes counter
@@ -285,9 +288,10 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
       voteSlashed.slashAmount = slashing;
       voteSlashed.staking = effectiveStake.gt(BIGINT_ZERO) ? true : false;
       user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
-      user.cumulativeCalculatedSlashPercentage = defaultBigDecimal(user.cumulativeCalculatedSlash)
-        .div(user.cumulativeStakeNoSlashing)
-        .times(BigInt.fromI32(100).toBigDecimal());
+      user.cumulativeCalculatedSlashPercentage = safeDivBigDecimal(
+        defaultBigDecimal(user.cumulativeCalculatedSlash),
+        user.cumulativeStakeNoSlashing
+      ).times(BigInt.fromI32(100).toBigDecimal());
       user.countNoVotes = user.countNoVotes.plus(BigInt.fromI32(1));
       globals.countNoVotes = globals.countNoVotes.plus(BigInt.fromI32(1));
       requestRound.countNoVotes = defaultBigInt(requestRound.countNoVotes).plus(BigInt.fromI32(1));
@@ -412,9 +416,10 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   requestRound.votersAmount = requestRound.votersAmount.plus(BIGDECIMAL_ONE);
   requestRound.lastRevealTime = event.block.timestamp;
 
-  requestRound.tokenVoteParticipationRatio = cumulativeStakeAtRound.gt(BIGDECIMAL_ZERO)
-    ? requestRound.totalVotesRevealed.div(<BigDecimal>cumulativeStakeAtRound)
-    : BigDecimal.fromString("0");
+  requestRound.tokenVoteParticipationRatio = safeDivBigDecimal(
+    requestRound.totalVotesRevealed,
+    <BigDecimal>cumulativeStakeAtRound
+  );
   requestRound.tokenVoteParticipationPercentage = defaultBigDecimal(requestRound.tokenVoteParticipationRatio).times(
     BIGDECIMAL_HUNDRED
   );
@@ -544,9 +549,9 @@ export function handleVoterSlashed(event: VoterSlashed): void {
   let user = getOrCreateUser(event.params.voter);
 
   user.cumulativeSlash = defaultBigDecimal(user.cumulativeSlash).plus(toDecimal(event.params.slashedTokens));
-  user.cumulativeSlashPercentage = defaultBigDecimal(user.cumulativeSlash)
-    .div(user.cumulativeStakeNoSlashing)
-    .times(BigInt.fromI32(100).toBigDecimal());
+  user.cumulativeSlashPercentage = safeDivBigDecimal(user.cumulativeSlash, user.cumulativeStakeNoSlashing).times(
+    BigInt.fromI32(100).toBigDecimal()
+  );
   user.voterStake = toDecimal(event.params.postActiveStake);
 
   addStakes(user, event.params.postActiveStake, event.block.timestamp);
@@ -576,14 +581,10 @@ function updateAprs(users: string[], emissionRate: BigInt, cumulativeStake: BigD
     let userAddress = users[i];
     let user = getOrCreateUser(Address.fromString(userAddress as string));
 
-    user.annualReturn = cumulativeStake.equals(BIGDECIMAL_ZERO)
-      ? BIGDECIMAL_ZERO
-      : defaultBigDecimal(user.voterStake).div(cumulativeStake).times(annualEmission);
-
-    user.annualPercentageReturn = defaultBigDecimal(user.voterStake).equals(BIGDECIMAL_ZERO)
-      ? BIGDECIMAL_ZERO
-      : user.annualReturn.div(defaultBigDecimal(user.voterStake)).times(BigInt.fromI32(100).toBigDecimal());
-
+    user.annualReturn = safeDivBigDecimal(defaultBigDecimal(user.voterStake), cumulativeStake).times(annualEmission);
+    user.annualPercentageReturn = safeDivBigDecimal(user.annualReturn, defaultBigDecimal(user.voterStake)).times(
+      BigInt.fromI32(100).toBigDecimal()
+    );
     user.save();
   }
   globals.save();
