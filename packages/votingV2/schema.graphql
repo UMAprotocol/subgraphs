@@ -48,6 +48,9 @@ type User @entity {
 
   voterStake: BigDecimal!
 
+  "Tracks the stake that user should have before the next price request is resolved"
+  voterCalculatedStake: BigDecimal!
+
   "Voter pending unstake during cooling-off period"
   voterPendingUnstake: BigDecimal!
 

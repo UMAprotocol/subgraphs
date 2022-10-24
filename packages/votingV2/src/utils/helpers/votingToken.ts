@@ -27,6 +27,7 @@ export function getOrCreateUser(id: Address, createIfNotFound: boolean = true): 
     user.cumulativeStakeNoSlashing = BIGDECIMAL_ZERO;
     user.voterStake = BIGDECIMAL_ZERO;
     user.voterPendingUnstake = BIGDECIMAL_ZERO;
+    user.voterCalculatedStake = BIGDECIMAL_ZERO;
     user.withdrawnRewards = BIGDECIMAL_ZERO;
     user.cumulativeSlash = BIGDECIMAL_ZERO;
 
