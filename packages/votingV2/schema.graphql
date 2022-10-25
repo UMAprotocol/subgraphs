@@ -255,7 +255,7 @@ type TransactionSlashedVotes @entity {
 }
 
 type SlashedVote @entity {
-  "Commited votes won't show the price until a reveal happens and a RevealedVote is created"
+
   id: ID!
 
   request: PriceRequest!
