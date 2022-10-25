@@ -165,8 +165,6 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
   let globals = getOrCreateGlobals();
   let users = globals.userAddresses;
 
-  let transactionHash = event.transaction.hash.toHexString();
-
   let requestId = getPriceRequestId(
     event.params.identifier.toString(),
     event.params.time.toString(),
@@ -190,17 +188,18 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
     let userAddress = users[i];
     let user = getOrCreateUser(Address.fromString(userAddress as string));
 
-    let newUserCalculatedStake = toDecimal(
+    // save the old calculated stake
+    let oldUserCalculatedStake = user.voterCalculatedStake;
+
+    // store the new calculated stake
+    user.voterCalculatedStake = toDecimal(
       votingContract.try_getVoterStakePostUpdate(Address.fromString(userAddress as string)).value
     );
 
-    let oldUserCalculatedStake = user.voterCalculatedStake;
-    let slashing = user.voterCalculatedStake.gt(newUserCalculatedStake)
-      ? BIGDECIMAL_ZERO.minus(user.voterCalculatedStake.minus(newUserCalculatedStake))
-      : newUserCalculatedStake.minus(user.voterCalculatedStake);
-
-    user.voterCalculatedStake = newUserCalculatedStake;
-    user.save();
+    // This is the more accurate way to calculate the user's slash amount.
+    // We just need to handle appropriately the case where there is more than one price request
+    // resolved in the same transaction, this is done in processSlashesInSameTransaction function.
+    let slashing = user.voterCalculatedStake.minus(oldUserCalculatedStake);
 
     var voteId = getVoteId(
       userAddress,
@@ -288,6 +287,7 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
       requestRound.cumulativeNoVoteSlash = defaultBigDecimal(requestRound.cumulativeNoVoteSlash).plus(slashing);
       transactionSlashedVotes.countNoVotes = transactionSlashedVotes.countNoVotes.plus(BigInt.fromI32(1));
     }
+
     user.save();
     voteSlashed.save();
 
@@ -358,7 +358,11 @@ function processSlashesInSameTransaction(
 
     let totalWrongVoteSlashAmount = transactionSlashedVotes.countWrongVotes
       .toBigDecimal()
-      .times(defaultBigDecimal(transactionSlashedVotes.stakedAmount).times(toDecimal(slashingTrackers.value.wrongVoteSlashPerToken)))
+      .times(
+        defaultBigDecimal(transactionSlashedVotes.stakedAmount).times(
+          toDecimal(slashingTrackers.value.wrongVoteSlashPerToken)
+        )
+      )
       .neg();
 
     // Similarly we derive totalNoVoteSlashAmount from totalNegativeSlashAmount to ensure that their sum is accurate.
@@ -668,4 +672,3 @@ function updateAprs(users: string[], emissionRate: BigInt, cumulativeStake: BigD
   }
   globals.save();
 }
-
