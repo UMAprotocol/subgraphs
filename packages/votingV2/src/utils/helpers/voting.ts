@@ -1,12 +1,12 @@
 import {
+  CommittedVote,
+  Globals,
   PriceRequest,
   PriceRequestRound,
-  CommittedVote,
   RevealedVote,
-  VoterGroup,
   SlashedVote,
-  Globals,
   TransactionSlashedVotes,
+  VoterGroup,
 } from "../../../generated/schema";
 import { BIGDECIMAL_ZERO, BIGINT_ZERO } from "../constants";
 export const GLOBALS = "globals";
@@ -68,7 +68,10 @@ export function getOrCreateTransactionSlashedVotes(
   if (transactionSlashedVotes == null && createIfNotFound) {
     transactionSlashedVotes = new TransactionSlashedVotes(id);
     transactionSlashedVotes.slashedVotesIDs = [];
-    transactionSlashedVotes.maxSlashAmount = BIGDECIMAL_ZERO;
+    transactionSlashedVotes.cumulativeTransactionSlashAmount = BIGDECIMAL_ZERO;
+    transactionSlashedVotes.countNoVotes = BIGINT_ZERO;
+    transactionSlashedVotes.countCorrectVotes = BIGINT_ZERO;
+    transactionSlashedVotes.countWrongVotes = BIGINT_ZERO;
   }
 
   return transactionSlashedVotes as TransactionSlashedVotes;
@@ -89,6 +92,7 @@ export function getOrCreateSlashedVote(
     vote.request = requestId;
     vote.slashAmount = BIGDECIMAL_ZERO;
     vote.voted = false;
+    vote.isGovernance = false;
 
     vote.transactionSlashedVotes = getSlashingTransactionId(transactionHash, voterId);
     let transactionSlashedVotes = getOrCreateTransactionSlashedVotes(vote.transactionSlashedVotes);

@@ -247,7 +247,15 @@ type TransactionSlashedVotes @entity {
   "List of all slashed votes in this transaction"
   slashedVotesIDs: [String!]!
 
-  maxSlashAmount: BigDecimal!
+  cumulativeTransactionSlashAmount: BigDecimal!
+
+  stakedAmount: BigDecimal
+
+  countNoVotes: BigInt!
+
+  countWrongVotes: BigInt!
+
+  countCorrectVotes: BigInt!
 
   slashedVotes: [SlashedVote!] @derivedFrom(field: "transactionSlashedVotes")
 }
@@ -269,6 +277,8 @@ type SlashedVote @entity {
   staking: Boolean
 
   resolutionTimestamp: BigInt
+
+  isGovernance: Boolean!
 
   transactionSlashedVotes: TransactionSlashedVotes!
 }

@@ -10,10 +10,18 @@ import {
   VoteRevealed,
   VoterSlashed,
   VotingV2,
+  VotingV2__requestSlashingTrackersResultValue0Struct,
   WithdrawnRewards,
 } from "../../generated/Voting/VotingV2";
 import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE, BIGINT_ZERO } from "../utils/constants";
-import { defaultBigDecimal, defaultBigInt, safeDivBigDecimal, toDecimal } from "../utils/decimals";
+import {
+  defaultBigDecimal,
+  defaultBigInt,
+  safeDivBigDecimal,
+  toDecimal,
+  absMax,
+  bigDecimalMin,
+} from "../utils/decimals";
 import {
   getOrCreateCommittedVote,
   getOrCreatePriceIdentifier,
@@ -187,6 +195,7 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
       votingContract.try_getVoterStakePostUpdate(Address.fromString(userAddress as string)).value
     );
 
+    let oldUserCalculatedStake = user.voterCalculatedStake;
     let slashing = user.voterCalculatedStake.gt(newUserCalculatedStake)
       ? BIGDECIMAL_ZERO.minus(user.voterCalculatedStake.minus(newUserCalculatedStake))
       : newUserCalculatedStake.minus(user.voterCalculatedStake);
@@ -211,8 +220,12 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
 
     let transactionHash = event.transaction.hash.toHexString();
     let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id, transactionHash);
+    let transactionSlashedVotes = TransactionSlashedVotes.load(
+      voteSlashed.transactionSlashedVotes
+    ) as TransactionSlashedVotes;
 
     voteSlashed.resolutionTimestamp = event.block.timestamp;
+    voteSlashed.isGovernance = request.isGovernance;
 
     // Check if the user voted in the round
     if (RevealedVote.load(voteId) != null) {
@@ -235,6 +248,7 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
         requestRound.cumulativeCorrectVoteSlash = defaultBigDecimal(requestRound.cumulativeCorrectVoteSlash).plus(
           slashing
         );
+        transactionSlashedVotes.countCorrectVotes = transactionSlashedVotes.countCorrectVotes.plus(BigInt.fromI32(1));
       } else {
         // User voted incorrectly
         // Update all the slashing trackers
@@ -256,6 +270,7 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
           user.countWrongVotes = user.countWrongVotes.plus(BigInt.fromI32(1));
           globals.countWrongVotes = globals.countWrongVotes.plus(BigInt.fromI32(1));
           requestRound.countWrongVotes = defaultBigInt(requestRound.countWrongVotes).plus(BigInt.fromI32(1));
+          transactionSlashedVotes.countWrongVotes = transactionSlashedVotes.countWrongVotes.plus(BigInt.fromI32(1));
         }
       }
     } else {
@@ -272,47 +287,19 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
       globals.countNoVotes = globals.countNoVotes.plus(BigInt.fromI32(1));
       requestRound.countNoVotes = defaultBigInt(requestRound.countNoVotes).plus(BigInt.fromI32(1));
       requestRound.cumulativeNoVoteSlash = defaultBigDecimal(requestRound.cumulativeNoVoteSlash).plus(slashing);
+      transactionSlashedVotes.countNoVotes = transactionSlashedVotes.countNoVotes.plus(BigInt.fromI32(1));
     }
     user.save();
     voteSlashed.save();
 
-    // Update votes slashed in the same transaction
-    let transactionSlashedVotes = TransactionSlashedVotes.load(
-      voteSlashed.transactionSlashedVotes
-    ) as TransactionSlashedVotes;
-    let oldSlashedVotesIDs = transactionSlashedVotes.slashedVotesIDs;
-    oldSlashedVotesIDs.push(voteSlashed.id);
-    transactionSlashedVotes.slashedVotesIDs = oldSlashedVotesIDs;
-    // if absolute value of slashing is greater than the current max, update the max
-    let absSlashAmount = voteSlashed.slashAmount.lt(BIGDECIMAL_ZERO)
-      ? BIGDECIMAL_ZERO.minus(voteSlashed.slashAmount)
-      : voteSlashed.slashAmount;
-
-    // abs transactionSlashedVotes.maxSlashAmount
-    let absMaxSlashAmount = transactionSlashedVotes.maxSlashAmount.lt(BIGDECIMAL_ZERO)
-      ? BIGDECIMAL_ZERO.minus(transactionSlashedVotes.maxSlashAmount)
-      : transactionSlashedVotes.maxSlashAmount;
-
-    if (absSlashAmount.gt(absMaxSlashAmount)) {
-      transactionSlashedVotes.maxSlashAmount = voteSlashed.slashAmount;
-    }
-    transactionSlashedVotes.save();
-
-    if (transactionSlashedVotes.slashedVotesIDs.length > 1) {
-      // Find the slash amount
-      let newSlashAmount = transactionSlashedVotes.maxSlashAmount.div(
-        BigInt.fromI32(transactionSlashedVotes.slashedVotesIDs.length).toBigDecimal()
-      );
-      // Update al slashed votes in the transaction
-      for (let i = 0; i < transactionSlashedVotes.slashedVotesIDs.length; i++) {
-        let slashedVote = SlashedVote.load(transactionSlashedVotes.slashedVotesIDs[i]) as SlashedVote;
-        slashedVote.slashAmount = newSlashAmount;
-        if (newSlashAmount.notEqual(BIGDECIMAL_ZERO)) {
-          slashedVote.staking = true;
-        }
-        slashedVote.save();
-      }
-    }
+    // Finally update votes slashed in the same transaction
+    processSlashesInSameTransaction(
+      transactionSlashedVotes,
+      voteSlashed,
+      oldUserCalculatedStake,
+      votingContract,
+      request.requestIndex
+    );
   }
 
   log.warning(`Finished updating slashing trackers: {},{},{}`, [
@@ -323,6 +310,91 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
 
   requestRound.save();
   globals.save();
+}
+
+function processSlashesInSameTransaction(
+  transactionSlashedVotes: TransactionSlashedVotes,
+  voteSlashed: SlashedVote,
+  oldUserCalculatedStake: BigDecimal,
+  votingContract: VotingV2,
+  requestIndex: BigInt
+): void {
+  let slashingTrackers = votingContract.try_requestSlashingTrackers(requestIndex);
+
+  let oldSlashedVotesIDs = transactionSlashedVotes.slashedVotesIDs;
+  oldSlashedVotesIDs.push(voteSlashed.id);
+  transactionSlashedVotes.slashedVotesIDs = oldSlashedVotesIDs;
+
+  // One of the slashes contains the cumulative sum of the others, so we look for the maximum in absolute value.
+  transactionSlashedVotes.cumulativeTransactionSlashAmount = absMax(
+    voteSlashed.slashAmount,
+    transactionSlashedVotes.cumulativeTransactionSlashAmount
+  );
+
+  // The staked amount is the minimum quantity of tokens that the wallet possessed before these slashes
+  // were applied
+  transactionSlashedVotes.stakedAmount =
+    transactionSlashedVotes.stakedAmount === null
+      ? oldUserCalculatedStake
+      : bigDecimalMin(transactionSlashedVotes.stakedAmount as BigDecimal, oldUserCalculatedStake);
+
+  // If this transaction contains more than one slashed vote, we rebalance the slash amounts such that the
+  // offchain computations are correct.
+  if (transactionSlashedVotes.slashedVotesIDs.length > 1) {
+    // Find the slash amounts
+    // This is the slashing calculated as in the contract for correct votes
+    let totalPositiveSlashAmount = transactionSlashedVotes.countCorrectVotes
+      .toBigDecimal()
+      .times(
+        safeDivBigDecimal(
+          defaultBigDecimal(transactionSlashedVotes.stakedAmount).times(toDecimal(slashingTrackers.value.totalSlashed)),
+          toDecimal(slashingTrackers.value.totalCorrectVotes)
+        )
+      );
+    // We derive totalNegativeSlashAmount from totalPositiveSlashAmount to ensure that their sum is accurate; otherwise,
+    // there would be slight differences due to the use of transactionSlashedVotes. stakedAmount to calculate rather than
+    // considering the variation in staked amount after each slash. We do this for convenience
+    let totalNegativeSlashAmount =
+      transactionSlashedVotes.cumulativeTransactionSlashAmount.minus(totalPositiveSlashAmount);
+
+    let totalWrongVoteSlashAmount = transactionSlashedVotes.countWrongVotes
+      .toBigDecimal()
+      .times(defaultBigDecimal(transactionSlashedVotes.stakedAmount).times(toDecimal(slashingTrackers.value.wrongVoteSlashPerToken)))
+      .neg();
+
+    // Similarly we derive totalNoVoteSlashAmount from totalNegativeSlashAmount to ensure that their sum is accurate.
+    let totalNoVoteSlashAmount = totalNegativeSlashAmount.minus(totalWrongVoteSlashAmount);
+
+    // Update al slashed votes in the transaction
+    for (let i = 0; i < transactionSlashedVotes.slashedVotesIDs.length; i++) {
+      let slashedVote = SlashedVote.load(transactionSlashedVotes.slashedVotesIDs[i]) as SlashedVote;
+      if (slashedVote.voted) {
+        if (slashedVote.correctness) {
+          slashedVote.slashAmount = safeDivBigDecimal(
+            totalPositiveSlashAmount,
+            transactionSlashedVotes.countCorrectVotes.toBigDecimal()
+          );
+        } else {
+          if (slashedVote.isGovernance) {
+            slashedVote.slashAmount = BIGDECIMAL_ZERO;
+          } else {
+            slashedVote.slashAmount = safeDivBigDecimal(
+              totalWrongVoteSlashAmount,
+              transactionSlashedVotes.countWrongVotes.toBigDecimal()
+            );
+          }
+        }
+      } else {
+        slashedVote.slashAmount = safeDivBigDecimal(
+          totalNoVoteSlashAmount,
+          transactionSlashedVotes.countNoVotes.toBigDecimal()
+        );
+      }
+      slashedVote.save();
+    }
+  }
+
+  transactionSlashedVotes.save();
 }
 
 // - event: VoteCommitted(indexed address,indexed address,uint256,uint256,indexed bytes32,uint256,bytes)
