@@ -75,12 +75,6 @@ type User @entity {
   "Cumulative resulting stake of all the stakes and unstakes of the user but not including the slashing"
   cumulativeStakeNoSlashing: BigDecimal!
 
-  "List of all voterStake updates"
-  stakesAmounts: [BigInt!]!
-
-  "List of all voterStake updates timestamps"
-  stakesTimestamp: [BigInt!]!
-
   votesCommited: [CommittedVote!]! @derivedFrom(field: "voter")
 
   votesRevealed: [RevealedVote!]! @derivedFrom(field: "voter")

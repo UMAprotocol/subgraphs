@@ -10,7 +10,6 @@ import {
   VoteRevealed,
   VoterSlashed,
   VotingV2,
-  VotingV2__requestSlashingTrackersResultValue0Struct,
   WithdrawnRewards,
 } from "../../generated/Voting/VotingV2";
 import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE, BIGINT_ZERO } from "../utils/constants";
@@ -549,8 +548,6 @@ export function handleStaked(event: Staked): void {
     newUserAddresses.push(event.params.voter.toHexString());
   globals.userAddresses = newUserAddresses;
 
-  addStakes(user, event.params.voterStake, event.block.timestamp);
-
   user.voterCalculatedStake = user.voterCalculatedStake.plus(toDecimal(event.params.amount));
 
   user.save();
@@ -582,8 +579,6 @@ export function handleRequestedUnstake(event: RequestedUnstake): void {
   if (!newUserAddresses.includes(event.params.voter.toHexString()))
     newUserAddresses.push(event.params.voter.toHexString());
   globals.userAddresses = newUserAddresses;
-
-  addStakes(user, event.params.voterStake, event.block.timestamp);
 
   user.voterCalculatedStake = user.voterCalculatedStake.minus(toDecimal(event.params.amount));
 
@@ -643,9 +638,6 @@ export function handleVoterSlashed(event: VoterSlashed): void {
     BigInt.fromI32(100).toBigDecimal()
   );
   user.voterStake = toDecimal(event.params.postActiveStake);
-
-  addStakes(user, event.params.postActiveStake, event.block.timestamp);
-
   user.save();
 }
 
@@ -654,9 +646,6 @@ export function handleVoterSlashed(event: VoterSlashed): void {
 export function handleExecutedUnstake(event: ExecutedUnstake): void {
   let user = getOrCreateUser(event.params.voter);
   user.voterStake = toDecimal(event.params.voterStake);
-
-  addStakes(user, event.params.voterStake, event.block.timestamp);
-
   user.save();
 }
 
@@ -680,14 +669,3 @@ function updateAprs(users: string[], emissionRate: BigInt, cumulativeStake: BigD
   globals.save();
 }
 
-// Stores the historic of the user's stake
-// This is required to calculate the user stake at a specific time if they didn't vote
-function addStakes(user: User, newStake: BigInt, timestamp: BigInt): void {
-  let newStakesAmounts = user.stakesAmounts;
-  newStakesAmounts.push(newStake);
-  user.stakesAmounts = newStakesAmounts;
-
-  let newStakesTimestamp = user.stakesTimestamp;
-  newStakesTimestamp.push(timestamp);
-  user.stakesTimestamp = newStakesTimestamp;
-}
