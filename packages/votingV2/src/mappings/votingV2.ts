@@ -368,7 +368,7 @@ function processSlashesInSameTransaction(
     // Similarly we derive totalNoVoteSlashAmount from totalNegativeSlashAmount to ensure that their sum is accurate.
     let totalNoVoteSlashAmount = totalNegativeSlashAmount.minus(totalWrongVoteSlashAmount);
 
-    // Update al slashed votes in the transaction
+    // Update all slashed votes in the transaction
     for (let i = 0; i < transactionSlashedVotes.slashedVotesIDs.length; i++) {
       let slashedVote = SlashedVote.load(transactionSlashedVotes.slashedVotesIDs[i]) as SlashedVote;
       if (slashedVote.voted) {
