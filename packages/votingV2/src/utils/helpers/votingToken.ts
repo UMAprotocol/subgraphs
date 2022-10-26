@@ -13,8 +13,6 @@ export function getOrCreateUser(id: Address, createIfNotFound: boolean = true): 
     user = new User(id.toHexString());
     user.address = id;
     user.countReveals = BIGINT_ZERO;
-    user.stakesAmounts = [];
-    user.stakesTimestamp = [];
     user.countCorrectVotes = BIGINT_ZERO;
     user.countWrongVotes = BIGINT_ZERO;
     user.countNoVotes = BIGINT_ZERO;
@@ -27,6 +25,7 @@ export function getOrCreateUser(id: Address, createIfNotFound: boolean = true): 
     user.cumulativeStakeNoSlashing = BIGDECIMAL_ZERO;
     user.voterStake = BIGDECIMAL_ZERO;
     user.voterPendingUnstake = BIGDECIMAL_ZERO;
+    user.voterCalculatedStake = BIGDECIMAL_ZERO;
     user.withdrawnRewards = BIGDECIMAL_ZERO;
     user.cumulativeSlash = BIGDECIMAL_ZERO;
 

@@ -40,3 +40,14 @@ export function safeDivBigDecimal(a: BigDecimal, b: BigDecimal): BigDecimal {
 
   return a.div(b);
 }
+
+// Compares the abs value of two big decimals and returns the one with the greater absolute value
+export function absMax(a: BigDecimal, b: BigDecimal): BigDecimal {
+  let absA = a.lt(BigDecimal.zero()) ? a.neg() : a;
+  let absB = b.lt(BigDecimal.zero()) ? b.neg() : b;
+  return absA.gt(absB) ? a : b;
+}
+
+export function bigDecimalMin(a: BigDecimal, b: BigDecimal): BigDecimal {
+  return a.lt(b) ? a : b;
+}

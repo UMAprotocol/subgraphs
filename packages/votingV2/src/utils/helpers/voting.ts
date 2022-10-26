@@ -1,11 +1,12 @@
 import {
+  CommittedVote,
+  Globals,
   PriceRequest,
   PriceRequestRound,
-  CommittedVote,
   RevealedVote,
-  VoterGroup,
   SlashedVote,
-  Globals,
+  TransactionSlashedVotes,
+  VoterGroup,
 } from "../../../generated/schema";
 import { BIGDECIMAL_ZERO, BIGINT_ZERO } from "../constants";
 export const GLOBALS = "globals";
@@ -58,10 +59,29 @@ export function getOrCreatePriceRequestRound(id: String, createIfNotFound: boole
   return requestRound as PriceRequestRound;
 }
 
+export function getOrCreateTransactionSlashedVotes(
+  id: String,
+  createIfNotFound: boolean = true
+): TransactionSlashedVotes {
+  let transactionSlashedVotes = TransactionSlashedVotes.load(id);
+
+  if (transactionSlashedVotes == null && createIfNotFound) {
+    transactionSlashedVotes = new TransactionSlashedVotes(id);
+    transactionSlashedVotes.slashedVotesIDs = [];
+    transactionSlashedVotes.cumulativeTransactionSlashAmount = BIGDECIMAL_ZERO;
+    transactionSlashedVotes.countNoVotes = BIGINT_ZERO;
+    transactionSlashedVotes.countCorrectVotes = BIGINT_ZERO;
+    transactionSlashedVotes.countWrongVotes = BIGINT_ZERO;
+  }
+
+  return transactionSlashedVotes as TransactionSlashedVotes;
+}
+
 export function getOrCreateSlashedVote(
   id: String,
   requestId: string,
   voterId: string,
+  transactionHash: string,
   createIfNotFound: boolean = true
 ): SlashedVote {
   let vote = SlashedVote.load(id);
@@ -72,6 +92,13 @@ export function getOrCreateSlashedVote(
     vote.request = requestId;
     vote.slashAmount = BIGDECIMAL_ZERO;
     vote.voted = false;
+    vote.isGovernance = false;
+
+    vote.transactionSlashedVotes = getSlashingTransactionId(transactionHash, voterId);
+    let transactionSlashedVotes = getOrCreateTransactionSlashedVotes(vote.transactionSlashedVotes);
+
+    transactionSlashedVotes.save();
+    vote.save();
   }
 
   return vote as SlashedVote;
@@ -144,4 +171,8 @@ export function getVoteIdNoRoundId(voter: string, identifier: string, time: stri
 
 export function getPriceRequestId(identifier: string, time: string, ancillaryData: string): string {
   return identifier.concat("-").concat(time).concat("-").concat(ancillaryData);
+}
+
+export function getSlashingTransactionId(transactionHash: string, voter: string): string {
+  return transactionHash.concat("-").concat(voter);
 }

@@ -48,6 +48,9 @@ type User @entity {
 
   voterStake: BigDecimal!
 
+  "Tracks the stake that user should have before the next price request is resolved"
+  voterCalculatedStake: BigDecimal!
+
   "Voter pending unstake during cooling-off period"
   voterPendingUnstake: BigDecimal!
 
@@ -71,12 +74,6 @@ type User @entity {
 
   "Cumulative resulting stake of all the stakes and unstakes of the user but not including the slashing"
   cumulativeStakeNoSlashing: BigDecimal!
-
-  "List of all voterStake updates"
-  stakesAmounts: [BigInt!]!
-
-  "List of all voterStake updates timestamps"
-  stakesTimestamp: [BigInt!]!
 
   votesCommited: [CommittedVote!]! @derivedFrom(field: "voter")
 
@@ -238,8 +235,27 @@ type VoterGroup @entity {
   won: Boolean!
 }
 
+type TransactionSlashedVotes @entity {
+  id: ID!
+
+  "List of all slashed votes in this transaction"
+  slashedVotesIDs: [String!]!
+
+  cumulativeTransactionSlashAmount: BigDecimal!
+
+  stakedAmount: BigDecimal
+
+  countNoVotes: BigInt!
+
+  countWrongVotes: BigInt!
+
+  countCorrectVotes: BigInt!
+
+  slashedVotes: [SlashedVote!] @derivedFrom(field: "transactionSlashedVotes")
+}
+
 type SlashedVote @entity {
-  "Commited votes won't show the price until a reveal happens and a RevealedVote is created"
+
   id: ID!
 
   request: PriceRequest!
@@ -253,6 +269,12 @@ type SlashedVote @entity {
   correctness: Boolean
 
   staking: Boolean
+
+  resolutionTimestamp: BigInt
+
+  isGovernance: Boolean!
+
+  transactionSlashedVotes: TransactionSlashedVotes!
 }
 
 type CommittedVote @entity {
