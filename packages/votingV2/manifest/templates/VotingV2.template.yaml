@@ -29,7 +29,7 @@
         handler: handleVoteCommitted
       - event: VoteRevealed(indexed address,indexed address,uint256,uint256,indexed bytes32,uint256,bytes,int256,uint256)
         handler: handleVoteRevealed
-      - event: PriceResolved(indexed uint256,uint256,indexed bytes32,uint256,bytes,int256)
+      - event: PriceResolved(indexed uint256,indexed uint256,indexed bytes32,uint256,bytes,int256)
         handler: handlePriceResolved
       - event: Staked(indexed address,indexed address,uint256,uint256,uint256,uint256)
         handler: handleStaked
