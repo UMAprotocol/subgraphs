@@ -91,10 +91,10 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   requestRound.save();
   request.save();
 }
-// - event: PriceResolved(indexed uint256,uint256,indexed bytes32,uint256,bytes,int256)
+// - PriceResolved(indexed uint256,indexed uint256,indexed bytes32,uint256,bytes,int256)
 // event PriceResolved(
 //   uint256 indexed roundId,
-//   uint256 priceRequestIndex,
+//   uint256 indexed priceRequestIndex,
 //   bytes32 indexed identifier,
 //   uint256 time,
 //   bytes ancillaryData,
@@ -632,7 +632,7 @@ export function handleWithdrawnRewards(event: WithdrawnRewards): void {
   user.save();
 }
 
-// event VoterSlashed(address indexed voter, int256 slashedTokens, uint256 postActiveStake);
+// event VoterSlashed(address indexed voter, int256 slashedTokens, uint256 postStake);
 
 export function handleVoterSlashed(event: VoterSlashed): void {
   let user = getOrCreateUser(event.params.voter);
@@ -641,7 +641,7 @@ export function handleVoterSlashed(event: VoterSlashed): void {
   user.cumulativeSlashPercentage = safeDivBigDecimal(user.cumulativeSlash, user.cumulativeStakeNoSlashing).times(
     BigInt.fromI32(100).toBigDecimal()
   );
-  user.voterStake = toDecimal(event.params.postActiveStake);
+  user.voterStake = toDecimal(event.params.postStake);
   user.save();
 }
 
