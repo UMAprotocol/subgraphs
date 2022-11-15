@@ -234,7 +234,7 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
         voteSlashed.voted = true;
         voteSlashed.correctness = true;
         voteSlashed.slashAmount = slashing;
-        voteSlashed.staking = slashing.notEqual(BIGDECIMAL_ZERO) ? true : false;
+        voteSlashed.staking = true;
         user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
         user.cumulativeCalculatedSlashPercentage = safeDivBigDecimal(
           defaultBigDecimal(user.cumulativeCalculatedSlash),
@@ -253,7 +253,7 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
         voteSlashed.voted = true;
         voteSlashed.correctness = false;
         voteSlashed.slashAmount = slashing;
-        voteSlashed.staking = slashing.notEqual(BIGDECIMAL_ZERO) ? true : false;
+        voteSlashed.staking = true;
         user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
         user.cumulativeCalculatedSlashPercentage = safeDivBigDecimal(
           defaultBigDecimal(user.cumulativeCalculatedSlash),
