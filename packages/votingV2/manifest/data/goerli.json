@@ -11,8 +11,8 @@
   "VotingDataSources": [
     {
       "name": "Voting",
-      "address": "0xb3AED6A86B43De70dfe814C5ac549e722CF635D2",
-      "startBlock": 7927165
+      "address": "0xF71cdF8A34c56933A8871354A2570a301364e95F",
+      "startBlock": 7998822
     }
   ],
   "StoreDataSources": [
