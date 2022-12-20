@@ -9,14 +9,14 @@ export function getOrCreateUser(id: Address, createIfNotFound: boolean = true): 
   let user = User.load(id.toHexString());
 
   if (user == null && createIfNotFound) {
-    let globals = getOrCreateGlobals();
+    let global = getOrCreateGlobals();
     user = new User(id.toHexString());
     user.address = id;
     user.countReveals = BIGINT_ZERO;
     user.countCorrectVotes = BIGINT_ZERO;
     user.countWrongVotes = BIGINT_ZERO;
     user.countNoVotes = BIGINT_ZERO;
-    user.globals = globals.id;
+    user.global = global.id;
     user.annualPercentageReturn = BIGDECIMAL_ZERO;
     user.annualReturn = BIGDECIMAL_ZERO;
     user.cumulativeCalculatedSlash = BIGDECIMAL_ZERO;
@@ -30,7 +30,7 @@ export function getOrCreateUser(id: Address, createIfNotFound: boolean = true): 
     user.cumulativeSlash = BIGDECIMAL_ZERO;
 
     user.save();
-    globals.save();
+    global.save();
   }
 
   return user as User;

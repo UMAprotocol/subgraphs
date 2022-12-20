@@ -1,4 +1,4 @@
-type Globals @entity {
+type Global @entity {
   id: ID!
 
   "List of all users addresses"
@@ -13,6 +13,9 @@ type Globals @entity {
   "Annual Voting Token emission at current emission rate"
   annualVotingTokenEmission: BigDecimal!
 
+  "Earnings percentage from staking over a 12-month period, exclusive of slashing and compound interest"
+  annualPercentageReturn: BigDecimal!
+
   "Higher index to process among all users"
   maxNextIndexToProcess: BigInt!
 
@@ -22,7 +25,7 @@ type Globals @entity {
 
   countCorrectVotes: BigInt!
 
-  users: [User!] @derivedFrom(field: "globals")
+  users: [User!] @derivedFrom(field: "global")
 }
 
 type User @entity {
@@ -81,7 +84,7 @@ type User @entity {
 
   votesSlashed: [SlashedVote!]! @derivedFrom(field: "voter")
 
-  globals: Globals!
+  global: Global!
 }
 
 type Collateral @entity {

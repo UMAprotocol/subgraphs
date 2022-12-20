@@ -1,6 +1,6 @@
 import {
   CommittedVote,
-  Globals,
+  Global,
   PriceRequest,
   PriceRequestRound,
   RevealedVote,
@@ -9,24 +9,25 @@ import {
   VoterGroup,
 } from "../../../generated/schema";
 import { BIGDECIMAL_ZERO, BIGINT_ZERO } from "../constants";
-export const GLOBALS = "globals";
+export const GLOBAL = "global";
 
-export function getOrCreateGlobals(): Globals {
-  let request = Globals.load(GLOBALS);
+export function getOrCreateGlobals(): Global {
+  let request = Global.load(GLOBAL);
 
   if (request == null) {
-    request = new Globals(GLOBALS);
+    request = new Global(GLOBAL);
     request.userAddresses = [];
     request.cumulativeStake = BIGDECIMAL_ZERO;
     request.emissionRate = BIGDECIMAL_ZERO;
     request.annualVotingTokenEmission = BIGDECIMAL_ZERO;
+    request.annualPercentageReturn = BIGDECIMAL_ZERO;
     request.maxNextIndexToProcess = BIGINT_ZERO;
     request.countCorrectVotes = BIGINT_ZERO;
     request.countWrongVotes = BIGINT_ZERO;
     request.countNoVotes = BIGINT_ZERO;
   }
 
-  return request as Globals;
+  return request as Global;
 }
 
 export function getOrCreatePriceRequest(id: String, createIfNotFound: boolean = true): PriceRequest {

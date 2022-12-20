@@ -162,8 +162,8 @@ export function handlePriceResolved(event: PriceResolved): void {
 
 function updateUsersSlashingTrackers(event: PriceResolved): void {
   let votingContract = VotingV2.bind(event.address);
-  let globals = getOrCreateGlobals();
-  let users = globals.userAddresses;
+  let global = getOrCreateGlobals();
+  let users = global.userAddresses;
 
   let requestId = getPriceRequestId(
     event.params.identifier.toString(),
@@ -241,7 +241,7 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
           user.cumulativeStakeNoSlashing
         ).times(BigInt.fromI32(100).toBigDecimal());
         user.countCorrectVotes = user.countCorrectVotes.plus(BigInt.fromI32(1));
-        globals.countCorrectVotes = globals.countCorrectVotes.plus(BigInt.fromI32(1));
+        global.countCorrectVotes = global.countCorrectVotes.plus(BigInt.fromI32(1));
         requestRound.countCorrectVotes = defaultBigInt(requestRound.countCorrectVotes).plus(BigInt.fromI32(1));
         requestRound.cumulativeCorrectVoteSlash = defaultBigDecimal(requestRound.cumulativeCorrectVoteSlash).plus(
           slashing
@@ -266,7 +266,7 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
         // and the incorrect vote slashing is zero
         if (!request.isGovernance) {
           user.countWrongVotes = user.countWrongVotes.plus(BigInt.fromI32(1));
-          globals.countWrongVotes = globals.countWrongVotes.plus(BigInt.fromI32(1));
+          global.countWrongVotes = global.countWrongVotes.plus(BigInt.fromI32(1));
           requestRound.countWrongVotes = defaultBigInt(requestRound.countWrongVotes).plus(BigInt.fromI32(1));
           transactionSlashedVotes.countWrongVotes = transactionSlashedVotes.countWrongVotes.plus(BigInt.fromI32(1));
         }
@@ -282,7 +282,7 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
         user.cumulativeStakeNoSlashing
       ).times(BigInt.fromI32(100).toBigDecimal());
       user.countNoVotes = user.countNoVotes.plus(BigInt.fromI32(1));
-      globals.countNoVotes = globals.countNoVotes.plus(BigInt.fromI32(1));
+      global.countNoVotes = global.countNoVotes.plus(BigInt.fromI32(1));
       requestRound.countNoVotes = defaultBigInt(requestRound.countNoVotes).plus(BigInt.fromI32(1));
       requestRound.cumulativeNoVoteSlash = defaultBigDecimal(requestRound.cumulativeNoVoteSlash).plus(slashing);
       transactionSlashedVotes.countNoVotes = transactionSlashedVotes.countNoVotes.plus(BigInt.fromI32(1));
@@ -308,7 +308,7 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
   ]);
 
   requestRound.save();
-  globals.save();
+  global.save();
 }
 
 function processSlashesInSameTransaction(
@@ -539,31 +539,31 @@ export function handleVoteRevealed(event: VoteRevealed): void {
 
 export function handleStaked(event: Staked): void {
   let user = getOrCreateUser(event.params.voter);
-  let globals = getOrCreateGlobals();
+  let global = getOrCreateGlobals();
   user.voterStake = toDecimal(event.params.voterStake);
   user.voterPendingUnstake = toDecimal(event.params.voterPendingUnstake);
   user.cumulativeStakeNoSlashing = defaultBigDecimal(user.cumulativeStakeNoSlashing).plus(
     toDecimal(event.params.amount)
   );
-  globals.cumulativeStake = toDecimal(event.params.cumulativeStake);
+  global.cumulativeStake = toDecimal(event.params.cumulativeStake);
 
-  let newUserAddresses = globals.userAddresses;
+  let newUserAddresses = global.userAddresses;
   if (!newUserAddresses.includes(event.params.voter.toHexString()))
     newUserAddresses.push(event.params.voter.toHexString());
-  globals.userAddresses = newUserAddresses;
+  global.userAddresses = newUserAddresses;
 
   user.voterCalculatedStake = user.voterCalculatedStake.plus(toDecimal(event.params.amount));
 
   user.save();
-  globals.save();
+  global.save();
 
   let votingContract = VotingV2.bind(event.address);
   let emissionRate = votingContract.try_emissionRate();
 
   updateAprs(
-    globals.userAddresses,
+    global.userAddresses,
     emissionRate.reverted ? BigInt.fromI32(0) : emissionRate.value,
-    globals.cumulativeStake
+    global.cumulativeStake
   );
 }
 
@@ -571,31 +571,31 @@ export function handleStaked(event: Staked): void {
 
 export function handleRequestedUnstake(event: RequestedUnstake): void {
   let user = getOrCreateUser(event.params.voter);
-  let globals = getOrCreateGlobals();
+  let global = getOrCreateGlobals();
   user.voterStake = toDecimal(event.params.voterStake);
   user.voterPendingUnstake = toDecimal(event.params.amount);
   user.cumulativeStakeNoSlashing = defaultBigDecimal(user.cumulativeStakeNoSlashing).minus(
     toDecimal(event.params.amount)
   );
-  globals.cumulativeStake = globals.cumulativeStake.minus(toDecimal(event.params.amount));
+  global.cumulativeStake = global.cumulativeStake.minus(toDecimal(event.params.amount));
 
-  let newUserAddresses = globals.userAddresses;
+  let newUserAddresses = global.userAddresses;
   if (!newUserAddresses.includes(event.params.voter.toHexString()))
     newUserAddresses.push(event.params.voter.toHexString());
-  globals.userAddresses = newUserAddresses;
+  global.userAddresses = newUserAddresses;
 
   user.voterCalculatedStake = user.voterCalculatedStake.minus(toDecimal(event.params.amount));
 
   user.save();
-  globals.save();
+  global.save();
 
   let votingContract = VotingV2.bind(event.address);
   let emissionRate = votingContract.try_emissionRate();
 
   updateAprs(
-    globals.userAddresses,
+    global.userAddresses,
     emissionRate.reverted ? BigInt.fromI32(0) : emissionRate.value,
-    globals.cumulativeStake
+    global.cumulativeStake
   );
 }
 
@@ -603,20 +603,20 @@ export function handleRequestedUnstake(event: RequestedUnstake): void {
 
 export function handleUpdatedReward(event: UpdatedReward): void {
   let user = getOrCreateUser(event.params.voter);
-  let globals = getOrCreateGlobals();
+  let global = getOrCreateGlobals();
   let votingContract = VotingV2.bind(event.address);
   let voterStake = votingContract.try_voterStakes(event.params.voter);
   let nextIndexToProcessChain = voterStake.value.value5;
 
   user.nextIndexToProcess = nextIndexToProcessChain;
 
-  if (nextIndexToProcessChain.gt(globals.maxNextIndexToProcess)) {
+  if (nextIndexToProcessChain.gt(global.maxNextIndexToProcess)) {
     // This value can be compared to the users' nextIndexToProcess to see if the users'
     // trackers are up to date. This is also demonstrated by the user.cumulativeSlash versus
     // user.cumulativeCalculatedSlash comparison; if they differ, the user's trackers are out of date.
     // It should be noted that user.cumulativeCalculatedSlash is always updated for all users.
-    globals.maxNextIndexToProcess = nextIndexToProcessChain;
-    globals.save();
+    global.maxNextIndexToProcess = nextIndexToProcessChain;
+    global.save();
   }
 
   user.save();
@@ -656,9 +656,13 @@ export function handleExecutedUnstake(event: ExecutedUnstake): void {
 function updateAprs(users: string[], emissionRate: BigInt, cumulativeStake: BigDecimal): void {
   const oneYear = BigInt.fromI32(31536000).toBigDecimal();
   const annualEmission = toDecimal(emissionRate).times(oneYear);
-  let globals = getOrCreateGlobals();
-  globals.annualVotingTokenEmission = annualEmission;
-  globals.emissionRate = toDecimal(emissionRate);
+  let global = getOrCreateGlobals();
+  global.annualVotingTokenEmission = annualEmission;
+  global.emissionRate = toDecimal(emissionRate);
+
+  global.annualPercentageReturn = safeDivBigDecimal(annualEmission, cumulativeStake).times(
+    BigInt.fromI32(100).toBigDecimal()
+  );
 
   for (let i = 0; i < users.length; i++) {
     let userAddress = users[i];
@@ -670,5 +674,5 @@ function updateAprs(users: string[], emissionRate: BigInt, cumulativeStake: BigD
     );
     user.save();
   }
-  globals.save();
+  global.save();
 }
