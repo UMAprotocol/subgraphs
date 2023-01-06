@@ -1,8 +1,8 @@
 import { PriceRequestRound, RevealedVote, SlashedVote, TransactionSlashedVotes, User } from "../../generated/schema";
 import {
   ExecutedUnstake,
-  PriceRequestAdded,
-  PriceResolved,
+  RequestAdded,
+  RequestResolved,
   RequestedUnstake,
   Staked,
   UpdatedReward,
@@ -11,6 +11,8 @@ import {
   VoterSlashed,
   VotingV2,
   WithdrawnRewards,
+  RequestDeleted,
+  RequestRolled,
 } from "../../generated/Voting/VotingV2";
 import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE, BIGINT_ZERO } from "../utils/constants";
 import {
@@ -39,21 +41,19 @@ import {
   getPriceRequestId,
   getVoteId,
   getVoteIdNoRoundId,
-  getOrCreateTransactionSlashedVotes,
 } from "../utils/helpers/voting";
 
-// - event: PriceRequestAdded(indexed address,indexed uint256,uint256,indexed bytes32,uint256,bytes,bool)
-// event PriceRequestAdded(
+// - event: RequestAdded(indexed address,indexed uint256,indexed bytes32,uint256,bytes,bool)
+// event RequestAdded(
 //   address indexed requester,
 //   uint256 indexed roundId,
-//   uint256 priceRequestIndex,
 //   bytes32 indexed identifier,
 //   uint256 time,
 //   bytes ancillaryData,
 //   bool isGovernance
 // );
 
-export function handlePriceRequestAdded(event: PriceRequestAdded): void {
+export function handlePriceRequestAdded(event: RequestAdded): void {
   let requestId = getPriceRequestId(
     event.params.identifier.toString(),
     event.params.time.toString(),
@@ -63,7 +63,6 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
 
   request.identifier = event.params.identifier.toString();
-  request.requestIndex = event.params.priceRequestIndex;
   request.requestTransaction = event.transaction.hash;
   request.latestRound = requestRound.id;
   request.time = event.params.time;
@@ -91,17 +90,17 @@ export function handlePriceRequestAdded(event: PriceRequestAdded): void {
   requestRound.save();
   request.save();
 }
-// - PriceResolved(indexed uint256,indexed uint256,indexed bytes32,uint256,bytes,int256)
-// event PriceResolved(
+// - RequestResolved(indexed uint256,indexed uint256,indexed bytes32,uint256,bytes,int256)
+// event RequestResolved(
 //   uint256 indexed roundId,
-//   uint256 indexed priceRequestIndex,
+//   uint256 indexed resolvedPriceRequestIndex,
 //   bytes32 indexed identifier,
 //   uint256 time,
 //   bytes ancillaryData,
 //   int256 price
 // );
 
-export function handlePriceResolved(event: PriceResolved): void {
+export function handlePriceResolved(event: RequestResolved): void {
   log.warning(`Price Resolved params: {},{},{}`, [
     event.params.time.toString(),
     event.params.identifier.toString(),
@@ -113,6 +112,8 @@ export function handlePriceResolved(event: PriceResolved): void {
     event.params.ancillaryData.toHexString()
   );
   let request = getOrCreatePriceRequest(requestId);
+
+  request.resolvedPriceRequestIndex = event.params.resolvedPriceRequestIndex;
 
   log.warning(`Fetched Price Request Entity: {},{},{}`, [
     request.time.toString(),
@@ -160,7 +161,7 @@ export function handlePriceResolved(event: PriceResolved): void {
   updateUsersSlashingTrackers(event);
 }
 
-function updateUsersSlashingTrackers(event: PriceResolved): void {
+function updateUsersSlashingTrackers(event: RequestResolved): void {
   let votingContract = VotingV2.bind(event.address);
   let global = getOrCreateGlobals();
   let users = global.userAddresses;
@@ -216,14 +217,17 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
       event.params.ancillaryData.toHexString()
     );
 
-    let transactionHash = event.transaction.hash.toHexString();
-    let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id, transactionHash);
+    let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id, event.transaction.hash.toHexString());
     let transactionSlashedVotes = TransactionSlashedVotes.load(
       voteSlashed.transactionSlashedVotes
     ) as TransactionSlashedVotes;
 
     voteSlashed.resolutionTimestamp = event.block.timestamp;
     voteSlashed.isGovernance = request.isGovernance;
+
+    if (voteSlashed.slashAmount.notEqual(BIGDECIMAL_ZERO)) {
+      voteSlashed.slashAmount = slashing;
+    }
 
     // Check if the user voted in the round
     if (RevealedVote.load(voteId) != null) {
@@ -233,7 +237,6 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
         // Update all the slashing trackers
         voteSlashed.voted = true;
         voteSlashed.correctness = true;
-        voteSlashed.slashAmount = slashing;
         voteSlashed.staking = true;
         user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
         user.cumulativeCalculatedSlashPercentage = safeDivBigDecimal(
@@ -252,7 +255,6 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
         // Update all the slashing trackers
         voteSlashed.voted = true;
         voteSlashed.correctness = false;
-        voteSlashed.slashAmount = slashing;
         voteSlashed.staking = true;
         user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
         user.cumulativeCalculatedSlashPercentage = safeDivBigDecimal(
@@ -274,7 +276,6 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
     } else {
       // User did not vote
       // Update all the slashing trackers
-      voteSlashed.slashAmount = slashing;
       voteSlashed.staking = slashing.notEqual(BIGDECIMAL_ZERO) ? true : false;
       user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
       user.cumulativeCalculatedSlashPercentage = safeDivBigDecimal(
@@ -297,7 +298,7 @@ function updateUsersSlashingTrackers(event: PriceResolved): void {
       voteSlashed,
       oldUserCalculatedStake,
       votingContract,
-      request.requestIndex
+      defaultBigInt(request.resolvedPriceRequestIndex)
     );
   }
 
@@ -316,9 +317,9 @@ function processSlashesInSameTransaction(
   voteSlashed: SlashedVote,
   oldUserCalculatedStake: BigDecimal,
   votingContract: VotingV2,
-  requestIndex: BigInt
+  resolvedPriceRequestIndex: BigInt
 ): void {
-  let slashingTrackers = votingContract.try_requestSlashingTrackers(requestIndex);
+  let slashingTrackers = votingContract.try_requestSlashingTrackers(resolvedPriceRequestIndex);
 
   let oldSlashedVotesIDs = transactionSlashedVotes.slashedVotesIDs;
   oldSlashedVotesIDs.push(voteSlashed.id);
@@ -400,12 +401,11 @@ function processSlashesInSameTransaction(
   transactionSlashedVotes.save();
 }
 
-// - event: VoteCommitted(indexed address,indexed address,uint256,uint256,indexed bytes32,uint256,bytes)
+// - event: VoteCommitted(indexed address,indexed address,uint256,indexed bytes32,uint256,bytes)
 // event VoteCommitted(
 //   address indexed voter,
 //   address indexed caller,
 //   uint256 roundId,
-//   uint256 priceRequestIndex,
 //   bytes32 indexed identifier,
 //   uint256 time,
 //   bytes ancillaryData
@@ -444,12 +444,11 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   vote.save();
   voter.save();
 }
-// - event: VoteRevealed(indexed address,indexed address,uint256,uint256,indexed bytes32,uint256,bytes,int256,uint256)
+// - event: VoteRevealed(indexed address,indexed address,uint256,indexed bytes32,uint256,bytes,int256,uint256)
 // event VoteRevealed(
 //   address indexed voter,
 //   address indexed caller,
 //   uint256 roundId,
-//   uint256 priceRequestIndex,
 //   bytes32 indexed identifier,
 //   uint256 time,
 //   bytes ancillaryData,
@@ -514,13 +513,6 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   );
 
   requestRound.save();
-
-  let voteSlashedId = getVoteIdNoRoundId(
-    event.params.voter.toHexString(),
-    event.params.identifier.toString(),
-    event.params.time.toString(),
-    event.params.ancillaryData.toHexString()
-  );
 
   vote.save();
   voter.save();
@@ -632,16 +624,39 @@ export function handleWithdrawnRewards(event: WithdrawnRewards): void {
   user.save();
 }
 
-// event VoterSlashed(address indexed voter, int256 slashedTokens, uint256 postStake);
+// VoterSlashed(indexed address,indexed uint256,int256)
+// event VoterSlashed(address indexed voter, uint256 indexed requestIndex, int256 slashedTokens);
 
 export function handleVoterSlashed(event: VoterSlashed): void {
   let user = getOrCreateUser(event.params.voter);
+  let votingContract = VotingV2.bind(event.address);
+  let priceRequestId = votingContract.try_resolvedPriceRequestIds(event.params.requestIndex);
+  let priceRequest = votingContract.try_priceRequests(priceRequestId.value);
 
   user.cumulativeSlash = defaultBigDecimal(user.cumulativeSlash).plus(toDecimal(event.params.slashedTokens));
   user.cumulativeSlashPercentage = safeDivBigDecimal(user.cumulativeSlash, user.cumulativeStakeNoSlashing).times(
     BigInt.fromI32(100).toBigDecimal()
   );
-  user.voterStake = toDecimal(event.params.postStake);
+  user.voterStake = user.voterStake.plus(toDecimal(event.params.slashedTokens));
+
+  // Update the voteSlashed
+  let voteSlashedId = getVoteIdNoRoundId(
+    event.params.voter.toHexString(),
+    priceRequest.value.getIdentifier().toString(),
+    priceRequest.value.getTime().toString(),
+    priceRequest.value.getAncillaryData().toHexString()
+  );
+
+  let requestId = getPriceRequestId(
+    priceRequest.value.getIdentifier().toString(),
+    priceRequest.value.getTime().toString(),
+    priceRequest.value.getAncillaryData().toHexString()
+  );
+
+  let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id, event.transaction.hash.toHexString());
+  voteSlashed.slashAmount = toDecimal(event.params.slashedTokens);
+
+  voteSlashed.save();
   user.save();
 }
 
@@ -651,6 +666,34 @@ export function handleExecutedUnstake(event: ExecutedUnstake): void {
   let user = getOrCreateUser(event.params.voter);
   user.voterStake = toDecimal(event.params.voterStake);
   user.save();
+}
+
+// event: RequestDeleted(indexed bytes32,indexed uint256,bytes,uint256)
+// event RequestDeleted(bytes32 indexed identifier, uint256 indexed time, bytes ancillaryData, uint256 rollCount);
+export function handleRequestDeleted(event: RequestDeleted): void {
+  let requestId = getPriceRequestId(
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString()
+  );
+  let request = getOrCreatePriceRequest(requestId);
+
+  request.isDeleted = true;
+  request.save();
+}
+
+// event: RequestRolled(indexed bytes32,indexed uint256,bytes,uint256)
+// event RequestRolled(bytes32 indexed identifier, uint256 indexed time, bytes ancillaryData, uint256 rollCount);
+export function handleRequestRolled(event: RequestRolled): void {
+  let requestId = getPriceRequestId(
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString()
+  );
+  let request = getOrCreatePriceRequest(requestId);
+
+  request.rollCount = event.params.rollCount;
+  request.save();
 }
 
 function updateAprs(users: string[], emissionRate: BigInt, cumulativeStake: BigDecimal): void {

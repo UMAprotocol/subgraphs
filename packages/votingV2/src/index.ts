@@ -8,7 +8,9 @@ export {
   handleExecutedUnstake,
   handleUpdatedReward,
   handleWithdrawnRewards,
-  handleVoterSlashed
+  handleVoterSlashed,
+  handleRequestDeleted,
+  handleRequestRolled,
 } from "./mappings/votingV2";
 
 export { handleSupportedIdentifierAdded, handleSupportedIdentifierRemoved } from "./mappings/identifierWhitelist";

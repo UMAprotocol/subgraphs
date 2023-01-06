@@ -117,14 +117,20 @@ type PriceRequest @entity {
   "ID is the PriceIdentifier ID + the timestamp"
   id: ID!
 
-  "The price request index"
-  requestIndex: BigInt!
+  "The price request resolved index"
+  resolvedPriceRequestIndex: BigInt
 
   "Depicts whether the request has been resolved"
   isResolved: Boolean!
 
+  "Depicts whether the request has been deleted after rolling too many rounds"
+  isDeleted: Boolean!
+
   "Price resolved for this request"
   price: BigInt
+
+  "Number of rounds that this request has been rolled"
+  rollCount: BigInt!
 
   "PriceRequestRound entity corresponding to the last round of voting"
   latestRound: PriceRequestRound
