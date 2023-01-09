@@ -197,11 +197,6 @@ function updateUsersSlashingTrackers(event: RequestResolved): void {
       votingContract.try_getVoterStakePostUpdate(Address.fromString(userAddress as string)).value
     );
 
-    // This is the more accurate way to calculate the user's slash amount.
-    // We just need to handle appropriately the case where there is more than one price request
-    // resolved in the same transaction, this is done in processSlashesInSameTransaction function.
-    let slashing = user.voterCalculatedStake.minus(oldUserCalculatedStake);
-
     var voteId = getVoteId(
       userAddress,
       event.params.identifier.toString(),
@@ -225,9 +220,14 @@ function updateUsersSlashingTrackers(event: RequestResolved): void {
     voteSlashed.resolutionTimestamp = event.block.timestamp;
     voteSlashed.isGovernance = request.isGovernance;
 
-    if (voteSlashed.slashAmount.notEqual(BIGDECIMAL_ZERO)) {
-      voteSlashed.slashAmount = slashing;
-    }
+    // This is the more accurate way to calculate the user's slash amount.
+    // We just need to handle appropriately the case where there is more than one price request
+    // resolved in the same transaction, this is done in processSlashesInSameTransaction function.
+    let slashing = voteSlashed.slashAmount.equals(BIGDECIMAL_ZERO)
+      ? user.voterCalculatedStake.minus(oldUserCalculatedStake)
+      : voteSlashed.slashAmount;
+
+    voteSlashed.slashAmount = slashing;
 
     // Check if the user voted in the round
     if (RevealedVote.load(voteId) != null) {
