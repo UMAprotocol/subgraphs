@@ -36,6 +36,8 @@ export function getOrCreatePriceRequest(id: String, createIfNotFound: boolean = 
   if (request == null && createIfNotFound) {
     request = new PriceRequest(id);
     request.isResolved = false;
+    request.isDeleted = false;
+    request.rollCount = BIGINT_ZERO;
   }
 
   return request as PriceRequest;
