@@ -23,29 +23,29 @@
       - name: VotingToken
         file: ./abis/VotingToken.json
     eventHandlers:
-      - event: RequestAdded(indexed address,indexed uint256,indexed bytes32,uint256,bytes,bool)
+      - event: RequestAdded(indexed address,indexed uint32,indexed bytes32,uint256,bytes,bool)
         handler: handlePriceRequestAdded
-      - event: VoteCommitted(indexed address,indexed address,uint256,indexed bytes32,uint256,bytes)
+      - event: VoteCommitted(indexed address,indexed address,uint32,indexed bytes32,uint256,bytes)
         handler: handleVoteCommitted
-      - event: VoteRevealed(indexed address,indexed address,uint256,indexed bytes32,uint256,bytes,int256,uint256)
+      - event: VoteRevealed(indexed address,indexed address,uint32,indexed bytes32,uint256,bytes,int256,uint128)
         handler: handleVoteRevealed
-      - event: RequestResolved(indexed uint256,indexed uint256,indexed bytes32,uint256,bytes,int256)
+      - event: RequestResolved(indexed uint32,indexed uint256,indexed bytes32,uint256,bytes,int256)
         handler: handlePriceResolved
-      - event: Staked(indexed address,indexed address,uint256,uint256,uint256,uint256)
+      - event: Staked(indexed address,indexed address,uint128,uint128,uint128,uint128)
         handler: handleStaked
-      - event: RequestedUnstake(indexed address,uint256,uint256,uint256)
+      - event: RequestedUnstake(indexed address,uint128,uint64,uint128)
         handler: handleRequestedUnstake
-      - event: ExecutedUnstake(indexed address,uint256,uint256)
+      - event: ExecutedUnstake(indexed address,uint128,uint128)
         handler: handleExecutedUnstake
-      - event: UpdatedReward(indexed address,uint256,uint256)
+      - event: UpdatedReward(indexed address,uint128,uint64)
         handler: handleUpdatedReward
-      - event: WithdrawnRewards(indexed address,indexed address,uint256)
+      - event: WithdrawnRewards(indexed address,indexed address,uint128)
         handler: handleWithdrawnRewards
-      - event: VoterSlashed(indexed address,indexed uint256,int256)
+      - event: VoterSlashed(indexed address,indexed uint256,int128)
         handler: handleVoterSlashed
-      - event: RequestDeleted(indexed bytes32,indexed uint256,bytes,uint256)
+      - event: RequestDeleted(indexed bytes32,indexed uint256,bytes,uint32)
         handler: handleRequestDeleted
-      - event: RequestRolled(indexed bytes32,indexed uint256,bytes,uint256)
+      - event: RequestRolled(indexed bytes32,indexed uint256,bytes,uint32)
         handler: handleRequestRolled
 
 
