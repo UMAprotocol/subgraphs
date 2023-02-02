@@ -1,15 +1,8 @@
-import {
-    RequestPrice,
-    ProposePrice,
-    DisputePrice,
-    Settle
-  } from "../../generated/OptimisticOracle/OptimisticOracle";
-  import {
-    getOrCreateOptimisticPriceRequest
-  } from "../utils/helpers";
-  
-  import { log, BigInt } from "@graphprotocol/graph-ts";
-  
+import { RequestPrice, ProposePrice, DisputePrice, Settle } from "../../generated/OptimisticOracle/OptimisticOracle";
+import { getOrCreateOptimisticPriceRequest } from "../utils/helpers";
+
+import { log, BigInt } from "@graphprotocol/graph-ts";
+
 // - event: RequestPrice(indexed address,bytes32,uint256,bytes,address,uint256,uint256)
 //   handler: handleOptimisticRequestPrice
 // - event RequestPrice(
@@ -23,14 +16,11 @@ import {
 //   );
 
 export function handleOptimisticRequestPrice(event: RequestPrice): void {
-  log.warning(
-    `(ancillary) OO PriceRequest params: {},{},{}`, 
-    [
-      event.params.timestamp.toString(),
-      event.params.identifier.toString(),
-      event.params.ancillaryData.toHex()
-    ]
-  ); 
+  log.warning(`(ancillary) OO PriceRequest params: {},{},{}`, [
+    event.params.timestamp.toString(),
+    event.params.identifier.toString(),
+    event.params.ancillaryData.toHex(),
+  ]);
   let requestId = event.params.identifier
     .toString()
     .concat("-")
@@ -47,11 +37,10 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
   request.currency = event.params.currency;
   request.reward = event.params.reward;
   request.finalFee = event.params.finalFee;
-    
+
   request.save();
 }
 
-  
 // - event: ProposePrice(indexed address,indexed address,bytes32,uint256,bytes,int256,uint256,address)
 //   handler: handleOptimisticProposePrice
 // - event ProposePrice(
@@ -66,28 +55,25 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
 // );
 
 export function handleOptimisticProposePrice(event: ProposePrice): void {
-  log.warning(
-    `(ancillary) OO PriceProposed params: {},{},{}`, 
-    [
-      event.params.timestamp.toString(),
-      event.params.identifier.toString(),
-      event.params.ancillaryData.toHex()
-    ]
-  ); 
-    let requestId = event.params.identifier
-      .toString()
-      .concat("-")
-      .concat(event.params.timestamp.toString())
-      .concat("-")
-      .concat(event.params.ancillaryData.toHex());
-  
-    let request = getOrCreateOptimisticPriceRequest(requestId);
-  
-    request.proposer = event.params.proposer;
-    request.proposedPrice = event.params.proposedPrice;
-    request.proposalExpirationTimestamp = event.params.expirationTimestamp;
-      
-    request.save();
+  log.warning(`(ancillary) OO PriceProposed params: {},{},{}`, [
+    event.params.timestamp.toString(),
+    event.params.identifier.toString(),
+    event.params.ancillaryData.toHex(),
+  ]);
+  let requestId = event.params.identifier
+    .toString()
+    .concat("-")
+    .concat(event.params.timestamp.toString())
+    .concat("-")
+    .concat(event.params.ancillaryData.toHex());
+
+  let request = getOrCreateOptimisticPriceRequest(requestId);
+
+  request.proposer = event.params.proposer;
+  request.proposedPrice = event.params.proposedPrice;
+  request.proposalExpirationTimestamp = event.params.expirationTimestamp;
+
+  request.save();
 }
 
 // - event: DisputePrice(indexed address,indexed address,indexed address,bytes32,uint256,bytes,int256)
@@ -103,26 +89,23 @@ export function handleOptimisticProposePrice(event: ProposePrice): void {
 //   );
 
 export function handleOptimisticDisputePrice(event: DisputePrice): void {
-  log.warning(
-    `(ancillary) OO PriceDisputed params: {},{},{}`, 
-    [
-      event.params.timestamp.toString(),
-      event.params.identifier.toString(),
-      event.params.ancillaryData.toHex()
-    ]
-  ); 
-    let requestId = event.params.identifier
-      .toString()
-      .concat("-")
-      .concat(event.params.timestamp.toString())
-      .concat("-")
-      .concat(event.params.ancillaryData.toHex());
-  
-    let request = getOrCreateOptimisticPriceRequest(requestId);
-  
-    request.disputer = event.params.disputer;
-      
-    request.save();
+  log.warning(`(ancillary) OO PriceDisputed params: {},{},{}`, [
+    event.params.timestamp.toString(),
+    event.params.identifier.toString(),
+    event.params.ancillaryData.toHex(),
+  ]);
+  let requestId = event.params.identifier
+    .toString()
+    .concat("-")
+    .concat(event.params.timestamp.toString())
+    .concat("-")
+    .concat(event.params.ancillaryData.toHex());
+
+  let request = getOrCreateOptimisticPriceRequest(requestId);
+
+  request.disputer = event.params.disputer;
+
+  request.save();
 }
 
 // - event: Settle(indexed address,indexed address,indexed address,bytes32,uint256,bytes,int256,uint256)
@@ -139,33 +122,27 @@ export function handleOptimisticDisputePrice(event: DisputePrice): void {
 // );
 
 export function handleOptimisticSettle(event: Settle): void {
-  log.warning(
-    `(ancillary) OO Settled params: {},{},{}`, 
-    [
-      event.params.timestamp.toString(),
-      event.params.identifier.toString(),
-      event.params.ancillaryData.toHex()
-    ]
-  ); 
-    let requestId = event.params.identifier
-      .toString()
-      .concat("-")
-      .concat(event.params.timestamp.toString())
-      .concat("-")
-      .concat(event.params.ancillaryData.toHex());
-  
-    let request = getOrCreateOptimisticPriceRequest(requestId);
-  
-    request.settlementPrice = event.params.price;
-    request.settlementPayout = event.params.payout;
+  log.warning(`(ancillary) OO Settled params: {},{},{}`, [
+    event.params.timestamp.toString(),
+    event.params.identifier.toString(),
+    event.params.ancillaryData.toHex(),
+  ]);
+  let requestId = event.params.identifier
+    .toString()
+    .concat("-")
+    .concat(event.params.timestamp.toString())
+    .concat("-")
+    .concat(event.params.ancillaryData.toHex());
 
-    if (
-        request.disputer == null ||
-        (request.proposedPrice as BigInt == request.settlementPrice as BigInt)
-    ) {
-        request.settlementRecipient = request.proposer;
-    } else {
-        request.settlementRecipient = request.disputer;
-    }
-    request.save();
+  let request = getOrCreateOptimisticPriceRequest(requestId);
+
+  request.settlementPrice = event.params.price;
+  request.settlementPayout = event.params.payout;
+
+  if (!request.disputer || request.proposedPrice!.equals(event.params.price)) {
+    request.settlementRecipient = request.proposer;
+  } else {
+    request.settlementRecipient = request.disputer;
+  }
+  request.save();
 }
