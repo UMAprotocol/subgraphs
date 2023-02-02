@@ -17,12 +17,8 @@ This subgraph indexes events emitted by the core Oracle contracts. The code can 
 
 This subgraph indexes events emitted by the "Optimistic Oracle" contracts. The code can be found in `packages/optimistic-oracle`
 
-- Kovan: https://thegraph.com/explorer/subgraph/umaprotocol/kovan-oo
-- Mainnet: https://thegraph.com/explorer/subgraph/umaprotocol/mainnet-oo
-- Polygon: https://thegraph.com/explorer/subgraph/umaprotocol/polygon-oo
-- (staging) Kovan: https://thegraph.com/explorer/subgraph/nicholaspai/kovan-oo-staging
-- (staging) Mainnet: https://thegraph.com/explorer/subgraph/nicholaspai/mainnet-oo-staging
-- (staging) Polygon: https://thegraph.com/explorer/subgraph/nicholaspai/polygon-oo-staging
+- Mainnet: https://thegraph.com/hosted-service/subgraph/md0x/mainnet-oo
+- (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-oo-staging
 
 ## Financial Contract Events:
 
@@ -42,6 +38,14 @@ This subgraph indexes events emitted by the UMA voting token contracts. The code
 - (staging) Kovan: https://thegraph.com/explorer/subgraph/nicholaspai/kovan-token-staging
 - (staging) Mainnet: https://thegraph.com/explorer/subgraph/nicholaspai/mainnet-token-staging
 
+## Voting V2 Events:
+
+This subgraph indexes events emitted by the core Oracle contracts. The code can be found in `packages/votingV2`
+
+- Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-votingv2-staging
+
 ## Resources
 
 - Really well done subgraph repository: [aragon/connect](https://github.com/aragon/connect/tree/master/packages/connect-thegraph/subgraph)
+
+- Run a local graph node: [graph-node](https://github.com/graphprotocol/graph-node/blob/master/docker/README.md)

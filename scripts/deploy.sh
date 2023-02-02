@@ -31,4 +31,9 @@ if [[ -z "${API_KEY}" ]]; then
 fi
 
 echo "$NAMESPACE/$SUBGRAPH_NAME"
-yarn graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ $NAMESPACE/$SUBGRAPH_NAME --access-token $API_KEY
+if [ "$DOCKER" ]; then
+    echo "Deploying to local docker node"
+    yarn graph create --node http://127.0.0.1:8020 $NAMESPACE/$SUBGRAPH_NAME && yarn graph deploy --node http://localhost:8020 --ipfs http://localhost:5001 $NAMESPACE/$SUBGRAPH_NAME
+else
+    yarn graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ $NAMESPACE/$SUBGRAPH_NAME --access-token $API_KEY
+fi
