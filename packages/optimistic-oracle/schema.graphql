@@ -29,5 +29,36 @@ type OptimisticPriceRequest @entity {
   settlementPayout: BigInt
 
   settlementRecipient: Bytes
-}
 
+  requestTimestamp: BigInt
+
+  requestBlockNumber: BigInt
+
+  requestHash: Bytes
+
+  requestLogIndex: BigInt
+
+  proposalTimestamp: BigInt
+
+  proposalBlockNumber: BigInt
+
+  proposalHash: Bytes
+
+  proposalLogIndex: BigInt
+
+  disputeTimestamp: BigInt
+
+  disputeBlockNumber: BigInt
+
+  disputeHash: Bytes
+
+  disputeLogIndex: BigInt
+
+  settlementTimestamp: BigInt
+
+  settlementBlockNumber: BigInt
+
+  settlementHash: Bytes
+
+  settlementLogIndex: BigInt
+}

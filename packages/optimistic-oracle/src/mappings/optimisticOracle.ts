@@ -1,7 +1,7 @@
 import { RequestPrice, ProposePrice, DisputePrice, Settle } from "../../generated/OptimisticOracle/OptimisticOracle";
 import { getOrCreateOptimisticPriceRequest } from "../utils/helpers";
 
-import { log, BigInt } from "@graphprotocol/graph-ts";
+import { log } from "@graphprotocol/graph-ts";
 
 // - event: RequestPrice(indexed address,bytes32,uint256,bytes,address,uint256,uint256)
 //   handler: handleOptimisticRequestPrice
@@ -37,6 +37,10 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
   request.currency = event.params.currency;
   request.reward = event.params.reward;
   request.finalFee = event.params.finalFee;
+  request.requestTimestamp = event.block.timestamp;
+  request.requestBlockNumber = event.block.number;
+  request.requestLogIndex = event.logIndex;
+  request.requestHash = event.transaction.hash;
 
   request.save();
 }
@@ -73,6 +77,11 @@ export function handleOptimisticProposePrice(event: ProposePrice): void {
   request.proposedPrice = event.params.proposedPrice;
   request.proposalExpirationTimestamp = event.params.expirationTimestamp;
 
+  request.proposalTimestamp = event.block.timestamp;
+  request.proposalBlockNumber = event.block.number;
+  request.proposalLogIndex = event.logIndex;
+  request.proposalHash = event.transaction.hash;
+
   request.save();
 }
 
@@ -104,6 +113,11 @@ export function handleOptimisticDisputePrice(event: DisputePrice): void {
   let request = getOrCreateOptimisticPriceRequest(requestId);
 
   request.disputer = event.params.disputer;
+
+  request.disputeTimestamp = event.block.timestamp;
+  request.disputeBlockNumber = event.block.number;
+  request.disputeLogIndex = event.logIndex;
+  request.disputeHash = event.transaction.hash;
 
   request.save();
 }
@@ -144,5 +158,11 @@ export function handleOptimisticSettle(event: Settle): void {
   } else {
     request.settlementRecipient = request.disputer;
   }
+
+  request.settlementTimestamp = event.block.timestamp;
+  request.settlementBlockNumber = event.block.number;
+  request.settlementLogIndex = event.logIndex;
+  request.settlementHash = event.transaction.hash;
+
   request.save();
 }
