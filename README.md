@@ -17,7 +17,11 @@ This subgraph indexes events emitted by the core Oracle contracts. The code can 
 
 This subgraph indexes events emitted by the "Optimistic Oracle" contracts. The code can be found in `packages/optimistic-oracle`
 
-- Mainnet: https://thegraph.com/hosted-service/subgraph/md0x/mainnet-oo
+- (unofficial) Mainnet: https://thegraph.com/hosted-service/subgraph/md0x/mainnet-oo-staging
+- (unofficial) Polygon: https://thegraph.com/hosted-service/subgraph/md0x/polygon-oo-staging
+- (unofficial) Arbitrum: https://thegraph.com/hosted-service/subgraph/md0x/arbitrum-oo-staging
+- (unofficial) Optimism: https://thegraph.com/hosted-service/subgraph/md0x/optimism-oo-staging
+- (unofficial) Boba: https://thegraph.com/hosted-service/subgraph/md0x/boba-oo-staging
 - (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-oo-staging
 
 ## Financial Contract Events:
