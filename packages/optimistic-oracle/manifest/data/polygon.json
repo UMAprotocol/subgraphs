@@ -1,16 +1,10 @@
 {
-    "network": "matic",
-    "OptimisticOracleDataSources": [
-      {
-          "name": "OptimisticOracle0",
-          "address": "0xaaf3f29521877d7a28c21e379bf7a5401883a6b2",
-          "startBlock": 15716448
-      },
-      {
-        "name": "OptimisticOracle1",
-        "address": "0xBb1A8db2D4350976a11cdfA60A1d43f97710Da49",
-        "startBlock": 16783346
+  "network": "matic",
+  "OptimisticOracleDataSources": [
+    {
+      "name": "OptimisticOracle",
+      "address": "0xBb1A8db2D4350976a11cdfA60A1d43f97710Da49",
+      "startBlock": 16783346
     }
-    ]
-  }
-  
+  ]
+}

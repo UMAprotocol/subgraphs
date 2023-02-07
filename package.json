@@ -20,12 +20,12 @@
     "packages": [
       "packages/financial-contracts/**",
       "packages/long-short-pair/**",
-      "packages/optimistic-oracle/**",
       "packages/token/**",
       "packages/voting/**"
     ],
     "nohoist": [
-      "packages/votingV2/**"
+      "packages/votingV2/**",
+      "packages/optimistic-oracle/**"
     ]
   },
   "devDependencies": {
