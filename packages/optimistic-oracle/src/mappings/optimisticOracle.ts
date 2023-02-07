@@ -1,7 +1,34 @@
-import { RequestPrice, ProposePrice, DisputePrice, Settle } from "../../generated/OptimisticOracle/OptimisticOracle";
+import {
+  DisputePrice,
+  OptimisticOracle,
+  ProposePrice,
+  RequestPrice,
+  Settle,
+} from "../../generated/OptimisticOracle/OptimisticOracle";
 import { getOrCreateOptimisticPriceRequest } from "../utils/helpers";
 
-import { log } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, log } from "@graphprotocol/graph-ts";
+
+function getState(
+  ooAddress: Address,
+  requester: Address,
+  identifier: Bytes,
+  timestamp: BigInt,
+  ancillaryData: Bytes
+): string {
+  const states = [
+    "Invalid", // Never requested.
+    "Requested", // Requested, no other actions taken.
+    "Proposed", // Proposed, but not expired or disputed yet.
+    "Expired", // Proposed, not disputed, past liveness.
+    "Disputed", // Disputed, but no DVM price returned yet.
+    "Resolved", // Disputed and DVM price is available.
+    "Settled", // Final price has been set in the contract (can get here from Expired or Resolved).
+  ];
+  let oo = OptimisticOracle.bind(ooAddress);
+  let state = oo.try_getState(requester, identifier, timestamp, ancillaryData);
+  return states[state.value];
+}
 
 // - event: RequestPrice(indexed address,bytes32,uint256,bytes,address,uint256,uint256)
 //   handler: handleOptimisticRequestPrice
@@ -41,6 +68,14 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
   request.requestBlockNumber = event.block.number;
   request.requestLogIndex = event.logIndex;
   request.requestHash = event.transaction.hash;
+
+  request.state = getState(
+    event.address,
+    event.params.requester,
+    event.params.identifier,
+    event.params.timestamp,
+    event.params.ancillaryData
+  );
 
   request.save();
 }
@@ -82,6 +117,14 @@ export function handleOptimisticProposePrice(event: ProposePrice): void {
   request.proposalLogIndex = event.logIndex;
   request.proposalHash = event.transaction.hash;
 
+  request.state = getState(
+    event.address,
+    event.params.requester,
+    event.params.identifier,
+    event.params.timestamp,
+    event.params.ancillaryData
+  );
+
   request.save();
 }
 
@@ -118,6 +161,14 @@ export function handleOptimisticDisputePrice(event: DisputePrice): void {
   request.disputeBlockNumber = event.block.number;
   request.disputeLogIndex = event.logIndex;
   request.disputeHash = event.transaction.hash;
+
+  request.state = getState(
+    event.address,
+    event.params.requester,
+    event.params.identifier,
+    event.params.timestamp,
+    event.params.ancillaryData
+  );
 
   request.save();
 }
@@ -163,6 +214,14 @@ export function handleOptimisticSettle(event: Settle): void {
   request.settlementBlockNumber = event.block.number;
   request.settlementLogIndex = event.logIndex;
   request.settlementHash = event.transaction.hash;
+
+  request.state = getState(
+    event.address,
+    event.params.requester,
+    event.params.identifier,
+    event.params.timestamp,
+    event.params.ancillaryData
+  );
 
   request.save();
 }
