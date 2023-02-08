@@ -3,8 +3,8 @@
   "OptimisticAsserterDataSources": [
     {
       "name": "OptimisticAsserter",
-      "address": "0x6f26Bf09B1C792e3228e5467807a900A503c0281",
-      "startBlock": 7328607
+      "address": "0x501B9005D0dB1cC00d231471f052b935D8566A59",
+      "startBlock": 8361804
     }
   ]
 }
