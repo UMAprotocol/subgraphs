@@ -24,16 +24,16 @@ import { log } from "@graphprotocol/graph-ts";
 
 export function handleAssertionMade(event: AssertionMade): void {
   log.warning(`Assertion params: {},{},{}`, [
-    event.params.assertionId.toString(),
-    event.params.domainId.toString(),
+    event.params.assertionId.toHexString(),
+    event.params.domainId.toHexString(),
     event.params.claim.toHexString(),
   ]);
   let assertionId = getAssertionId(event.params.assertionId);
 
   let assertion = getOrCreateAssertion(assertionId);
 
-  assertion.assertionId = event.params.assertionId.toString();
-  assertion.domainId = event.params.domainId.toString();
+  assertion.assertionId = event.params.assertionId.toHexString();
+  assertion.domainId = event.params.domainId.toHexString();
   assertion.claim = event.params.claim.toHexString();
   assertion.asserter = event.params.asserter;
   assertion.callbackRecipient = event.params.callbackRecipient;
@@ -57,9 +57,9 @@ export function handleAssertionMade(event: AssertionMade): void {
 
 export function handleAssertionDisputed(event: AssertionDisputed): void {
   log.warning(`Assertion disputed params: {},{},{}`, [
-    event.params.assertionId.toString(),
-    event.params.caller.toString(),
-    event.params.disputer.toString(),
+    event.params.assertionId.toHexString(),
+    event.params.caller.toHexString(),
+    event.params.disputer.toHexString(),
   ]);
 
   let assertionId = getAssertionId(event.params.assertionId);
@@ -87,10 +87,10 @@ export function handleAssertionDisputed(event: AssertionDisputed): void {
 // );
 
 export function handleAssertionSettled(event: AssertionSettled): void {
-  log.warning(`Assertion params: {},{},{}`, [
-    event.params.assertionId.toString(),
+  log.warning(`Assertion settled params: {},{},{}`, [
+    event.params.assertionId.toHexString(),
     event.params.settlementResolution.toString(),
-    event.params.settleCaller.toString(),
+    event.params.settleCaller.toHexString(),
   ]);
   let assertionId = getAssertionId(event.params.assertionId);
 
