@@ -1,13 +1,3 @@
-enum OptimisticPriceRequestState {
-  Invalid
-  Requested
-  Proposed
-  Expired
-  Disputed
-  Resolved
-  Settled
-}
-
 type Assertion @entity {
   "ID is the PriceIdentifier ID + the timestamp + ancillaryData (if available)"
   id: ID!
@@ -39,8 +29,6 @@ type Assertion @entity {
   settlementRecipient: Bytes
 
   settlementResolution: Boolean
-
-  state: OptimisticPriceRequestState
 
   assertionTimestamp: BigInt
 
