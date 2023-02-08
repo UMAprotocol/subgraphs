@@ -1,0 +1,10 @@
+{
+  "network": "boba",
+  "OptimisticAsserterDataSources": [
+    {
+      "name": "OptimisticAsserter",
+      "address": "0x7da554228555C8Bf3748403573d48a2138C6b848",
+      "startBlock": 278019
+    }
+  ]
+}

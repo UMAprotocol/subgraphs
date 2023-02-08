@@ -1,0 +1,68 @@
+enum OptimisticPriceRequestState {
+  Invalid
+  Requested
+  Proposed
+  Expired
+  Disputed
+  Resolved
+  Settled
+}
+
+type Assertion @entity {
+  "ID is the PriceIdentifier ID + the timestamp + ancillaryData (if available)"
+  id: ID!
+
+  assertionId: String!
+
+  domainId: String!
+
+  claim: String!
+
+  asserter: Bytes!
+
+  callbackRecipient: Bytes!
+
+  escalationManager: Bytes!
+
+  caller: Bytes!
+
+  expirationTime: BigInt!
+
+  currency: Bytes!
+
+  bond: BigInt!
+
+  disputer: Bytes
+
+  settlementPayout: BigInt
+
+  settlementRecipient: Bytes
+
+  settlementResolution: Boolean
+
+  state: OptimisticPriceRequestState
+
+  assertionTimestamp: BigInt
+
+  assertionBlockNumber: BigInt
+
+  assertionHash: Bytes
+
+  assertionLogIndex: BigInt
+
+  disputeTimestamp: BigInt
+
+  disputeBlockNumber: BigInt
+
+  disputeHash: Bytes
+
+  disputeLogIndex: BigInt
+
+  settlementTimestamp: BigInt
+
+  settlementBlockNumber: BigInt
+
+  settlementHash: Bytes
+
+  settlementLogIndex: BigInt
+}

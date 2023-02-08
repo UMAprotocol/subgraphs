@@ -1,0 +1,10 @@
+{
+  "network": "arbitrum-one",
+  "OptimisticAsserterDataSources": [
+    {
+      "name": "OptimisticAsserter",
+      "address": "0x031A7882cE3e8b4462b057EBb0c3F23Cd731D234",
+      "startBlock": 4185657
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "network": "mainnet",
+  "OptimisticAsserterDataSources": [
+    {
+      "name": "OptimisticAsserter",
+      "address": "0xc43767f4592df265b4a9f1a398b97ff24f38c6a6",
+      "startBlock": 12813254
+    }
+  ]
+}
