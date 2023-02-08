@@ -2,7 +2,7 @@ import { Bytes } from "@graphprotocol/graph-ts";
 import { Assertion } from "../../../generated/schema";
 
 export function getAssertionId(assertionId: Bytes): String {
-  return assertionId.toString();
+  return assertionId.toHexString();
 }
 
 export function getOrCreateAssertion(id: String, createIfNotFound: boolean = true): Assertion {
