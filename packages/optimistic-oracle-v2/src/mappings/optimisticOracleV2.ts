@@ -226,3 +226,21 @@ export function handleOptimisticSettle(event: Settle): void {
 
   request.save();
 }
+
+export function handleSetCustomLiveness(call: SetCustomLivenessCall): void {
+  log.warning(`OOV2 set custom liveness inputs: {},{},{},{}`, [
+    call.inputs.timestamp.toString(),
+    call.inputs.identifier.toString(),
+    call.inputs.ancillaryData.toHex(),
+    call.inputs.customLiveness.toString(),
+  ]);
+  let requestId = call.inputs.identifier
+    .toString()
+    .concat("-")
+    .concat(call.inputs.timestamp.toString())
+    .concat("-")
+    .concat(call.inputs.ancillaryData.toHex());
+
+  let request = getOrCreateOptimisticPriceRequest(requestId);
+  request.customLiveness = call.inputs.customLiveness;
+}
