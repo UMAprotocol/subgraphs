@@ -1,4 +1,4 @@
-import { SetFinalFeeCall } from "../../generated/Store/Store";
+ import { SetFinalFeeCall } from "../../generated/Store/Store";
 import { getOrCreateCollateral } from "../utils/helpers";
 import { toDecimal } from "../utils/decimals";
 

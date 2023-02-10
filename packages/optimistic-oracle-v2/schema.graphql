@@ -1,0 +1,78 @@
+enum OptimisticPriceRequestState {
+  Invalid
+  Requested
+  Proposed
+  Expired
+  Disputed
+  Resolved
+  Settled
+}
+
+type OptimisticPriceRequest @entity {
+  "ID is the PriceIdentifier ID + the timestamp + ancillaryData (if available)"
+  id: ID!
+
+  identifier: String!
+
+  ancillaryData: String!
+
+  time: BigInt!
+
+  requester: Bytes!
+
+  currency: Bytes!
+
+  reward: BigInt!
+
+  finalFee: BigInt!
+
+  proposer: Bytes
+
+  proposedPrice: BigInt
+
+  proposalExpirationTimestamp: BigInt
+
+  disputer: Bytes
+
+  settlementPrice: BigInt
+
+  settlementPayout: BigInt
+
+  settlementRecipient: Bytes
+
+  state: OptimisticPriceRequestState
+
+  requestTimestamp: BigInt
+
+  requestBlockNumber: BigInt
+
+  requestHash: Bytes
+
+  requestLogIndex: BigInt
+
+  proposalTimestamp: BigInt
+
+  proposalBlockNumber: BigInt
+
+  proposalHash: Bytes
+
+  proposalLogIndex: BigInt
+
+  disputeTimestamp: BigInt
+
+  disputeBlockNumber: BigInt
+
+  disputeHash: Bytes
+
+  disputeLogIndex: BigInt
+
+  settlementTimestamp: BigInt
+
+  settlementBlockNumber: BigInt
+
+  settlementHash: Bytes
+
+  settlementLogIndex: BigInt
+
+  customLiveness: BigInt
+}

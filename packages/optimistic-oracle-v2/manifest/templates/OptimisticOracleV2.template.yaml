@@ -1,0 +1,30 @@
+- kind: ethereum/contract
+  name: {{name}}
+  network: {{network}}
+  source:
+    address: "{{address}}"
+    abi: OptimisticOracleV2
+    startBlock: {{startBlock}} 
+  mapping:
+    kind: ethereum/events
+    apiVersion: 0.0.7
+    language: wasm/assemblyscript
+    file: ./src/index.ts
+    entities:
+      - OptimisticPriceRequest
+      - PriceIdentifier
+    abis:
+      - name: OptimisticOracleV2
+        file: ./abis/OptimisticOracleV2.json
+    eventHandlers:
+      - event: RequestPrice(indexed address,bytes32,uint256,bytes,address,uint256,uint256)
+        handler: handleOptimisticRequestPrice
+      - event: ProposePrice(indexed address,indexed address,bytes32,uint256,bytes,int256,uint256,address)
+        handler: handleOptimisticProposePrice
+      - event: DisputePrice(indexed address,indexed address,indexed address,bytes32,uint256,bytes,int256)
+        handler: handleOptimisticDisputePrice
+      - event: Settle(indexed address,indexed address,indexed address,bytes32,uint256,bytes,int256,uint256)
+        handler: handleOptimisticSettle
+    callHandlers:
+      - function: setCustomLiveness(bytes32,uint256,bytes,uint256)
+        handler: handleSetCustomLiveness
