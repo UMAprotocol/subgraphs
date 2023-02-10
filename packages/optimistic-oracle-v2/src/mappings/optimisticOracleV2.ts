@@ -245,6 +245,8 @@ export function handleSetCustomLiveness(call: SetCustomLivenessCall): void {
 
   let request = getOrCreateOptimisticPriceRequest(requestId);
   request.customLiveness = call.inputs.customLiveness;
+
+  request.save();
 }
 
 export function handleSetBond(call: SetBondCall): void {
@@ -263,6 +265,8 @@ export function handleSetBond(call: SetBondCall): void {
 
   let request = getOrCreateOptimisticPriceRequest(requestId);
   request.bond = call.inputs.bond;
+
+  request.save();
 }
 
 export function handleSetEventBased(call: SetEventBasedCall): void {
@@ -280,4 +284,6 @@ export function handleSetEventBased(call: SetEventBasedCall): void {
 
   let request = getOrCreateOptimisticPriceRequest(requestId);
   request.eventBased = true;
+
+  request.save();
 }
