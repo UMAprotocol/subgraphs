@@ -1,10 +1,10 @@
 {
   "network": "boba",
-  "OptimisticOracleDataSources": [
+  "OptimisticOracleV2DataSources": [
     {
-      "name": "OptimisticOracle",
-      "address": "0x7da554228555C8Bf3748403573d48a2138C6b848",
-      "startBlock": 278019
+      "name": "OptimisticOracleV2",
+      "address": "0xb2b5C1b17B19d92CC4fC1f026B2133259e3ccd41",
+      "startBlock": 658837
     }
   ]
 }
