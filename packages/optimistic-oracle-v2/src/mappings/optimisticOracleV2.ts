@@ -5,6 +5,7 @@ import {
   RequestPrice,
   SetBondCall,
   SetCustomLivenessCall,
+  SetEventBasedCall,
   Settle,
 } from "../../generated/OptimisticOracleV2/OptimisticOracleV2";
 import { getOrCreateOptimisticPriceRequest } from "../utils/helpers";
@@ -262,4 +263,21 @@ export function handleSetBond(call: SetBondCall): void {
 
   let request = getOrCreateOptimisticPriceRequest(requestId);
   request.bond = call.inputs.bond;
+}
+
+export function handleSetEventBased(call: SetEventBasedCall): void {
+  log.warning(`OOV2 set event based inputs: {},{},{},{}`, [
+    call.inputs.timestamp.toString(),
+    call.inputs.identifier.toString(),
+    call.inputs.ancillaryData.toHex(),
+  ]);
+  let requestId = call.inputs.identifier
+    .toString()
+    .concat("-")
+    .concat(call.inputs.timestamp.toString())
+    .concat("-")
+    .concat(call.inputs.ancillaryData.toHex());
+
+  let request = getOrCreateOptimisticPriceRequest(requestId);
+  request.eventBased = true;
 }

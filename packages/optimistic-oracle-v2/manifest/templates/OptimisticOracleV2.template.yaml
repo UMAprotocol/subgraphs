@@ -30,3 +30,5 @@
         handler: handleSetCustomLiveness
       - function: setBond(bytes32,uint256,bytes,uint256)
         handler: handleSetBond
+      - function: setEventBased(bytes32,uint256,bytes)
+        handler: handleSetEventBased
