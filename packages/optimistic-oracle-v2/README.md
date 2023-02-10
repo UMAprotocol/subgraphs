@@ -1,4 +1,4 @@
-# Optimistic Oracle Subgraph
+# Optimistic Oracle V2 Subgraph
 
 ## Deploying the subgraph
 
