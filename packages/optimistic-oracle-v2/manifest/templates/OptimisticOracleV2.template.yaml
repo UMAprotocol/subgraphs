@@ -28,3 +28,5 @@
     callHandlers:
       - function: setCustomLiveness(bytes32,uint256,bytes,uint256)
         handler: handleSetCustomLiveness
+      - function: setBond(bytes32,uint256,bytes,uint256)
+        handler: handleSetBond

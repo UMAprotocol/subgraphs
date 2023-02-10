@@ -3,6 +3,7 @@ import {
   OptimisticOracleV2,
   ProposePrice,
   RequestPrice,
+  SetBondCall,
   SetCustomLivenessCall,
   Settle,
 } from "../../generated/OptimisticOracleV2/OptimisticOracleV2";
@@ -243,4 +244,22 @@ export function handleSetCustomLiveness(call: SetCustomLivenessCall): void {
 
   let request = getOrCreateOptimisticPriceRequest(requestId);
   request.customLiveness = call.inputs.customLiveness;
+}
+
+export function handleSetBond(call: SetBondCall): void {
+  log.warning(`OOV2 set bond inputs: {},{},{},{}`, [
+    call.inputs.timestamp.toString(),
+    call.inputs.identifier.toString(),
+    call.inputs.ancillaryData.toHex(),
+    call.inputs.bond.toString(),
+  ]);
+  let requestId = call.inputs.identifier
+    .toString()
+    .concat("-")
+    .concat(call.inputs.timestamp.toString())
+    .concat("-")
+    .concat(call.inputs.ancillaryData.toHex());
+
+  let request = getOrCreateOptimisticPriceRequest(requestId);
+  request.bond = call.inputs.bond;
 }
