@@ -48,6 +48,17 @@ This subgraph indexes events emitted by the core Oracle contracts. The code can 
 
 - Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-votingv2-staging
 
+## Optimistic Asserter Events:
+
+This subgraph indexes events emitted by the "Optimistic Asserter" contracts. The code can be found in `packages/optimistic-asserter`
+
+- (unofficial) Mainnet: https://thegraph.com/hosted-service/subgraph/md0x/mainnet-oa-staging
+- (unofficial) Polygon: https://thegraph.com/hosted-service/subgraph/md0x/polygon-oa-staging
+- (unofficial) Arbitrum: https://thegraph.com/hosted-service/subgraph/md0x/arbitrum-oa-staging
+- (unofficial) Optimism: https://thegraph.com/hosted-service/subgraph/md0x/optimism-oa-staging
+- (unofficial) Boba: https://thegraph.com/hosted-service/subgraph/md0x/boba-oa-staging
+- (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-oa-staging
+
 ## Resources
 
 - Really well done subgraph repository: [aragon/connect](https://github.com/aragon/connect/tree/master/packages/connect-thegraph/subgraph)

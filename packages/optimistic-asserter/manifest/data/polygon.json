@@ -1,0 +1,10 @@
+{
+  "network": "matic",
+  "OptimisticAsserterDataSources": [
+    {
+      "name": "OptimisticAsserter",
+      "address": "0x1a3cF7c0f99256431Fd6e8163FF8748A4aE50b6F",
+      "startBlock": 38517680
+    }
+  ]
+}

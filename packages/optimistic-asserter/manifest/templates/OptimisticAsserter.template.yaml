@@ -1,0 +1,25 @@
+- kind: ethereum/contract
+  name: {{name}}
+  network: {{network}}
+  source:
+    address: "{{address}}"
+    abi: OptimisticAsserter
+    startBlock: {{startBlock}} 
+  mapping:
+    kind: ethereum/events
+    apiVersion: 0.0.7
+    language: wasm/assemblyscript
+    file: ./src/index.ts
+    entities:
+      - OptimisticPriceRequest
+      - PriceIdentifier
+    abis:
+      - name: OptimisticAsserter
+        file: ./abis/OptimisticAsserter.json
+    eventHandlers:
+      - event: AssertionMade(indexed bytes32,bytes32,bytes,indexed address,address,indexed address,address,uint64,address,uint256)
+        handler: handleAssertionMade
+      - event: AssertionDisputed(indexed bytes32,indexed address,indexed address)
+        handler: handleAssertionDisputed
+      - event: AssertionSettled(indexed bytes32,indexed address,bool,bool,address)
+        handler: handleAssertionSettled
