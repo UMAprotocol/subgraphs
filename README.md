@@ -28,12 +28,12 @@ This subgraph indexes events emitted by the "Optimistic Oracle" contracts. The c
 
 This subgraph indexes events and function calls by the "Optimistic Oracle V2" contracts. The code can be found in `packages/optimistic-oracle-v2`
 
-- (unofficial) Mainnet: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/mainnet-oo-v2-staging
-- (unofficial) Polygon: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/polygon-oo-v2-staging
-- (unofficial) Arbitrum: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/arbitrum-oo-v2-staging
-- (unofficial) Optimism: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/optimism-oo-v2-staging
-- (unofficial) Boba: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/boba-oo-v2-staging
-- (staging) Goerli: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/goerli-oo-v2-staging
+- (unofficial) Mainnet: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/mainnet-oov2-staging
+- (unofficial) Polygon: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/polygon-oov2-staging
+- (unofficial) Arbitrum: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/arbitrum-oov2-staging
+- (unofficial) Optimism: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/optimism-oov2-staging
+- (unofficial) Boba: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/boba-oov2-staging
+- (staging) Goerli: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/goerli-oov2-staging
 
 
 ## Financial Contract Events:
