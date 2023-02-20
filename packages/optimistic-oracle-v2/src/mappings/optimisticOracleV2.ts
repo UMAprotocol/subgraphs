@@ -84,6 +84,21 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
     event.params.ancillaryData
   );
 
+  // workaround for Polygon which does not support `callHandlers`
+  // see readme for more info
+  if (isPolygon) {
+    let oov2 = OptimisticOracleV2.bind(event.address);
+    let requestSettings = oov2.try_getRequest(
+      event.params.requester,
+      event.params.identifier,
+      event.params.timestamp,
+      event.params.ancillaryData
+    ).value.requestSettings;
+    request.bond = requestSettings.bond;
+    request.eventBased = requestSettings.eventBased;
+    request.customLiveness = requestSettings.customLiveness;
+  }
+
   request.save();
 }
 
