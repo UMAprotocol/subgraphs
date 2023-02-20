@@ -6,9 +6,10 @@
     "ganache": "ganache-cli -h 0.0.0.0",
     "codegen": "graph codegen",
     "build": "graph build",
+    "remove-call-handlers": "node ./scripts/remove-call-handlers.js",
     "prepare:mainnet": "scripts/build-manifest.sh mainnet && yarn codegen && yarn build",
     "prepare:goerli": "scripts/build-manifest.sh goerli && yarn codegen && yarn build",
-    "prepare:polygon": "scripts/build-manifest.sh polygon && yarn codegen && yarn build",
+    "prepare:polygon": "scripts/build-manifest.sh polygon && yarn remove-call-handlers && yarn codegen && yarn build",
     "prepare:optimism": "scripts/build-manifest.sh optimism && yarn codegen && yarn build",
     "prepare:arbitrum": "scripts/build-manifest.sh arbitrum && yarn codegen && yarn build",
     "prepare:boba": "scripts/build-manifest.sh boba && yarn codegen && yarn build",
@@ -35,6 +36,7 @@
   "dependencies": {
     "@graphprotocol/graph-cli": "^0.38.0",
     "@graphprotocol/graph-ts": "^0.29.3",
-    "mustache": "^4.2.0"
+    "mustache": "^4.2.0",
+    "yaml": "^2.2.1"
   }
 }

@@ -10,7 +10,11 @@ import {
 } from "../../generated/OptimisticOracleV2/OptimisticOracleV2";
 import { getOrCreateOptimisticPriceRequest } from "../utils/helpers";
 
-import { Address, BigInt, Bytes, log } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, dataSource, log } from "@graphprotocol/graph-ts";
+
+let network = dataSource.network();
+
+let isPolygon = network === "matic";
 
 function getState(
   ooAddress: Address,
