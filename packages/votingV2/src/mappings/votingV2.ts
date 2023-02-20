@@ -129,7 +129,7 @@ export function handlePriceResolved(event: RequestResolved): void {
   let roundInfo = votingContract.try_rounds(event.params.roundId);
   let cumulativeStakeAtRound = roundInfo.reverted
     ? toDecimal(BigInt.fromString("0"))
-    : toDecimal(roundInfo.value.value1);
+    : toDecimal(roundInfo.value.value3);
 
   request.latestRound = requestRound.id;
   request.price = event.params.price;
@@ -145,13 +145,10 @@ export function handlePriceResolved(event: RequestResolved): void {
   requestRound.time = event.params.time;
   requestRound.roundId = event.params.roundId;
   requestRound.winnerGroup = voterGroup.id;
-  requestRound.gat = roundInfo.reverted ? requestRound.gat : toDecimal(roundInfo.value.value0);
+  requestRound.slashingLibrary = roundInfo.value.value0.toHexString();
+  requestRound.minParticipationRequirement = toDecimal(roundInfo.value.value1);
+  requestRound.minAgreementRequirement = toDecimal(roundInfo.value.value2);
 
-  requestRound.gatPercentageRaw = safeDivBigDecimal(
-    defaultBigDecimal(requestRound.gat),
-    toDecimal(getTokenContract().try_totalSupply().value)
-  );
-  requestRound.gatPercentage = defaultBigDecimal(requestRound.gatPercentageRaw).times(BIGDECIMAL_HUNDRED);
   requestRound.cumulativeStakeAtRound = cumulativeStakeAtRound;
 
   requestRound.save();
