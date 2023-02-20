@@ -26,7 +26,7 @@
     "nohoist": [
       "packages/votingV2/**",
       "packages/optimistic-oracle/**",
-      "packages/optimistic-asserter/**"
+      "packages/optimistic-oracle-v3/**"
     ]
   },
   "devDependencies": {

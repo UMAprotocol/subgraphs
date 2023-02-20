@@ -1,8 +1,8 @@
 import {
   AssertionDisputed,
   AssertionMade,
-  AssertionSettled
-} from "../../generated/OptimisticAsserter/OptimisticAsserter";
+  AssertionSettled,
+} from "../../generated/OptimisticOracleV3/OptimisticOracleV3";
 import { getAssertionId, getOrCreateAssertion } from "../utils/helpers";
 
 import { log } from "@graphprotocol/graph-ts";
@@ -42,6 +42,7 @@ export function handleAssertionMade(event: AssertionMade): void {
   assertion.expirationTime = event.params.expirationTime;
   assertion.currency = event.params.currency;
   assertion.bond = event.params.bond;
+  assertion.identifier = event.params.identifier.toHexString();
 
   assertion.assertionTimestamp = event.block.timestamp;
   assertion.assertionBlockNumber = event.block.number;

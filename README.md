@@ -48,16 +48,16 @@ This subgraph indexes events emitted by the core Oracle contracts. The code can 
 
 - Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-votingv2-staging
 
-## Optimistic Asserter Events:
+## Optimistic Oracle V3 Events:
 
-This subgraph indexes events emitted by the "Optimistic Asserter" contracts. The code can be found in `packages/optimistic-asserter`
+This subgraph indexes events emitted by the "Optimistic Oracle V3" contracts. The code can be found in `packages/optimistic-oracle-v3`
 
-- (unofficial) Mainnet: https://thegraph.com/hosted-service/subgraph/md0x/mainnet-oa-staging
-- (unofficial) Polygon: https://thegraph.com/hosted-service/subgraph/md0x/polygon-oa-staging
-- (unofficial) Arbitrum: https://thegraph.com/hosted-service/subgraph/md0x/arbitrum-oa-staging
-- (unofficial) Optimism: https://thegraph.com/hosted-service/subgraph/md0x/optimism-oa-staging
-- (unofficial) Boba: https://thegraph.com/hosted-service/subgraph/md0x/boba-oa-staging
-- (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-oa-staging
+- (unofficial) Mainnet: https://thegraph.com/hosted-service/subgraph/md0x/mainnet-oov3-staging
+- (unofficial) Polygon: https://thegraph.com/hosted-service/subgraph/md0x/polygon-oov3-staging
+- (unofficial) Arbitrum: https://thegraph.com/hosted-service/subgraph/md0x/arbitrum-oov3-staging
+- (unofficial) Optimism: https://thegraph.com/hosted-service/subgraph/md0x/optimism-oov3-staging
+- (unofficial) Boba: https://thegraph.com/hosted-service/subgraph/md0x/boba-oov3-staging
+- (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-oov3-staging
 
 ## Resources
 

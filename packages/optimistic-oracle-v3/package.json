@@ -1,7 +1,7 @@
 {
-  "name": "optimistic-asserter-subgraph",
+  "name": "optimistic-oracle-v3-subgraph",
   "version": "0.1.0",
-  "description": "Optimistic Asserter Contract Events Subgraph",
+  "description": "Optimistic Oracle V3 Contract Events Subgraph",
   "scripts": {
     "ganache": "ganache-cli -h 0.0.0.0",
     "codegen": "graph codegen",

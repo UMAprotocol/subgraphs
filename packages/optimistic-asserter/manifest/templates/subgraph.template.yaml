@@ -1,9 +1,0 @@
-specVersion: 0.0.2
-description: Subgraph with support for the UMA Optimistic Asserter contract data
-repository: https://github.com/UMAprotocol/subgraphs
-schema:
-  file: ./schema.graphql
-dataSources:
-{{#OptimisticAsserterDataSources}}
-  {{> OptimisticAsserter.template.yaml}}
-{{/OptimisticAsserterDataSources}}

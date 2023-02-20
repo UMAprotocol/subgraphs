@@ -3,7 +3,7 @@
   network: {{network}}
   source:
     address: "{{address}}"
-    abi: OptimisticAsserter
+    abi: OptimisticOracleV3
     startBlock: {{startBlock}} 
   mapping:
     kind: ethereum/events
@@ -14,10 +14,10 @@
       - OptimisticPriceRequest
       - PriceIdentifier
     abis:
-      - name: OptimisticAsserter
-        file: ./abis/OptimisticAsserter.json
+      - name: OptimisticOracleV3
+        file: ./abis/OptimisticOracleV3.json
     eventHandlers:
-      - event: AssertionMade(indexed bytes32,bytes32,bytes,indexed address,address,indexed address,address,uint64,address,uint256)
+      - event: AssertionMade(indexed bytes32,bytes32,bytes,indexed address,address,address,address,uint64,address,uint256,indexed bytes32)
         handler: handleAssertionMade
       - event: AssertionDisputed(indexed bytes32,indexed address,indexed address)
         handler: handleAssertionDisputed

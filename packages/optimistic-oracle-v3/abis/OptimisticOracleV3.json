@@ -36,11 +36,12 @@
       { "indexed": false, "internalType": "bytes", "name": "claim", "type": "bytes" },
       { "indexed": true, "internalType": "address", "name": "asserter", "type": "address" },
       { "indexed": false, "internalType": "address", "name": "callbackRecipient", "type": "address" },
-      { "indexed": true, "internalType": "address", "name": "escalationManager", "type": "address" },
+      { "indexed": false, "internalType": "address", "name": "escalationManager", "type": "address" },
       { "indexed": false, "internalType": "address", "name": "caller", "type": "address" },
       { "indexed": false, "internalType": "uint64", "name": "expirationTime", "type": "uint64" },
       { "indexed": false, "internalType": "contract IERC20", "name": "currency", "type": "address" },
-      { "indexed": false, "internalType": "uint256", "name": "bond", "type": "uint256" }
+      { "indexed": false, "internalType": "uint256", "name": "bond", "type": "uint256" },
+      { "indexed": true, "internalType": "bytes32", "name": "identifier", "type": "bytes32" }
     ],
     "name": "AssertionMade",
     "type": "event"
@@ -105,7 +106,7 @@
           { "internalType": "address", "name": "assertingCaller", "type": "address" },
           { "internalType": "address", "name": "escalationManager", "type": "address" }
         ],
-        "internalType": "struct OptimisticAsserterInterface.EscalationManagerSettings",
+        "internalType": "struct OptimisticOracleV3Interface.EscalationManagerSettings",
         "name": "escalationManagerSettings",
         "type": "tuple"
       },
@@ -207,7 +208,7 @@
               { "internalType": "address", "name": "assertingCaller", "type": "address" },
               { "internalType": "address", "name": "escalationManager", "type": "address" }
             ],
-            "internalType": "struct OptimisticAsserterInterface.EscalationManagerSettings",
+            "internalType": "struct OptimisticOracleV3Interface.EscalationManagerSettings",
             "name": "escalationManagerSettings",
             "type": "tuple"
           },
@@ -223,7 +224,7 @@
           { "internalType": "address", "name": "callbackRecipient", "type": "address" },
           { "internalType": "address", "name": "disputer", "type": "address" }
         ],
-        "internalType": "struct OptimisticAsserterInterface.Assertion",
+        "internalType": "struct OptimisticOracleV3Interface.Assertion",
         "name": "",
         "type": "tuple"
       }

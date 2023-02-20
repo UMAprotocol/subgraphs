@@ -1,0 +1,10 @@
+{
+  "network": "optimism",
+  "OptimisticOracleV3DataSources": [
+    {
+      "name": "OptimisticOracleV3",
+      "address": "0x072819Bb43B50E7A251c64411e7aA362ce82803B",
+      "startBlock": 74537234
+    }
+  ]
+}
