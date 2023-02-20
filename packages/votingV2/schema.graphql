@@ -209,14 +209,14 @@ type PriceRequestRound @entity {
   "Percentage of the total supply of tokens that were weighted on this vote"
   tokenVoteParticipationPercentage: BigDecimal
 
-  "gat expressed exactly as in the contract"
-  gat: BigDecimal
+  "minParticipationRequirement expressed exactly as in the contract"
+  minParticipationRequirement: BigDecimal
 
-  "The raw percentage that the gat represents of total supply . 1 = 100%"
-  gatPercentageRaw: BigDecimal
+  "minAgreementRequirement expressed exactly as in the contract"
+  minAgreementRequirement: BigDecimal
 
-  "gatPercentage expressed as a percentage value"
-  gatPercentage: BigDecimal
+  "SlashingLibrary address used for this round"
+  slashingLibrary: String
 
   winnerGroup: VoterGroup
 
@@ -264,7 +264,6 @@ type TransactionSlashedVotes @entity {
 }
 
 type SlashedVote @entity {
-
   id: ID!
 
   request: PriceRequest!
