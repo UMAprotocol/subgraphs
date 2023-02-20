@@ -212,7 +212,7 @@ type PriceRequestRound @entity {
   "minParticipationRequirement expressed exactly as in the contract"
   minParticipationRequirement: BigDecimal
 
-  "minAgreementRequirement expressed as a percentage value"
+  "minAgreementRequirement expressed exactly as in the contract"
   minAgreementRequirement: BigDecimal
 
   "SlashingLibrary address used for this round"
