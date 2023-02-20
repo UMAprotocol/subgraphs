@@ -28,7 +28,7 @@ This subgraph indexes events emitted by the "Optimistic Oracle" contracts. The c
 
 This subgraph indexes events and function calls by the "Optimistic Oracle V2" contracts. The code can be found in `packages/optimistic-oracle-v2`
 
-**Note:** Polygon does not support `callHandlers`. This means we cannot use callHandlers to index the `setBond`, `setCustomLiveness`, and `setEventBased` function calls. These properties are also not available via events. Our compromise here is that in the case of Polygon, we read this data from the contract state in the event handler instead. **This workaround works when `setCustomLiveness` and `setEventBased` are called in the same transaction as `requestPrice`. So it doesn't work for all cases. Ideally we should have `callHandlers` in the chains that support this.**
+**Note:** Polygon does not support `callHandlers`. This means we cannot use callHandlers to index the `setBond`, `setCustomLiveness`, and `setEventBased` function calls. These properties are also not available via events. Our compromise here is that in the case of Polygon, we read this data from the contract state in the event handler instead. **This workaround works when `setCustomLiveness` and `setEventBased` are called in the same transaction as `requestPrice`. So it doesn't work for all cases. Ideally we should have `callHandlers` in the chains that support this.** We therefore must also remove the call handlers from the subgraph.yaml file for Polygon. See `scripts/remove-call-handlers.js` for implementation.
 
 - (unofficial) Mainnet: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/mainnet-oov2-staging
 - (unofficial) Polygon: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/polygon-oov2-staging
