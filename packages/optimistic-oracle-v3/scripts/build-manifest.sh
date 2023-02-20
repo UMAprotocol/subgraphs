@@ -10,6 +10,6 @@ echo 'Generating manifest from data file: '$DATA
 cat $DATA
 
 mustache \
-  -p manifest/templates/OptimisticAsserter.template.yaml \
+  -p manifest/templates/OptimisticOracleV3.template.yaml \
   $DATA \
   manifest/templates/subgraph.template.yaml > subgraph.yaml

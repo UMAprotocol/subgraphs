@@ -1,0 +1,9 @@
+specVersion: 0.0.2
+description: Subgraph with support for the UMA Optimistic Oracle V3 contract data
+repository: https://github.com/UMAprotocol/subgraphs
+schema:
+  file: ./schema.graphql
+dataSources:
+{{#OptimisticOracleV3DataSources}}
+  {{> OptimisticOracleV3.template.yaml}}
+{{/OptimisticOracleV3DataSources}}

@@ -1,0 +1,10 @@
+{
+  "network": "goerli",
+  "OptimisticOracleV3DataSources": [
+    {
+      "name": "OptimisticOracleV3",
+      "address": "0x9923D42eF695B5dd9911D05Ac944d4cAca3c4EAB",
+      "startBlock": 8497481
+    }
+  ]
+}

@@ -2,4 +2,4 @@ export {
   handleAssertionDisputed,
   handleAssertionMade,
   handleAssertionSettled
-} from "./mappings/optimisticAsserter";
+} from "./mappings/optimisticOracleV3";

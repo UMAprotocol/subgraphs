@@ -1,4 +1,4 @@
-# Optimistic Asserter Subgraph
+# Optimistic Oracle V3 Subgraph
 
 ## Deploying the subgraph
 

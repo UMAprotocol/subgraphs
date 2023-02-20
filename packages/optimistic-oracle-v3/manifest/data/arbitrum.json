@@ -1,0 +1,10 @@
+{
+  "network": "arbitrum-one",
+  "OptimisticOracleV3DataSources": [
+    {
+      "name": "OptimisticOracleV3",
+      "address": "0xa6147867264374F324524E30C02C331cF28aa879",
+      "startBlock": 61236565
+    }
+  ]
+}
