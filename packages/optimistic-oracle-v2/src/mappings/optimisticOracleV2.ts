@@ -14,7 +14,7 @@ import { Address, BigInt, Bytes, dataSource, log } from "@graphprotocol/graph-ts
 
 let network = dataSource.network();
 
-let isPolygon = network === "matic";
+let isPolygon = network == "matic";
 
 function getState(
   ooAddress: Address,
