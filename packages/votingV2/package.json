@@ -8,7 +8,7 @@
     "build": "graph build",
     "importAbi": "scripts/copy-contracts-abis.sh",
     "prepare:goerli": "scripts/build-manifest.sh goerli && yarn codegen && yarn build",
-    "prepare:mainnet": "npm run importAbi && scripts/build-manifest.sh mainnet && yarn codegen && yarn build",
+    "prepare:mainnet": "scripts/build-manifest.sh mainnet && yarn codegen && yarn build",
     "prepare:kovan": "npm run importAbi && scripts/build-manifest.sh kovan && yarn codegen && yarn build",
     "prepare:polygon": "npm run importAbi && scripts/build-manifest.sh polygon && yarn codegen && yarn build",
     "deploy:kovan": "env STAGING=true scripts/deploy.sh kovan",
