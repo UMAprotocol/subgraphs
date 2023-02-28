@@ -17,12 +17,12 @@ This subgraph indexes events emitted by the core Oracle contracts. The code can 
 
 This subgraph indexes events emitted by the "Optimistic Oracle" contracts. The code can be found in `packages/optimistic-oracle`
 
-- (unofficial) Mainnet: https://thegraph.com/hosted-service/subgraph/md0x/mainnet-oo-staging
-- (unofficial) Polygon: https://thegraph.com/hosted-service/subgraph/md0x/polygon-oo-staging
-- (unofficial) Arbitrum: https://thegraph.com/hosted-service/subgraph/md0x/arbitrum-oo-staging
-- (unofficial) Optimism: https://thegraph.com/hosted-service/subgraph/md0x/optimism-oo-staging
-- (unofficial) Boba: https://thegraph.com/hosted-service/subgraph/md0x/boba-oo-staging
-- (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-oo-staging
+- Mainnet: https://thegraph.com/hosted-service/subgraph/umaprotocol/mainnet-optimistic-oracle
+- Polygon: https://thegraph.com/hosted-service/subgraph/umaprotocol/polygon-optimistic-oracle
+- Arbitrum: https://thegraph.com/hosted-service/subgraph/umaprotocol/arbitrum-optimistic-oracle
+- Optimism: https://thegraph.com/hosted-service/subgraph/umaprotocol/optimism-optimistic-oracle
+- Boba: https://thegraph.com/hosted-service/subgraph/umaprotocol/boba-optimistic-oracle
+- (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-oracle
 
 ## Optimistic Oracle V2 Events and Calls:
 
@@ -30,13 +30,12 @@ This subgraph indexes events and function calls by the "Optimistic Oracle V2" co
 
 **Note:** Polygon does not support `callHandlers`. This means we cannot use callHandlers to index the `setBond`, `setCustomLiveness`, and `setEventBased` function calls. These properties are also not available via events. Our compromise here is that in the case of Polygon, we read this data from the contract state in the event handler instead. **This workaround works when `setCustomLiveness` and `setEventBased` are called in the same transaction as `requestPrice`. So it doesn't work for all cases. Ideally we should have `callHandlers` in the chains that support this.** We therefore must also remove the call handlers from the subgraph.yaml file for Polygon. See `scripts/remove-call-handlers.js` for implementation.
 
-- (unofficial) Mainnet: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/mainnet-oov2-staging
-- (unofficial) Polygon: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/polygon-oov2-staging
-- (unofficial) Arbitrum: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/arbitrum-oov2-staging
-- (unofficial) Optimism: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/optimism-oov2-staging
-- (unofficial) Boba: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/boba-oov2-staging
-- (staging) Goerli: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/goerli-oov2-staging
-
+- Mainnet: https://thegraph.com/hosted-service/subgraph/umaprotocol/mainnet-optimistic-oracle-v2
+- Polygon: https://thegraph.com/hosted-service/subgraph/umaprotocol/polygon-optimistic-oracle-v2
+- Arbitrum: https://thegraph.com/hosted-service/subgraph/umaprotocol/arbitrum-optimistic-oracle-v2
+- Optimism: https://thegraph.com/hosted-service/subgraph/umaprotocol/optimism-optimistic-oracle-v2
+- Boba: https://thegraph.com/hosted-service/subgraph/umaprotocol/boba-optimistic-oracle-v2
+- (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-oracle-v2
 
 ## Financial Contract Events:
 
@@ -60,18 +59,19 @@ This subgraph indexes events emitted by the UMA voting token contracts. The code
 
 This subgraph indexes events emitted by the core Oracle contracts. The code can be found in `packages/votingV2`
 
-- Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-votingv2-staging
+- Mainnet: https://thegraph.com/hosted-service/subgraph/umaprotocol/mainnet-voting-v2
+- Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-voting-v2
 
 ## Optimistic Oracle V3 Events:
 
 This subgraph indexes events emitted by the "Optimistic Oracle V3" contracts. The code can be found in `packages/optimistic-oracle-v3`
 
-- (unofficial) Mainnet: https://thegraph.com/hosted-service/subgraph/md0x/mainnet-oov3-staging
-- (unofficial) Polygon: https://thegraph.com/hosted-service/subgraph/md0x/polygon-oov3-staging
-- (unofficial) Arbitrum: https://thegraph.com/hosted-service/subgraph/md0x/arbitrum-oov3-staging
-- (unofficial) Optimism: https://thegraph.com/hosted-service/subgraph/md0x/optimism-oov3-staging
-- (unofficial) Boba: https://thegraph.com/hosted-service/subgraph/md0x/boba-oov3-staging
-- (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-oov3-staging
+- Mainnet: https://thegraph.com/hosted-service/subgraph/umaprotocol/mainnet-optimistic-oracle-v3
+- Polygon: https://thegraph.com/hosted-service/subgraph/umaprotocol/polygon-optimistic-oracle-v3
+- Arbitrum: https://thegraph.com/hosted-service/subgraph/umaprotocol/arbitrum-optimistic-oracle-v3
+- Optimism: https://thegraph.com/hosted-service/subgraph/umaprotocol/optimism-optimistic-oracle-v3
+- Boba: https://thegraph.com/hosted-service/subgraph/umaprotocol/boba-optimistic-oracle-v3
+- (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-oracle-v3
 
 ## Resources
 

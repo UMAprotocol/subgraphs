@@ -9,9 +9,6 @@ if [[ "$STAGING" && -z "${STAGING_NAMESPACE}" ]]; then
     exit 1
 fi
 
-if [ "$STAGING" ] && [ "$NETWORK" != "mainnet" ]; then
-    SUBGRAPH_NAME=$SUBGRAPH_NAME-staging
-fi
 if [ "$STAGING" ]; then
     NAMESPACE=$STAGING_NAMESPACE
 else

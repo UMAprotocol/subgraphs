@@ -22,6 +22,10 @@
     "deploy-prod:kovan": "scripts/deploy.sh kovan",
     "deploy-prod:mainnet": "scripts/deploy.sh mainnet",
     "deploy-prod:polygon": "scripts/deploy.sh polygon",
+    "deploy-prod:boba": "scripts/deploy.sh boba",
+    "deploy-prod:optimism": "scripts/deploy.sh optimism",
+    "deploy-prod:arbitrum": "scripts/deploy.sh arbitrum",
+    "deploy:all-prod":"yarn prepare:mainnet && yarn deploy-prod:mainnet && yarn prepare:polygon && yarn deploy-prod:polygon && yarn prepare:optimism && yarn deploy-prod:optimism && yarn prepare:arbitrum && yarn deploy-prod:arbitrum && yarn prepare:boba && yarn deploy-prod:boba",
     "deploy:all": "yarn prepare:goerli && yarn deploy:goerli && yarn prepare:mainnet && yarn deploy:mainnet && yarn prepare:polygon && yarn deploy:polygon && yarn prepare:arbitrum && yarn deploy:arbitrum && yarn prepare:optimism && yarn deploy:optimism && yarn prepare:boba && yarn deploy:boba"
   },
   "repository": {
