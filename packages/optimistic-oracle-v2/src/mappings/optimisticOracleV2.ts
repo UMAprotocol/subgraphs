@@ -289,7 +289,7 @@ export function handleSetBond(call: SetBondCall): void {
 }
 
 export function handleSetEventBased(call: SetEventBasedCall): void {
-  log.warning(`OOV2 set event based inputs: {},{},{},{}`, [
+  log.warning(`OOV2 set event based inputs: {},{},{}`, [
     call.inputs.timestamp.toString(),
     call.inputs.identifier.toString(),
     call.inputs.ancillaryData.toHex(),
