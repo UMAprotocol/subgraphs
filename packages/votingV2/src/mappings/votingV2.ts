@@ -34,7 +34,7 @@ import {
   getTokenContract,
 } from "../utils/helpers";
 
-import { Address, BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt, Bytes, dataSource, ethereum, log } from "@graphprotocol/graph-ts";
 import {
   getOrCreateSlashedVote,
   getOrCreateGlobals,
@@ -42,6 +42,8 @@ import {
   getVoteId,
   getVoteIdNoRoundId,
 } from "../utils/helpers/voting";
+
+let isGoerli = dataSource.network() == "goerli";
 
 // - event: RequestAdded(indexed address,indexed uint256,indexed bytes32,uint256,bytes,bool)
 // event RequestAdded(
@@ -63,6 +65,7 @@ export function handlePriceRequestAdded(event: RequestAdded): void {
   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
 
   request.identifier = event.params.identifier.toString();
+  request.identifierRaw = event.params.identifier.toHex();
   request.requestTransaction = event.transaction.hash;
   request.latestRound = requestRound.id;
   request.time = event.params.time;
@@ -112,6 +115,7 @@ export function handlePriceResolved(event: RequestResolved): void {
     event.params.ancillaryData.toHexString()
   );
   let request = getOrCreatePriceRequest(requestId);
+  let global = getOrCreateGlobals();
 
   request.resolvedPriceRequestIndex = event.params.resolvedPriceRequestIndex;
 
@@ -151,9 +155,22 @@ export function handlePriceResolved(event: RequestResolved): void {
 
   requestRound.cumulativeStakeAtRound = cumulativeStakeAtRound;
 
+  let newActivePriceRequests = global.activePriceRequests;
+  if (newActivePriceRequests.includes(requestId)) {
+    // remove the request from the active price requests
+    let newActivePriceRequests = new Array<string>();
+    for (let i = 0; i < global.activePriceRequests.length; i++) {
+      if (global.activePriceRequests[i] != requestId) {
+        newActivePriceRequests.push(global.activePriceRequests[i]);
+      }
+    }
+    global.activePriceRequests = newActivePriceRequests;
+  }
+
   requestRound.save();
   request.save();
   voterGroup.save();
+  global.save();
 
   updateUsersSlashingTrackers(event);
 }
@@ -454,6 +471,7 @@ export function handleVoteCommitted(event: VoteCommitted): void {
 // );
 
 export function handleVoteRevealed(event: VoteRevealed): void {
+  let global = getOrCreateGlobals();
   let voteId = getVoteId(
     event.params.voter.toHexString(),
     event.params.identifier.toString(),
@@ -509,8 +527,16 @@ export function handleVoteRevealed(event: VoteRevealed): void {
     BIGDECIMAL_HUNDRED
   );
 
+  // If a price request is revealed, push it to the active price requests array so it will be checked in the
+  // block handler for price resolution
+  let newActivePriceRequests = global.activePriceRequests;
+  if (!newActivePriceRequests.includes(requestId)) {
+    newActivePriceRequests.push(requestId);
+    global.activePriceRequests = newActivePriceRequests;
+  }
   requestRound.save();
 
+  global.save();
   vote.save();
   voter.save();
   voterGroup.save();
@@ -715,4 +741,36 @@ function updateAprs(users: string[], emissionRate: BigInt, cumulativeStake: BigD
     user.save();
   }
   global.save();
+}
+
+// This function is called every time a new block is added to the chain.
+// It is used to check if there are any active price requests that could be resolved.
+export function handleBlock(block: ethereum.Block): void {
+  let global = getOrCreateGlobals();
+  let activePriceRequests = global.activePriceRequests;
+  let votingContractAddress = isGoerli
+    ? "0xc48F2d8491AffFc8eB21c85dEa1B4c0259c749a0"
+    : "0x004395edb43EFca9885CEdad51EC9fAf93Bd34ac";
+  log.warning("Checking active price requests in VotingV2 contract with address: {}", [votingContractAddress]);
+  for (let i = 0; i < activePriceRequests.length; i++) {
+    let request = getOrCreatePriceRequest(activePriceRequests[i]);
+    let votingContract = VotingV2.bind(Address.fromString(votingContractAddress));
+    let hasPrice = votingContract.try_hasPrice1(
+      Bytes.fromHexString(request.identifierRaw as string),
+      request.time,
+      Bytes.fromHexString(request.ancillaryData as string)
+    );
+    if (hasPrice.value) {
+      let price = votingContract.try_getPrice(
+        Bytes.fromHexString(request.identifierRaw as string),
+        request.time,
+        Bytes.fromHexString(request.ancillaryData as string)
+      );
+      // Mark the request as resolved and save the price.
+      request.isResolved = true;
+      request.price = price.value;
+      request.save();
+      log.warning("Price Request marked as resolved before event emitted: {}", [request.id]);
+    }
+  }
 }

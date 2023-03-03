@@ -47,5 +47,7 @@
         handler: handleRequestDeleted
       - event: RequestRolled(indexed bytes32,indexed uint256,bytes,uint32)
         handler: handleRequestRolled
+    blockHandlers:
+      - handler: handleBlock
 
 

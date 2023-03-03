@@ -4,6 +4,9 @@ type Global @entity {
   "List of all users addresses"
   userAddresses: [String!]!
 
+  "List of all active price requests with at least one revealed vote"
+  activePriceRequests: [ID!]!
+
   "Cumulative stake from all users"
   cumulativeStake: BigDecimal!
 
@@ -141,6 +144,10 @@ type PriceRequest @entity {
   "PriceIdentifier for the request"
   identifier: PriceIdentifier!
 
+  "PriceIdentifier for the request hex encoded"
+  identifierRaw: String
+
+  "Ancillary data for the request"
   ancillaryData: String
 
   "Transaction where the creation of the request took place"

@@ -11,6 +11,7 @@ export {
   handleVoterSlashed,
   handleRequestDeleted,
   handleRequestRolled,
+  handleBlock
 } from "./mappings/votingV2";
 
 export { handleSupportedIdentifierAdded, handleSupportedIdentifierRemoved } from "./mappings/identifierWhitelist";

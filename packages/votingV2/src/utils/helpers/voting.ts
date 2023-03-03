@@ -17,6 +17,7 @@ export function getOrCreateGlobals(): Global {
   if (request == null) {
     request = new Global(GLOBAL);
     request.userAddresses = [];
+    request.activePriceRequests = [];
     request.cumulativeStake = BIGDECIMAL_ZERO;
     request.emissionRate = BIGDECIMAL_ZERO;
     request.annualVotingTokenEmission = BIGDECIMAL_ZERO;
