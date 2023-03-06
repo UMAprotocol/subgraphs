@@ -13,6 +13,12 @@ This subgraph indexes events emitted by the core Oracle contracts. The code can 
 - (staging) Kovan: https://thegraph.com/explorer/subgraph/nicholaspai/kovan-voting-staging
 - (staging) Mainnet: https://thegraph.com/explorer/subgraph/nicholaspai/mainnet-voting-staging
 
+## Skinny Optimistic Oracle Events::
+
+This subgraph indexes events emitted by the "Skinny Optimistic Oracle" contracts. The code can be found in `packages/skinny-optimistic-oracle`
+
+- Mainnet: https://thegraph.com/hosted-service/subgraph/umaprotocol/mainnet-skinny-oo
+
 ## Optimistic Oracle Events:
 
 This subgraph indexes events emitted by the "Optimistic Oracle" contracts. The code can be found in `packages/optimistic-oracle`
