@@ -1,0 +1,27 @@
+- kind: ethereum/contract
+  name: {{name}}
+  network: {{network}}
+  source:
+    address: "{{address}}"
+    abi: SkinnyOptimisticOracle
+    startBlock: {{startBlock}} 
+  mapping:
+    kind: ethereum/events
+    apiVersion: 0.0.7
+    language: wasm/assemblyscript
+    file: ./src/index.ts
+    entities:
+      - OptimisticPriceRequest
+      - PriceIdentifier
+    abis:
+      - name: SkinnyOptimisticOracle
+        file: ./abis/SkinnyOptimisticOracle.json
+    eventHandlers:
+      - event: RequestPrice(indexed address,indexed bytes32,uint32,bytes,(address,address,address,bool,int256,int256,uint256,uint256,uint256,uint256,uint256))
+        handler: handleOptimisticRequestPrice
+      - event: ProposePrice(indexed address,indexed bytes32,uint32,bytes,(address,address,address,bool,int256,int256,uint256,uint256,uint256,uint256,uint256))
+        handler: handleOptimisticProposePrice
+      - event: DisputePrice(indexed address,indexed bytes32,uint32,bytes,(address,address,address,bool,int256,int256,uint256,uint256,uint256,uint256,uint256))
+        handler: handleOptimisticDisputePrice
+      - event: Settle(indexed address,indexed bytes32,uint32,bytes,(address,address,address,bool,int256,int256,uint256,uint256,uint256,uint256,uint256))
+        handler: handleOptimisticSettle
