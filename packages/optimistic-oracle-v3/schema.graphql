@@ -34,11 +34,11 @@ type Assertion @entity {
 
   assertionTimestamp: BigInt!
 
-  assertionBlockNumber: BigInt
+  assertionBlockNumber: BigInt!
 
-  assertionHash: Bytes
+  assertionHash: Bytes!
 
-  assertionLogIndex: BigInt
+  assertionLogIndex: BigInt!
 
   disputeTimestamp: BigInt
 
