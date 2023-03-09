@@ -32,7 +32,7 @@ type Assertion @entity {
 
   settlementResolution: Boolean
 
-  assertionTimestamp: BigInt
+  assertionTimestamp: BigInt!
 
   assertionBlockNumber: BigInt
 
