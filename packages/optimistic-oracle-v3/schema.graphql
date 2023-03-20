@@ -32,13 +32,13 @@ type Assertion @entity {
 
   settlementResolution: Boolean
 
-  assertionTimestamp: BigInt
+  assertionTimestamp: BigInt!
 
-  assertionBlockNumber: BigInt
+  assertionBlockNumber: BigInt!
 
-  assertionHash: Bytes
+  assertionHash: Bytes!
 
-  assertionLogIndex: BigInt
+  assertionLogIndex: BigInt!
 
   disputeTimestamp: BigInt
 
