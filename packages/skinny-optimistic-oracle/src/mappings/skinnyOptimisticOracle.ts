@@ -39,11 +39,11 @@ function getState<T extends RequestPriceRequestStruct>(
   req[3] = ethereum.Value.fromBoolean(request.settled);
   req[4] = ethereum.Value.fromSignedBigInt(request.proposedPrice);
   req[5] = ethereum.Value.fromSignedBigInt(request.resolvedPrice);
-  req[6] = ethereum.Value.fromSignedBigInt(request.expirationTime);
-  req[7] = ethereum.Value.fromSignedBigInt(request.reward);
-  req[8] = ethereum.Value.fromSignedBigInt(request.finalFee);
-  req[9] = ethereum.Value.fromSignedBigInt(request.bond);
-  req[10] = ethereum.Value.fromSignedBigInt(request.customLiveness);
+  req[6] = ethereum.Value.fromUnsignedBigInt(request.expirationTime);
+  req[7] = ethereum.Value.fromUnsignedBigInt(request.reward);
+  req[8] = ethereum.Value.fromUnsignedBigInt(request.finalFee);
+  req[9] = ethereum.Value.fromUnsignedBigInt(request.bond);
+  req[10] = ethereum.Value.fromUnsignedBigInt(request.customLiveness);
 
   let state = oo.try_getState(requester, identifier, timestamp, ancillaryData, req);
   return states[state.value];
