@@ -14,7 +14,7 @@ import { Address, BigInt, Bytes, dataSource, log } from "@graphprotocol/graph-ts
 
 let network = dataSource.network();
 
-let isPolygon = network == "matic";
+let isMainnet = network == "mainnet";
 
 function getState(
   ooAddress: Address,
@@ -84,9 +84,9 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
     event.params.ancillaryData
   );
 
-  // workaround for Polygon which does not support `callHandlers`
+  // workaround for L2 chains that don't support `callHandlers`
   // see readme for more info
-  if (isPolygon) {
+  if (!isMainnet) {
     let oov2 = OptimisticOracleV2.bind(event.address);
     let requestSettings = oov2.try_getRequest(
       event.params.requester,
