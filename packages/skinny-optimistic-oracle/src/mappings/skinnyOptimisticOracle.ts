@@ -1,13 +1,53 @@
 import {
   DisputePrice,
+  DisputePriceRequestStruct,
   ProposePrice,
+  ProposePriceRequestStruct,
   RequestPrice,
+  RequestPriceRequestStruct,
   Settle,
+  SettleRequestStruct,
+  SkinnyOptimisticOracle,
   SkinnyOptimisticOracle__getStateInputRequestStruct,
 } from "../../generated/SkinnyOptimisticOracle/SkinnyOptimisticOracle";
 import { getOrCreateOptimisticPriceRequest } from "../utils/helpers";
 
-import { Address, BigInt, Bytes, log } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, ethereum, log } from "@graphprotocol/graph-ts";
+
+function getState<T extends RequestPriceRequestStruct>(
+  ooAddress: Address,
+  requester: Address,
+  identifier: Bytes,
+  timestamp: BigInt,
+  ancillaryData: Bytes,
+  request: T
+): string {
+  const states = [
+    "Invalid", // Never requested.
+    "Requested", // Requested, no other actions taken.
+    "Proposed", // Proposed, but not expired or disputed yet.
+    "Expired", // Proposed, not disputed, past liveness.
+    "Disputed", // Disputed, but no DVM price returned yet.
+    "Resolved", // Disputed and DVM price is available.
+    "Settled", // Final price has been set in the contract (can get here from Expired or Resolved).
+  ];
+  let oo = SkinnyOptimisticOracle.bind(ooAddress);
+  let req = new SkinnyOptimisticOracle__getStateInputRequestStruct(9);
+  req[0] = ethereum.Value.fromAddress(request.proposer);
+  req[1] = ethereum.Value.fromAddress(request.disputer);
+  req[2] = ethereum.Value.fromAddress(request.currency);
+  req[3] = ethereum.Value.fromBoolean(request.settled);
+  req[4] = ethereum.Value.fromSignedBigInt(request.proposedPrice);
+  req[5] = ethereum.Value.fromSignedBigInt(request.resolvedPrice);
+  req[6] = ethereum.Value.fromUnsignedBigInt(request.expirationTime);
+  req[7] = ethereum.Value.fromUnsignedBigInt(request.reward);
+  req[8] = ethereum.Value.fromUnsignedBigInt(request.finalFee);
+  req[9] = ethereum.Value.fromUnsignedBigInt(request.bond);
+  req[10] = ethereum.Value.fromUnsignedBigInt(request.customLiveness);
+
+  let state = oo.try_getState(requester, identifier, timestamp, ancillaryData, req);
+  return states[state.value];
+}
 
 // event RequestPrice(
 //   address indexed requester,
@@ -44,7 +84,14 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
   request.requestLogIndex = event.logIndex;
   request.requestHash = event.transaction.hash;
 
-  new SkinnyOptimisticOracle__getStateInputRequestStruct();
+  request.state = getState<RequestPriceRequestStruct>(
+    event.address,
+    event.params.requester,
+    event.params.identifier,
+    event.params.timestamp,
+    event.params.ancillaryData,
+    event.params.request
+  );
 
   request.save();
 }
@@ -81,6 +128,15 @@ export function handleOptimisticProposePrice(event: ProposePrice): void {
   request.proposalLogIndex = event.logIndex;
   request.proposalHash = event.transaction.hash;
 
+  request.state = getState<ProposePriceRequestStruct>(
+    event.address,
+    event.params.requester,
+    event.params.identifier,
+    event.params.timestamp,
+    event.params.ancillaryData,
+    event.params.request
+  );
+
   request.save();
 }
 
@@ -113,6 +169,15 @@ export function handleOptimisticDisputePrice(event: DisputePrice): void {
   request.disputeBlockNumber = event.block.number;
   request.disputeLogIndex = event.logIndex;
   request.disputeHash = event.transaction.hash;
+
+  request.state = getState<DisputePriceRequestStruct>(
+    event.address,
+    event.params.requester,
+    event.params.identifier,
+    event.params.timestamp,
+    event.params.ancillaryData,
+    event.params.request
+  );
 
   request.save();
 }
@@ -155,6 +220,15 @@ export function handleOptimisticSettle(event: Settle): void {
   request.settlementBlockNumber = event.block.number;
   request.settlementLogIndex = event.logIndex;
   request.settlementHash = event.transaction.hash;
+
+  request.state = getState<SettleRequestStruct>(
+    event.address,
+    event.params.requester,
+    event.params.identifier,
+    event.params.timestamp,
+    event.params.ancillaryData,
+    event.params.request
+  );
 
   request.save();
 }
