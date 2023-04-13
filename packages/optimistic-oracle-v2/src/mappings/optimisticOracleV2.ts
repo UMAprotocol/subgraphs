@@ -15,6 +15,7 @@ import { Address, BigInt, Bytes, dataSource, log } from "@graphprotocol/graph-ts
 let network = dataSource.network();
 
 let isMainnet = network == "mainnet";
+let isGoerli = network == "goerli";
 
 function getState(
   ooAddress: Address,
@@ -86,7 +87,7 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
 
   // workaround for L2 chains that don't support `callHandlers`
   // see readme for more info
-  if (!isMainnet) {
+  if (!isMainnet && !isGoerli) {
     let oov2 = OptimisticOracleV2.bind(event.address);
     let requestSettings = oov2.try_getRequest(
       event.params.requester,
