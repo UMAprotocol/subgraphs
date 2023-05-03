@@ -468,6 +468,7 @@ export function handleVoteRevealed(event: VoteRevealed): void {
     event.params.time.toString(),
     event.params.ancillaryData.toHexString()
   );
+  let request = getOrCreatePriceRequest(requestId);
   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
   let groupId = requestRound.id.concat("-").concat(event.params.price.toString());
   let voterGroup = getOrCreateVoterGroup(groupId);
@@ -476,6 +477,8 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   let cumulativeStakeAtRound = roundInfo.reverted
     ? toDecimal(BigInt.fromString("0"))
     : toDecimal(roundInfo.value.value1);
+
+  request.latestRound = requestRound.id;
 
   vote.voter = voter.id;
   vote.round = requestRound.id;
@@ -510,10 +513,10 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   );
 
   requestRound.save();
-
   vote.save();
   voter.save();
   voterGroup.save();
+  request.save();
 }
 
 // - event: Staked(indexed address,indexed address,uint256,uint256,uint256,uint256)
