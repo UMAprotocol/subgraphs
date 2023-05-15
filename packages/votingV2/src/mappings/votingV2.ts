@@ -426,6 +426,9 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   );
   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
 
+  let request = getOrCreatePriceRequest(requestId);
+  request.latestRound = requestRound.id;
+
   vote.voter = voter.id;
   vote.request = requestId;
   vote.identifier = event.params.identifier.toString();
@@ -438,6 +441,7 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   requestRound.roundId = event.params.roundId;
 
   requestRound.save();
+  request.save();
   vote.save();
   voter.save();
 }
