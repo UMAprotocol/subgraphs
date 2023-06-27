@@ -1,0 +1,13 @@
+specVersion: 0.0.2
+description: Subgraph with support for the UMA Optimistic Governors contract data
+repository: https://github.com/UMAprotocol/subgraphs
+schema:
+  file: ./schema.graphql
+dataSources:
+{{#ModuleProxyFactoryDataSources}}
+  {{> ModuleProxyFactory.template.yaml}}
+{{/ModuleProxyFactoryDataSources}}
+templates:
+{{#OptimisticGovernorDataSources}}
+  {{> OptimisticGovernor.template.yaml}}
+{{/OptimisticGovernorDataSources}}

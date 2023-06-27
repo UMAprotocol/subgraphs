@@ -1,0 +1,15 @@
+{
+  "network": "mainnet",
+  "ModuleProxyFactoryDataSources": [
+    {
+      "name": "ModuleProxyFactory",
+      "address": "0xA0Ae6609447e57a42c51B50EAe921D701823FFAe",
+      "startBlock": 16140611
+    }
+  ],
+  "OptimisticGovernorDataSources": [
+    {
+      "name": "OptimisticGovernor"
+    }
+  ]
+}

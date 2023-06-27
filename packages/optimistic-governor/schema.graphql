@@ -1,0 +1,14 @@
+type Proposal @entity {
+  "ID is the Proposal Hash"
+  id: ID!
+  proposer: Bytes!
+  proposalTime: BigInt!
+  proposalTimestamp: BigInt!
+  assertionId: Bytes!
+  explanation: Bytes
+  rules: String
+  challengeWindowEnds: BigInt!
+  proposalHash: Bytes!
+  executed: Boolean!
+  executionTransactionHash: Bytes
+}
