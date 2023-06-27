@@ -1,10 +1,10 @@
-# Optimistic Oracle V2 Subgraph
+# Optimistic Governor Subgraph
 
-## Deploying the subgraph
+## Deployed subgraphs
 
-- (unofficial) Mainnet: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/mainnet-oov2-staging
-- (unofficial) Polygon: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/polygon-oov2-staging
-- (unofficial) Arbitrum: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/arbitrum-oov2-staging
-- (unofficial) Optimism: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/optimism-oov2-staging
-- (unofficial) Boba: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/boba-oov2-staging
-- (staging) Goerli: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/goerli-oov2-staging
+- (unofficial) Mainnet: https://thegraph.com/hosted-service/subgraph/md0x/mainnet-optimistic-governor
+- (unofficial) Polygon: https://thegraph.com/hosted-service/subgraph/md0x/polygon-optimistic-governor
+- (unofficial) Arbitrum: https://thegraph.com/hosted-service/subgraph/md0x/arbitrum-optimistic-governor
+- (unofficial) Optimism: https://thegraph.com/hosted-service/subgraph/md0x/optimism-optimistic-governor
+- (unofficial) Avalanche: https://thegraph.com/hosted-service/subgraph/md0x/avalanche-optimistic-governor
+- (unofficial) Gnosis: https://thegraph.com/hosted-service/subgraph/md0x/gnosis-optimistic-governor

@@ -1,0 +1,15 @@
+{
+  "network": "optimism",
+  "ModuleProxyFactoryDataSources": [
+    {
+      "name": "ModuleProxyFactory",
+      "address": "0x000000000000aDdB49795b0f9bA5BC298cDda236",
+      "startBlock": 83168480
+    }
+  ],
+  "OptimisticGovernorDataSources": [
+    {
+      "name": "OptimisticGovernor"
+    }
+  ]
+}

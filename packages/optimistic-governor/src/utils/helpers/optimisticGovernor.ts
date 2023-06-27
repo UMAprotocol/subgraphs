@@ -10,7 +10,6 @@ export function getOrCreateProposal(id: string, createIfNotFound: boolean = true
     proposal.proposalTime = BIGINT_ZERO;
     proposal.assertionId = Bytes.fromI32(0);
     proposal.proposalHash = Bytes.fromI32(0);
-    proposal.proposalTimestamp = BIGINT_ZERO;
     proposal.executed = false;
     proposal.challengeWindowEnds = BIGINT_ZERO;
   }
