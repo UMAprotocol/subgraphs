@@ -16,17 +16,17 @@ function getMasterCopy(_network: string): string {
 }
 
 export function handleModuleProxyCreation(event: ModuleProxyCreation): void {
-  if (event.params.masterCopy.toString() == getMasterCopy(network)) {
+  if (event.params.masterCopy.toHexString().toLowerCase() == getMasterCopy(network).toLowerCase()) {
     log.warning(`New Optimistic Governor deployed: {},{}`, [
-      event.params.proxy.toString(),
-      event.params.masterCopy.toHex(),
+      event.params.proxy.toHexString(),
+      event.params.masterCopy.toHexString(),
     ]);
     OptimisticGovernor.create(event.params.proxy);
   }
 }
 
 export function handleTransactionsProposed(event: TransactionsProposed): void {
-  let proposalId = event.address.toHexString().concat("-").concat(event.params.proposalHash.toString());
+  let proposalId = event.address.toHexString().concat("-").concat(event.params.proposalHash.toHexString());
   let proposal = getOrCreateProposal(proposalId);
 
   proposal.proposer = event.params.proposer;
@@ -42,11 +42,11 @@ export function handleTransactionsProposed(event: TransactionsProposed): void {
 }
 
 export function handleProposalExecuted(event: ProposalExecuted): void {
-  let proposalId = event.address.toHexString().concat("-").concat(event.params.proposalHash.toString());
+  let proposalId = event.address.toHexString().concat("-").concat(event.params.proposalHash.toHexString());
   let proposal = getOrCreateProposal(proposalId);
 
   proposal.executed = true;
-  proposal.executionTransactionHash = event.transaction.hash;
+  proposal.executionTransactionHash = event.transaction.hash.toHexString();
 
   proposal.save();
 }
