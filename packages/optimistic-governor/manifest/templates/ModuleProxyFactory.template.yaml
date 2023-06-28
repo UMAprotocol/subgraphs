@@ -1,0 +1,20 @@
+- kind: ethereum/contract
+  name: {{name}}
+  network: {{network}}
+  source:
+    address: "{{address}}"
+    abi: ModuleProxyFactory
+    startBlock: {{startBlock}} 
+  mapping:
+    kind: ethereum/events
+    apiVersion: 0.0.7
+    language: wasm/assemblyscript
+    file: ./src/index.ts
+    entities:
+      - Proposal
+    abis:
+      - name: ModuleProxyFactory
+        file: ./abis/ModuleProxyFactory.json
+    eventHandlers:
+      - event: ModuleProxyCreation(indexed address,indexed address)
+        handler: handleModuleProxyCreation

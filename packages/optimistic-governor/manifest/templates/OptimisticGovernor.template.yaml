@@ -1,0 +1,20 @@
+- kind: ethereum/contract
+  name: {{name}}
+  network: {{network}}
+  source:
+    abi: OptimisticGovernor
+  mapping:
+    kind: ethereum/events
+    apiVersion: 0.0.7
+    language: wasm/assemblyscript
+    file: ./src/index.ts
+    entities:
+      - Proposal
+    abis:
+      - name: OptimisticGovernor
+        file: ./abis/OptimisticGovernor.json
+    eventHandlers:
+      - event: TransactionsProposed(indexed address,indexed uint256,indexed bytes32,((address,uint8,uint256,bytes)[],uint256),bytes32,bytes,string,uint256)
+        handler: handleTransactionsProposed
+      - event: ProposalExecuted(indexed bytes32,indexed bytes32)
+        handler: handleProposalExecuted
