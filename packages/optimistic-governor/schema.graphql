@@ -5,6 +5,7 @@ type Proposal @entity {
   proposalTime: BigInt!
   assertionId: Bytes!
   explanation: Bytes
+  explanationText: String
   rules: String
   challengeWindowEnds: BigInt!
   proposalHash: Bytes!

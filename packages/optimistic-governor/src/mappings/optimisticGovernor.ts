@@ -28,6 +28,9 @@ function getMasterCopy(_network: string): string {
   if (_network == "gnosis") {
     return "0x972396Ab668cd11dc1F6321A5ae30c6A8d3759F0";
   }
+  if (_network == "goerli") {
+    return "0x07a7Be7AA4AaD42696A17e974486cb64A4daC47b";
+  }
   log.error("No master copy found for network: {}", [_network]);
   return ZERO_ADDRESS;
 }
@@ -53,6 +56,7 @@ export function handleTransactionsProposed(event: TransactionsProposed): void {
   proposal.challengeWindowEnds = event.params.challengeWindowEnds;
   proposal.rules = event.params.rules;
   proposal.explanation = event.params.explanation;
+  proposal.explanationText = event.params.explanation.toString();
 
   proposal.save();
 }
