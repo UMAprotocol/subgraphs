@@ -8,3 +8,4 @@
 - (unofficial) Optimism: https://thegraph.com/hosted-service/subgraph/md0x/optimism-optimistic-governor
 - (unofficial) Avalanche: https://thegraph.com/hosted-service/subgraph/md0x/avalanche-optimistic-governor
 - (unofficial) Gnosis: https://thegraph.com/hosted-service/subgraph/md0x/gnosis-optimistic-governor
+- (testnet) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-governor
