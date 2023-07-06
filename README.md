@@ -79,6 +79,18 @@ This subgraph indexes events emitted by the "Optimistic Oracle V3" contracts. Th
 - Boba: https://thegraph.com/hosted-service/subgraph/umaprotocol/boba-optimistic-oracle-v3
 - (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-oracle-v3
 
+## Optimistic Governor Events:
+
+This subgraph indexes events emitted by all the Optimistic Governor deployments. 
+
+- Mainnet: https://thegraph.com/hosted-service/subgraph/umaprotocol/mainnet-optimistic-governor
+- Polygon: https://thegraph.com/hosted-service/subgraph/umaprotocol/polygon-optimistic-governor
+- Arbitrum: https://thegraph.com/hosted-service/subgraph/umaprotocol/arbitrum-optimistic-governor
+- Optimism: https://thegraph.com/hosted-service/subgraph/umaprotocol/optimism-optimistic-governor
+- Avalanche: https://thegraph.com/hosted-service/subgraph/umaprotocol/avalanche-optimistic-governor
+- Gnosis: https://thegraph.com/hosted-service/subgraph/umaprotocol/gnosis-optimistic-governor
+- (testnet) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-governor
+
 ## Resources
 
 - Really well done subgraph repository: [aragon/connect](https://github.com/aragon/connect/tree/master/packages/connect-thegraph/subgraph)

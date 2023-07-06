@@ -1,6 +1,7 @@
 type Proposal @entity {
   "ID is the Proposal Hash"
   id: ID!
+  ogAddress: Bytes!
   proposer: Bytes!
   proposalTime: BigInt!
   assertionId: Bytes!

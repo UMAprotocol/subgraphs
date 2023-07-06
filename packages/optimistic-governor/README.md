@@ -1,11 +1,13 @@
 # Optimistic Governor Subgraph
 
+This subgraph indexes events emitted by all the Optimistic Governor deployments.
+
 ## Deployed subgraphs
 
-- (unofficial) Mainnet: https://thegraph.com/hosted-service/subgraph/md0x/mainnet-optimistic-governor
-- (unofficial) Polygon: https://thegraph.com/hosted-service/subgraph/md0x/polygon-optimistic-governor
-- (unofficial) Arbitrum: https://thegraph.com/hosted-service/subgraph/md0x/arbitrum-optimistic-governor
-- (unofficial) Optimism: https://thegraph.com/hosted-service/subgraph/md0x/optimism-optimistic-governor
-- (unofficial) Avalanche: https://thegraph.com/hosted-service/subgraph/md0x/avalanche-optimistic-governor
-- (unofficial) Gnosis: https://thegraph.com/hosted-service/subgraph/md0x/gnosis-optimistic-governor
+- Mainnet: https://thegraph.com/hosted-service/subgraph/umaprotocol/mainnet-optimistic-governor
+- Polygon: https://thegraph.com/hosted-service/subgraph/umaprotocol/polygon-optimistic-governor
+- Arbitrum: https://thegraph.com/hosted-service/subgraph/umaprotocol/arbitrum-optimistic-governor
+- Optimism: https://thegraph.com/hosted-service/subgraph/umaprotocol/optimism-optimistic-governor
+- Avalanche: https://thegraph.com/hosted-service/subgraph/umaprotocol/avalanche-optimistic-governor
+- Gnosis: https://thegraph.com/hosted-service/subgraph/umaprotocol/gnosis-optimistic-governor
 - (testnet) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-governor
