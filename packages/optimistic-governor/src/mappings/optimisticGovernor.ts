@@ -46,9 +46,10 @@ export function handleModuleProxyCreation(event: ModuleProxyCreation): void {
 }
 
 export function handleTransactionsProposed(event: TransactionsProposed): void {
-  let proposalId = event.address.toHexString().concat("-").concat(event.params.proposalHash.toHexString());
+  let proposalId = event.params.assertionId.toHexString();
   let proposal = getOrCreateProposal(proposalId);
 
+  proposal.ogAddress = event.address;
   proposal.proposer = event.params.proposer;
   proposal.proposalTime = event.params.proposalTime;
   proposal.assertionId = event.params.assertionId;
@@ -62,7 +63,7 @@ export function handleTransactionsProposed(event: TransactionsProposed): void {
 }
 
 export function handleProposalExecuted(event: ProposalExecuted): void {
-  let proposalId = event.address.toHexString().concat("-").concat(event.params.proposalHash.toHexString());
+  let proposalId = event.params.assertionId.toHexString();
   let proposal = getOrCreateProposal(proposalId);
 
   proposal.executed = true;
