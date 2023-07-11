@@ -1,0 +1,10 @@
+{
+  "network": "avalanche",
+  "OptimisticOracleV3DataSources": [
+    {
+      "name": "OptimisticOracleV3",
+      "address": "0xa4199d73ae206d49c966cF16c58436851f87d47F",
+      "startBlock": 27816737
+    }
+  ]
+}

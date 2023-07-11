@@ -1,16 +1,15 @@
 {
-    "network": "arbitrum-one",
-    "ModuleProxyFactoryDataSources": [
-      {
-        "name": "ModuleProxyFactory",
-        "address": "0x000000000000aDdB49795b0f9bA5BC298cDda236",
-        "startBlock": 72850751
-      }
-    ],
-    "OptimisticGovernorDataSources": [
-      {
-        "name": "OptimisticGovernor"
-      }
-    ]
-  }
-  
+  "network": "avalanche",
+  "ModuleProxyFactoryDataSources": [
+    {
+      "name": "ModuleProxyFactory",
+      "address": "0x000000000000aDdB49795b0f9bA5BC298cDda236",
+      "startBlock": 28050250
+    }
+  ],
+  "OptimisticGovernorDataSources": [
+    {
+      "name": "OptimisticGovernor"
+    }
+  ]
+}
