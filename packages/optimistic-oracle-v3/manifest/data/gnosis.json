@@ -1,0 +1,10 @@
+{
+  "network": "gnosis",
+  "OptimisticOracleV3DataSources": [
+    {
+      "name": "OptimisticOracleV3",
+      "address": "0x22A9AaAC9c3184f68C7B7C95b1300C4B1D2fB95C",
+      "startBlock": 27087150
+    }
+  ]
+}
