@@ -1,6 +1,15 @@
-import { Bytes } from "@graphprotocol/graph-ts";
-import { Proposal } from "../../../generated/schema";
+import { Bytes, Address } from "@graphprotocol/graph-ts";
+import { OptimisticGovernor, Proposal } from "../../../generated/schema";
 import { BIGINT_ZERO } from "../constants";
+
+export function getOrCreateOptimisticGovernor(id: string): OptimisticGovernor {
+  let og = OptimisticGovernor.load(id);
+  if (og == null) {
+    og = new OptimisticGovernor(id);
+    og.address = Address.fromString(id);
+  }
+  return og as OptimisticGovernor;
+}
 
 export function getOrCreateProposal(id: string, createIfNotFound: boolean = true): Proposal {
   let proposal = Proposal.load(id);

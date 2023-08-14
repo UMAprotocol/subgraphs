@@ -6,6 +6,7 @@ import { ZERO_ADDRESS } from "../utils/constants";
 import { getOrCreateProposal } from "../utils/helpers";
 
 import { dataSource, log } from "@graphprotocol/graph-ts";
+import { getOrCreateOptimisticGovernor } from "../utils/helpers/optimisticGovernor";
 
 let network = dataSource.network();
 
@@ -41,6 +42,8 @@ export function handleModuleProxyCreation(event: ModuleProxyCreation): void {
       event.params.proxy.toHexString(),
       event.params.masterCopy.toHexString(),
     ]);
+    let optimisticGovernor = getOrCreateOptimisticGovernor(event.params.proxy.toHexString());
+    optimisticGovernor.save();
     OptimisticGovernor.create(event.params.proxy);
   }
 }
@@ -49,7 +52,7 @@ export function handleTransactionsProposed(event: TransactionsProposed): void {
   let proposalId = event.params.assertionId.toHexString();
   let proposal = getOrCreateProposal(proposalId);
 
-  proposal.ogAddress = event.address;
+  proposal.optimisticGovernor = event.address.toHexString();
   proposal.proposer = event.params.proposer;
   proposal.proposalTime = event.params.proposalTime;
   proposal.assertionId = event.params.assertionId;
