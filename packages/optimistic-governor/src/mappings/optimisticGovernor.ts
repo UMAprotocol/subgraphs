@@ -5,7 +5,7 @@ import { ZERO_ADDRESS } from "../utils/constants";
 
 import { getOrCreateProposal } from "../utils/helpers";
 
-import { dataSource, log } from "@graphprotocol/graph-ts";
+import { Bytes, dataSource, log } from "@graphprotocol/graph-ts";
 import { getOrCreateOptimisticGovernor } from "../utils/helpers/optimisticGovernor";
 
 let network = dataSource.network();
@@ -43,6 +43,7 @@ export function handleModuleProxyCreation(event: ModuleProxyCreation): void {
       event.params.masterCopy.toHexString(),
     ]);
     let optimisticGovernor = getOrCreateOptimisticGovernor(event.params.proxy.toHexString());
+    optimisticGovernor.safeAddress = event.transaction.to as Bytes;
     optimisticGovernor.save();
     OptimisticGovernor.create(event.params.proxy);
   }
