@@ -12,5 +12,6 @@ cat $DATA
 mustache \
   -p manifest/templates/ModuleProxyFactory.template.yaml \
   -p manifest/templates/OptimisticGovernor.template.yaml \
+  -p manifest/templates/Safe.template.yaml \
   $DATA \
   manifest/templates/subgraph.template.yaml > subgraph.yaml

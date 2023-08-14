@@ -11,6 +11,11 @@
       {
         "name": "OptimisticGovernor"
       }
+    ],
+    "SafeDataSources": [
+      {
+        "name": "Safe"
+      }
     ]
   }
   

@@ -11,3 +11,6 @@ templates:
 {{#OptimisticGovernorDataSources}}
   {{> OptimisticGovernor.template.yaml}}
 {{/OptimisticGovernorDataSources}}
+{{#SafeDataSources}}
+  {{> Safe.template.yaml}}
+{{/SafeDataSources}}

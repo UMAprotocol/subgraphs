@@ -17,8 +17,17 @@ type Proposal @entity {
 type OptimisticGovernor @entity {
   "ID is the Optimistic Governor Address"
   id: ID!
-  "The Safe address that deployed this Optimistic Governor"
-  safeAddress: Bytes!
+  "The Safe that deployed this Optimistic Governor"
+  safe: Safe!
   "List of all the proposals made by this governor"
   proposals: [Proposal!]! @derivedFrom(field: "optimisticGovernor")
+}
+
+type Safe @entity {
+  "ID is the safe Address"
+  id: ID!
+  "The Optimistic Governor deployed by this Safe"
+  optimisticGovernor: OptimisticGovernor!
+  "Wether the Optimistic Governor is enabled for this Safe"
+  isOptimisticGovernorEnabled: Boolean
 }
