@@ -11,7 +11,7 @@ import { ZERO_ADDRESS } from "../utils/constants";
 
 import { getOrCreateProposal } from "../utils/helpers";
 
-import { dataSource, log } from "@graphprotocol/graph-ts";
+import { Address, dataSource, log } from "@graphprotocol/graph-ts";
 import { getOrCreateOptimisticGovernor, getOrCreateSafe } from "../utils/helpers/optimisticGovernor";
 import { DisabledModule, EnabledModule } from "../../generated/templates/Safe/Safe";
 
@@ -52,12 +52,15 @@ export function handleModuleProxyCreation(event: ModuleProxyCreation): void {
 
     let optimisticGovernor = getOrCreateOptimisticGovernor(event.params.proxy.toHexString());
     let og = OptimisticGovernorContract.bind(event.params.proxy);
-    let safeAddress = og.try_target().value;
-    optimisticGovernor.safe = safeAddress.toHexString();
+    let safeAddress = og.try_target();
+    optimisticGovernor.safe = safeAddress.reverted ? ZERO_ADDRESS : safeAddress.value.toHexString();
 
     let safe = getOrCreateSafe(optimisticGovernor.safe);
     safe.optimisticGovernor = event.params.proxy.toHexString();
-    safe.isOptimisticGovernorEnabled = true;
+
+    let safeContract = SafeContract.bind(Address.fromString(optimisticGovernor.safe));
+    let isOgEnabled = safeContract.try_isModuleEnabled(event.address);
+    safe.isOptimisticGovernorEnabled = isOgEnabled.reverted ? false : isOgEnabled.value;
 
     // Save entities
     safe.save();
@@ -65,7 +68,7 @@ export function handleModuleProxyCreation(event: ModuleProxyCreation): void {
 
     // Create new data source for this Optimistic Governor contract and Safe
     OptimisticGovernor.create(event.params.proxy);
-    Safe.create(safeAddress);
+    Safe.create(Address.fromString(optimisticGovernor.safe));
   }
 }
 
@@ -104,7 +107,8 @@ export function handleTargetSet(event: TargetSet): void {
 
   // Check if the Optimistic Governor is enabled on the Safe
   let safeContract = SafeContract.bind(event.params.newTarget);
-  safe.isOptimisticGovernorEnabled = safeContract.try_isModuleEnabled(event.address).value;
+  let isOgEnabled = safeContract.try_isModuleEnabled(event.address);
+  safe.isOptimisticGovernorEnabled = isOgEnabled.reverted ? false : isOgEnabled.value;
 
   // Create new Safe data source
   Safe.create(event.params.newTarget);
