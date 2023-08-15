@@ -12,9 +12,15 @@
     file: ./src/index.ts
     entities:
       - Proposal
+      - Safe
+      - OptimisticGovernor
     abis:
       - name: ModuleProxyFactory
         file: ./abis/ModuleProxyFactory.json
+      - name: OptimisticGovernor
+        file: ./abis/OptimisticGovernor.json
+      - name: Safe
+        file: ./abis/Safe.json
     eventHandlers:
       - event: ModuleProxyCreation(indexed address,indexed address)
         handler: handleModuleProxyCreation

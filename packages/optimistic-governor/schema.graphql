@@ -1,7 +1,7 @@
 type Proposal @entity {
   "ID is the Proposal Hash"
   id: ID!
-  ogAddress: Bytes!
+  optimisticGovernor: OptimisticGovernor!
   proposer: Bytes!
   proposalTime: BigInt!
   assertionId: Bytes!
@@ -12,4 +12,22 @@ type Proposal @entity {
   proposalHash: Bytes!
   executed: Boolean!
   executionTransactionHash: String
+}
+
+type OptimisticGovernor @entity {
+  "ID is the Optimistic Governor Address"
+  id: ID!
+  "The Safe that deployed this Optimistic Governor"
+  safe: Safe!
+  "List of all the proposals made by this governor"
+  proposals: [Proposal!]! @derivedFrom(field: "optimisticGovernor")
+}
+
+type Safe @entity {
+  "ID is the safe Address"
+  id: ID!
+  "The Optimistic Governor deployed by this Safe"
+  optimisticGovernor: OptimisticGovernor!
+  "Wether the Optimistic Governor is enabled for this Safe"
+  isOptimisticGovernorEnabled: Boolean
 }

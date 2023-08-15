@@ -2,7 +2,7 @@
   name: {{name}}
   network: {{network}}
   source:
-    abi: OptimisticGovernor
+    abi: Safe
   mapping:
     kind: ethereum/events
     apiVersion: 0.0.7
@@ -20,9 +20,7 @@
       - name: Safe
         file: ./abis/Safe.json
     eventHandlers:
-      - event: TransactionsProposed(indexed address,indexed uint256,indexed bytes32,((address,uint8,uint256,bytes)[],uint256),bytes32,bytes,string,uint256)
-        handler: handleTransactionsProposed
-      - event: ProposalExecuted(indexed bytes32,indexed bytes32)
-        handler: handleProposalExecuted
-      - event:  TargetSet(indexed address,indexed address)
-        handler: handleTargetSet
+      - event: DisabledModule(address)
+        handler: handleSafeDisabledModule
+      - event: EnabledModule(address)
+        handler: handleSafeEnabledModule

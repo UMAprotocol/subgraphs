@@ -1,11 +1,19 @@
 import { ModuleProxyCreation } from "../../generated/ModuleProxyFactory/ModuleProxyFactory";
-import { ProposalExecuted, TransactionsProposed } from "../../generated/OptimisticGovernor/OptimisticGovernor";
-import { OptimisticGovernor } from "../../generated/templates";
+import {
+  ProposalExecuted,
+  TransactionsProposed,
+  OptimisticGovernor as OptimisticGovernorContract,
+  TargetSet,
+} from "../../generated/OptimisticGovernor/OptimisticGovernor";
+import { Safe as SafeContract } from "../../generated/ModuleProxyFactory/Safe";
+import { OptimisticGovernor, Safe } from "../../generated/templates";
 import { ZERO_ADDRESS } from "../utils/constants";
 
 import { getOrCreateProposal } from "../utils/helpers";
 
-import { dataSource, log } from "@graphprotocol/graph-ts";
+import { Address, dataSource, log } from "@graphprotocol/graph-ts";
+import { getOrCreateOptimisticGovernor, getOrCreateSafe } from "../utils/helpers/optimisticGovernor";
+import { DisabledModule, EnabledModule } from "../../generated/templates/Safe/Safe";
 
 let network = dataSource.network();
 
@@ -41,7 +49,26 @@ export function handleModuleProxyCreation(event: ModuleProxyCreation): void {
       event.params.proxy.toHexString(),
       event.params.masterCopy.toHexString(),
     ]);
+
+    let optimisticGovernor = getOrCreateOptimisticGovernor(event.params.proxy.toHexString());
+    let og = OptimisticGovernorContract.bind(event.params.proxy);
+    let safeAddress = og.try_target();
+    optimisticGovernor.safe = safeAddress.reverted ? ZERO_ADDRESS : safeAddress.value.toHexString();
+
+    let safe = getOrCreateSafe(optimisticGovernor.safe);
+    safe.optimisticGovernor = event.params.proxy.toHexString();
+
+    let safeContract = SafeContract.bind(Address.fromString(optimisticGovernor.safe));
+    let isOgEnabled = safeContract.try_isModuleEnabled(event.address);
+    safe.isOptimisticGovernorEnabled = isOgEnabled.reverted ? false : isOgEnabled.value;
+
+    // Save entities
+    safe.save();
+    optimisticGovernor.save();
+
+    // Create new data source for this Optimistic Governor contract and Safe
     OptimisticGovernor.create(event.params.proxy);
+    Safe.create(Address.fromString(optimisticGovernor.safe));
   }
 }
 
@@ -49,7 +76,7 @@ export function handleTransactionsProposed(event: TransactionsProposed): void {
   let proposalId = event.params.assertionId.toHexString();
   let proposal = getOrCreateProposal(proposalId);
 
-  proposal.ogAddress = event.address;
+  proposal.optimisticGovernor = event.address.toHexString();
   proposal.proposer = event.params.proposer;
   proposal.proposalTime = event.params.proposalTime;
   proposal.assertionId = event.params.assertionId;
@@ -70,4 +97,38 @@ export function handleProposalExecuted(event: ProposalExecuted): void {
   proposal.executionTransactionHash = event.transaction.hash.toHexString();
 
   proposal.save();
+}
+
+export function handleTargetSet(event: TargetSet): void {
+  let optimisticGovernor = getOrCreateOptimisticGovernor(event.address.toHexString());
+  let safe = getOrCreateSafe(event.params.newTarget.toHexString());
+  safe.optimisticGovernor = event.address.toHexString();
+  optimisticGovernor.safe = event.params.newTarget.toHexString();
+
+  // Check if the Optimistic Governor is enabled on the Safe
+  let safeContract = SafeContract.bind(event.params.newTarget);
+  let isOgEnabled = safeContract.try_isModuleEnabled(event.address);
+  safe.isOptimisticGovernorEnabled = isOgEnabled.reverted ? false : isOgEnabled.value;
+
+  // Create new Safe data source
+  Safe.create(event.params.newTarget);
+
+  optimisticGovernor.save();
+  safe.save();
+}
+
+export function handleSafeDisabledModule(event: DisabledModule): void {
+  let safe = getOrCreateSafe(event.address.toHexString());
+  if (safe.optimisticGovernor.toLowerCase() == event.params.module.toHexString().toLowerCase()) {
+    safe.isOptimisticGovernorEnabled = false;
+    safe.save();
+  }
+}
+
+export function handleSafeEnabledModule(event: EnabledModule): void {
+  let safe = getOrCreateSafe(event.address.toHexString());
+  if (safe.optimisticGovernor.toLowerCase() == event.params.module.toHexString().toLowerCase()) {
+    safe.isOptimisticGovernorEnabled = true;
+    safe.save();
+  }
 }
