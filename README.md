@@ -77,8 +77,8 @@ This subgraph indexes events emitted by the "Optimistic Oracle V3" contracts. Th
 - Arbitrum: https://thegraph.com/hosted-service/subgraph/umaprotocol/arbitrum-optimistic-oracle-v3
 - Optimism: https://thegraph.com/hosted-service/subgraph/umaprotocol/optimism-optimistic-oracle-v3
 - Boba: https://thegraph.com/hosted-service/subgraph/umaprotocol/boba-optimistic-oracle-v3
-- (unofficial) Avalanche: https://thegraph.com/hosted-service/subgraph/md0x/avalanche-optimistic-oracle-v3
-- (unofficial) Gnosis: https://thegraph.com/hosted-service/subgraph/md0x/gnosis-optimistic-oracle-v3
+- Avalanche: https://thegraph.com/hosted-service/subgraph/umaprotocol/avalanche-optimistic-oracle-v3
+- Gnosis: https://thegraph.com/hosted-service/subgraph/umaprotocol/gnosis-optimistic-oracle-v3
 - (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-oracle-v3
 
 ## Optimistic Governor Events:
