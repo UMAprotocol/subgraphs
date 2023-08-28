@@ -273,7 +273,7 @@ function updateUsersSlashingTrackers(event: RequestResolved): void {
     } else {
       // User did not vote
       // Update all the slashing trackers
-      voteSlashed.staking = slashing.notEqual(BIGDECIMAL_ZERO) ? true : false;
+      voteSlashed.staking = oldUserCalculatedStake.equals(BIGDECIMAL_ZERO) ? false : true;
       user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
       user.cumulativeCalculatedSlashPercentage = safeDivBigDecimal(
         defaultBigDecimal(user.cumulativeCalculatedSlash),
@@ -480,7 +480,7 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   let roundInfo = votingContract.try_rounds(event.params.roundId);
   let cumulativeStakeAtRound = roundInfo.reverted
     ? toDecimal(BigInt.fromString("0"))
-    : toDecimal(roundInfo.value.value1);
+    : toDecimal(roundInfo.value.value3);
 
   request.latestRound = requestRound.id;
 
@@ -515,6 +515,9 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   requestRound.tokenVoteParticipationPercentage = defaultBigDecimal(requestRound.tokenVoteParticipationRatio).times(
     BIGDECIMAL_HUNDRED
   );
+  requestRound.cumulativeStakeAtRound = cumulativeStakeAtRound;
+  requestRound.minParticipationRequirement = toDecimal(roundInfo.value.value1);
+  requestRound.minAgreementRequirement = toDecimal(roundInfo.value.value2);
 
   requestRound.save();
   vote.save();
@@ -659,6 +662,7 @@ export function handleVoterSlashed(event: VoterSlashed): void {
 
   let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id, event.transaction.hash.toHexString());
   voteSlashed.slashAmount = toDecimal(event.params.slashedTokens);
+  voteSlashed.staking = voteSlashed.slashAmount.equals(BIGDECIMAL_ZERO) ? false : true;
 
   voteSlashed.save();
   user.save();
