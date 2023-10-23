@@ -86,7 +86,6 @@ export function handleTransactionsProposed(event: TransactionsProposed): void {
   proposal.rules = event.params.rules;
   proposal.explanation = event.params.explanation;
   proposal.explanationText = event.params.explanation.toString();
-  proposal.deleted = false;
 
   proposal.save();
 }
@@ -106,7 +105,6 @@ export function handleProposalDeleted(event: ProposalDeleted): void {
   let proposal = getOrCreateProposal(proposalId);
 
   proposal.deleted = true;
-  proposal.deletionCount = proposal.deletionCount.plus(BIGINT_ONE);
 
   proposal.save();
 }

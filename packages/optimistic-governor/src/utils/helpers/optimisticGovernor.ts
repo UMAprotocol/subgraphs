@@ -28,7 +28,6 @@ export function getOrCreateProposal(id: string, createIfNotFound: boolean = true
     proposal.proposalHash = Bytes.fromI32(0);
     proposal.executed = false;
     proposal.deleted = false;
-    proposal.deletionCount = BIGINT_ZERO;
     proposal.challengeWindowEnds = BIGINT_ZERO;
   }
   return proposal as Proposal;
