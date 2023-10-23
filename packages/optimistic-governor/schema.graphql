@@ -11,6 +11,8 @@ type Proposal @entity {
   challengeWindowEnds: BigInt!
   proposalHash: Bytes!
   executed: Boolean!
+  deleted: Boolean!
+  deletionCount: BigInt!
   executionTransactionHash: String
 }
 
