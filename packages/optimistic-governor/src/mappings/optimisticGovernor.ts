@@ -1,13 +1,14 @@
 import { ModuleProxyCreation } from "../../generated/ModuleProxyFactory/ModuleProxyFactory";
 import {
   ProposalExecuted,
+  ProposalDeleted,
   TransactionsProposed,
   OptimisticGovernor as OptimisticGovernorContract,
   TargetSet,
 } from "../../generated/OptimisticGovernor/OptimisticGovernor";
 import { Safe as SafeContract } from "../../generated/ModuleProxyFactory/Safe";
 import { OptimisticGovernor, Safe } from "../../generated/templates";
-import { ZERO_ADDRESS } from "../utils/constants";
+import { BIGINT_ONE, ZERO_ADDRESS } from "../utils/constants";
 
 import { getOrCreateProposal } from "../utils/helpers";
 
@@ -95,6 +96,15 @@ export function handleProposalExecuted(event: ProposalExecuted): void {
 
   proposal.executed = true;
   proposal.executionTransactionHash = event.transaction.hash.toHexString();
+
+  proposal.save();
+}
+
+export function handleProposalDeleted(event: ProposalDeleted): void {
+  let proposalId = event.params.assertionId.toHexString();
+  let proposal = getOrCreateProposal(proposalId);
+
+  proposal.deleted = true;
 
   proposal.save();
 }
