@@ -4,5 +4,6 @@ export {
   handleProposalExecuted,
   handleTargetSet,
   handleSafeDisabledModule,
-  handleSafeEnabledModule
+  handleSafeEnabledModule,
+  handleProposalDeleted,
 } from "./mappings/optimisticGovernor";

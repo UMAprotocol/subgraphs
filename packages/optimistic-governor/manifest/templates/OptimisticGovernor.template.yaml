@@ -26,3 +26,5 @@
         handler: handleProposalExecuted
       - event:  TargetSet(indexed address,indexed address)
         handler: handleTargetSet
+      - event: ProposalDeleted(indexed bytes32,indexed bytes32)
+        handler: handleProposalDeleted
