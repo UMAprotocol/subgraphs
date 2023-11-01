@@ -3,11 +3,17 @@ import {
   OptimisticOracle,
   ProposePrice,
   RequestPrice,
+  SetBondCall,
   Settle,
 } from "../../generated/OptimisticOracle/OptimisticOracle";
 import { getOrCreateOptimisticPriceRequest } from "../utils/helpers";
 
-import { Address, BigInt, Bytes, log } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, log, dataSource } from "@graphprotocol/graph-ts";
+
+let network = dataSource.network();
+
+let isMainnet = network == "mainnet";
+let isGoerli = network == "goerli";
 
 function getState(
   ooAddress: Address,
@@ -76,6 +82,18 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
     event.params.timestamp,
     event.params.ancillaryData
   );
+
+  // workaround for L2 chains that don't support `callHandlers`
+  if (!isMainnet && !isGoerli) {
+    let oo = OptimisticOracle.bind(event.address);
+    let requestData = oo.try_getRequest(
+      event.params.requester,
+      event.params.identifier,
+      event.params.timestamp,
+      event.params.ancillaryData
+    ).value;
+    request.finalFee = requestData.finalFee.plus(requestData.bond);
+  }
 
   request.save();
 }
@@ -222,6 +240,26 @@ export function handleOptimisticSettle(event: Settle): void {
     event.params.timestamp,
     event.params.ancillaryData
   );
+
+  request.save();
+}
+
+export function handleSetBond(call: SetBondCall): void {
+  log.warning(`OO set bond inputs: {},{},{},{}`, [
+    call.inputs.timestamp.toString(),
+    call.inputs.identifier.toString(),
+    call.inputs.ancillaryData.toHex(),
+    call.inputs.bond.toString(),
+  ]);
+  let requestId = call.inputs.identifier
+    .toString()
+    .concat("-")
+    .concat(call.inputs.timestamp.toString())
+    .concat("-")
+    .concat(call.inputs.ancillaryData.toHex());
+
+  let request = getOrCreateOptimisticPriceRequest(requestId);
+  request.finalFee = call.outputs.totalBond;
 
   request.save();
 }
