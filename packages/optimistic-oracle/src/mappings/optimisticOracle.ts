@@ -69,7 +69,7 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
   request.requester = event.params.requester;
   request.currency = event.params.currency;
   request.reward = event.params.reward;
-  request.finalFee = event.params.finalFee;
+  request.finalFee = event.params.finalFee.times(BigInt.fromI32(2));
   request.requestTimestamp = event.block.timestamp;
   request.requestBlockNumber = event.block.number;
   request.requestLogIndex = event.logIndex;
