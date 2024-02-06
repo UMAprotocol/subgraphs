@@ -29,6 +29,7 @@ This subgraph indexes events emitted by the "Optimistic Oracle" contracts. The c
 - Optimism: https://thegraph.com/hosted-service/subgraph/umaprotocol/optimism-optimistic-oracle
 - Boba: https://thegraph.com/hosted-service/subgraph/umaprotocol/boba-optimistic-oracle
 - (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-oracle
+- (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-oracle
 
 ## Optimistic Oracle V2 Events and Calls:
 
@@ -42,6 +43,7 @@ This subgraph indexes events and function calls by the "Optimistic Oracle V2" co
 - Optimism: https://thegraph.com/hosted-service/subgraph/umaprotocol/optimism-optimistic-oracle-v2
 - Boba: https://thegraph.com/hosted-service/subgraph/umaprotocol/boba-optimistic-oracle-v2
 - (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-oracle-v2
+- (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-oracle-v2
 
 ## Financial Contract Events:
 
@@ -80,6 +82,7 @@ This subgraph indexes events emitted by the "Optimistic Oracle V3" contracts. Th
 - Avalanche: https://thegraph.com/hosted-service/subgraph/umaprotocol/avalanche-optimistic-oracle-v3
 - Gnosis: https://thegraph.com/hosted-service/subgraph/umaprotocol/gnosis-optimistic-oracle-v3
 - (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-oracle-v3
+- (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-oracle-v3
 
 ## Optimistic Governor Events:
 
@@ -92,6 +95,7 @@ This subgraph indexes events emitted by all the Optimistic Governor deployments.
 - Avalanche: https://thegraph.com/hosted-service/subgraph/umaprotocol/avalanche-optimistic-governor
 - Gnosis: https://thegraph.com/hosted-service/subgraph/umaprotocol/gnosis-optimistic-governor
 - (testnet) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-governor
+- (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-governor
 
 ## Resources
 

@@ -5,3 +5,4 @@
 - Mainnet: `yarn prepare:mainnet && yarn deploy:mainnet`
 - Kovan: `yarn prepare:kovan && yarn deploy:kovan`
 - Polygon: `yarn prepare:polygon && yarn deploy:polygon`
+- Core Testnet: `yarn prepare:core-testnet && yarn deploy:core-testnet`

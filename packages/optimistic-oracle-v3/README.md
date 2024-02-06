@@ -8,3 +8,4 @@
 - Boba: `yarn prepare:boba && yarn deploy:boba`
 - Optimism: `yarn prepare:optimism && yarn deploy:optimism`
 - Goerli: `yarn prepare:goerli && yarn deploy:goerli`
+- Core Testnet: `yarn prepare:core-testnet && yarn deploy:core-testnet`
