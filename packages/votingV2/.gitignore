@@ -3,4 +3,3 @@ node_modules/
 /build
 subgraph.yaml
 addresses.ts
-abis
