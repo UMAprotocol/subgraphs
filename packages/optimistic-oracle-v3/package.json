@@ -31,7 +31,7 @@
     "deploy-prod:arbitrum": "scripts/deploy.sh arbitrum",
     "deploy-prod:gnosis": "scripts/deploy.sh gnosis",
     "deploy-prod:avalanche": "scripts/deploy.sh avalanche",
-    "deploy:all-prod":"yarn prepare:mainnet && yarn deploy-prod:mainnet && yarn prepare:polygon && yarn deploy-prod:polygon && yarn prepare:optimism && yarn deploy-prod:optimism && yarn prepare:arbitrum && yarn deploy-prod:arbitrum && yarn prepare:boba && yarn deploy-prod:boba && yarn prepare:gnosis && yarn deploy-prod:gnosis && yarn prepare:avalanche && yarn deploy-prod:avalanche",
+    "deploy:all-prod": "yarn prepare:mainnet && yarn deploy-prod:mainnet && yarn prepare:polygon && yarn deploy-prod:polygon && yarn prepare:optimism && yarn deploy-prod:optimism && yarn prepare:arbitrum && yarn deploy-prod:arbitrum && yarn prepare:boba && yarn deploy-prod:boba && yarn prepare:gnosis && yarn deploy-prod:gnosis && yarn prepare:avalanche && yarn deploy-prod:avalanche",
     "deploy:all": "yarn prepare:goerli && yarn deploy:goerli && yarn prepare:mainnet && yarn deploy:mainnet && yarn prepare:polygon && yarn deploy:polygon && yarn prepare:arbitrum && yarn deploy:arbitrum && yarn prepare:optimism && yarn deploy:optimism && yarn prepare:boba && yarn deploy:boba && yarn prepare:gnosis && yarn deploy:gnosis && yarn prepare:avalanche && yarn deploy:avalanche"
   },
   "repository": {
@@ -46,8 +46,8 @@
   },
   "homepage": "https://github.com/UMAprotocol/subgraphs#readme",
   "dependencies": {
-    "@graphprotocol/graph-cli": "^0.38.0",
-    "@graphprotocol/graph-ts": "^0.29.3",
+    "@graphprotocol/graph-cli": "^0.67.3",
+    "@graphprotocol/graph-ts": "^0.32.0",
     "mustache": "^4.2.0"
   }
 }
