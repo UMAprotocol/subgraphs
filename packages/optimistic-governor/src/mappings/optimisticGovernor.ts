@@ -5,7 +5,7 @@ import {
   TransactionsProposed,
   OptimisticGovernor as OptimisticGovernorContract,
   TargetSet,
-} from "../../generated/OptimisticGovernor/OptimisticGovernor";
+} from "../../generated/templates/OptimisticGovernor/OptimisticGovernor";
 import { Safe as SafeContract } from "../../generated/ModuleProxyFactory/Safe";
 import { OptimisticGovernor, Safe } from "../../generated/templates";
 import { BIGINT_ONE, ZERO_ADDRESS } from "../utils/constants";

@@ -33,7 +33,7 @@
   "devDependencies": {
     "ganache-cli": "^6.12.2",
     "lerna": "^3.22.1",
-    "truffle": "^5.2.5",
-    "prettier": "^2.3.1"
+    "prettier": "^2.3.1",
+    "truffle": "^5.2.5"
   }
 }
