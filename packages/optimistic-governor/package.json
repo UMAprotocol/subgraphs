@@ -13,6 +13,7 @@
     "prepare:arbitrum": "scripts/build-manifest.sh arbitrum  && yarn codegen && yarn build",
     "prepare:gnosis": "scripts/build-manifest.sh gnosis  && yarn codegen && yarn build",
     "prepare:avalanche": "scripts/build-manifest.sh avalanche  && yarn codegen && yarn build",
+    "prepare:core-testnet": "scripts/build-manifest.sh core-testnet && yarn codegen && yarn build",
     "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",
     "deploy:goerli": "env STAGING=true scripts/deploy.sh goerli",
     "deploy:polygon": "env STAGING=true scripts/deploy.sh polygon",
@@ -20,6 +21,7 @@
     "deploy:arbitrum": "env STAGING=true scripts/deploy.sh arbitrum",
     "deploy:gnosis": "env STAGING=true scripts/deploy.sh gnosis",
     "deploy:avalanche": "env STAGING=true scripts/deploy.sh avalanche",
+    "deploy:core-testnet": "env STAGING=true CREATE=true scripts/deploy.sh core-testnet",
     "deploy-prod:mainnet": "scripts/deploy.sh mainnet",
     "deploy-prod:polygon": "scripts/deploy.sh polygon",
     "deploy-prod:boba": "scripts/deploy.sh boba",
@@ -27,7 +29,7 @@
     "deploy-prod:arbitrum": "scripts/deploy.sh arbitrum",
     "deploy-prod:gnosis": "scripts/deploy.sh gnosis",
     "deploy-prod:avalanche": "scripts/deploy.sh avalanche",
-    "deploy:all": "yarn prepare:mainnet && yarn deploy:mainnet && yarn prepare:polygon && yarn deploy:polygon && yarn prepare:optimism && yarn deploy:optimism && yarn prepare:arbitrum && yarn deploy:arbitrum && yarn prepare:gnosis && yarn deploy:gnosis && yarn prepare:avalanche && yarn deploy:avalanche",
+    "deploy:all": "yarn prepare:mainnet && yarn deploy:mainnet && yarn prepare:polygon && yarn deploy:polygon && yarn prepare:optimism && yarn deploy:optimism && yarn prepare:arbitrum && yarn deploy:arbitrum && yarn prepare:gnosis && yarn deploy:gnosis && yarn prepare:avalanche && yarn deploy:avalanche && yarn prepare:core-testnet && yarn deploy:core-testnet",
     "deploy:all-prod": "yarn prepare:mainnet && yarn deploy-prod:mainnet && yarn prepare:polygon && yarn deploy-prod:polygon && yarn prepare:optimism && yarn deploy-prod:optimism && yarn prepare:arbitrum && yarn deploy-prod:arbitrum && yarn prepare:gnosis && yarn deploy-prod:gnosis && yarn prepare:avalanche && yarn deploy-prod:avalanche"
   },
   "repository": {

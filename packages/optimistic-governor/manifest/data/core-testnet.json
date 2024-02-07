@@ -1,0 +1,20 @@
+{
+  "network": "core",
+  "ModuleProxyFactoryDataSources": [
+    {
+      "name": "ModuleProxyFactory",
+      "address": "0x000000000000aDdB49795b0f9bA5BC298cDda236",
+      "startBlock": 16741372
+    }
+  ],
+  "OptimisticGovernorDataSources": [
+    {
+      "name": "OptimisticGovernor"
+    }
+  ],
+  "SafeDataSources": [
+    {
+      "name": "Safe"
+    }
+  ]
+}

@@ -11,3 +11,4 @@ This subgraph indexes events emitted by all the Optimistic Governor deployments.
 - Avalanche: https://thegraph.com/hosted-service/subgraph/umaprotocol/avalanche-optimistic-governor
 - Gnosis: https://thegraph.com/hosted-service/subgraph/umaprotocol/gnosis-optimistic-governor
 - (testnet) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-governor
+- (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-governor

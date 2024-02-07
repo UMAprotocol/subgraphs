@@ -40,6 +40,9 @@ function getMasterCopy(_network: string): string {
   if (_network == "goerli") {
     return "0x07a7Be7AA4AaD42696A17e974486cb64A4daC47b";
   }
+  if (_network == "core") {
+    return "0xD43463Fadd73373bE260b67F5825274F4403dAF0";
+  }
   log.error("No master copy found for network: {}", [_network]);
   return ZERO_ADDRESS;
 }
