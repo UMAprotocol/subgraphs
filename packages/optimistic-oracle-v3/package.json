@@ -16,6 +16,7 @@
     "prepare:gnosis": "scripts/build-manifest.sh gnosis && yarn codegen && yarn build",
     "prepare:avalanche": "scripts/build-manifest.sh avalanche && yarn codegen && yarn build",
     "prepare:core-testnet": "scripts/build-manifest.sh core-testnet && yarn codegen && yarn build",
+    "prepare:core": "scripts/build-manifest.sh core && yarn codegen && yarn build",
     "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",
     "deploy:goerli": "env STAGING=true scripts/deploy.sh goerli",
     "deploy:polygon": "env STAGING=true scripts/deploy.sh polygon",
@@ -25,6 +26,7 @@
     "deploy:gnosis": "env STAGING=true scripts/deploy.sh gnosis",
     "deploy:avalanche": "env STAGING=true scripts/deploy.sh avalanche",
     "deploy:core-testnet": "env STAGING=true CREATE=true scripts/deploy.sh core-testnet",
+    "deploy:core": "env STAGING=true CREATE=true scripts/deploy.sh core",
     "deploy-prod:kovan": "scripts/deploy.sh kovan",
     "deploy-prod:mainnet": "scripts/deploy.sh mainnet",
     "deploy-prod:polygon": "scripts/deploy.sh polygon",
@@ -33,8 +35,9 @@
     "deploy-prod:arbitrum": "scripts/deploy.sh arbitrum",
     "deploy-prod:gnosis": "scripts/deploy.sh gnosis",
     "deploy-prod:avalanche": "scripts/deploy.sh avalanche",
-    "deploy:all-prod": "yarn prepare:mainnet && yarn deploy-prod:mainnet && yarn prepare:polygon && yarn deploy-prod:polygon && yarn prepare:optimism && yarn deploy-prod:optimism && yarn prepare:arbitrum && yarn deploy-prod:arbitrum && yarn prepare:boba && yarn deploy-prod:boba && yarn prepare:gnosis && yarn deploy-prod:gnosis && yarn prepare:avalanche && yarn deploy-prod:avalanche",
-    "deploy:all": "yarn prepare:goerli && yarn deploy:goerli && yarn prepare:mainnet && yarn deploy:mainnet && yarn prepare:polygon && yarn deploy:polygon && yarn prepare:arbitrum && yarn deploy:arbitrum && yarn prepare:optimism && yarn deploy:optimism && yarn prepare:boba && yarn deploy:boba && yarn prepare:gnosis && yarn deploy:gnosis && yarn prepare:avalanche && yarn deploy:avalanche && yarn prepare:core-testnet && yarn deploy:core-testnet"
+    "deploy-prod:core": "CREATE=true scripts/deploy.sh core",
+    "deploy:all-prod": "yarn prepare:mainnet && yarn deploy-prod:mainnet && yarn prepare:polygon && yarn deploy-prod:polygon && yarn prepare:optimism && yarn deploy-prod:optimism && yarn prepare:arbitrum && yarn deploy-prod:arbitrum && yarn prepare:boba && yarn deploy-prod:boba && yarn prepare:gnosis && yarn deploy-prod:gnosis && yarn prepare:avalanche && yarn deploy-prod:avalanche && yarn prepare:core && yarn deploy-prod:core",
+    "deploy:all": "yarn prepare:goerli && yarn deploy:goerli && yarn prepare:mainnet && yarn deploy:mainnet && yarn prepare:polygon && yarn deploy:polygon && yarn prepare:arbitrum && yarn deploy:arbitrum && yarn prepare:optimism && yarn deploy:optimism && yarn prepare:boba && yarn deploy:boba && yarn prepare:gnosis && yarn deploy:gnosis && yarn prepare:avalanche && yarn deploy:avalanche && yarn prepare:core-testnet && yarn deploy:core-testnet && yarn prepare:core && yarn deploy:core"
   },
   "repository": {
     "type": "git",

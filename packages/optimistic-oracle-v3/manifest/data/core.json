@@ -1,0 +1,10 @@
+{
+  "network": "core",
+  "OptimisticOracleV3DataSources": [
+    {
+      "name": "OptimisticOracleV3",
+      "address": "0xD84ACa67d683aF7702705141b3C7E57e4e5e7726",
+      "startBlock": 11341063
+    }
+  ]
+}

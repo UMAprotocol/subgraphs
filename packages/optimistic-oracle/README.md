@@ -6,3 +6,4 @@
 - Kovan: `yarn prepare:kovan && yarn deploy:kovan`
 - Polygon: `yarn prepare:polygon && yarn deploy:polygon`
 - Core Testnet: `yarn prepare:core-testnet && yarn deploy:core-testnet`
+- Core: `yarn prepare:core && yarn deploy:core`
