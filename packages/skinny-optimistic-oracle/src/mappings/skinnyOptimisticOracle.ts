@@ -248,6 +248,9 @@ export function handleOptimisticSettle(event: Settle): void {
 
 // requestPrice(bytes32,uint32,bytes,address,uint256,uint256,uint256)
 // requestAndProposePriceFor(bytes32,uint32,bytes,address,uint256,uint256,uint256,address,int256)
+// Note: The handleRequestPrice function is utilized for both requestPrice and requestAndProposePriceFor function calls.
+// Its primary purpose is to retrieve the customLiveness value from the request and to fetch the finalFee from the store.
+// This information is then used to calculate the bond. The logic remains identical in both scenarios.
 
 export function handleRequestPrice(call: RequestPriceCall): void {
   log.warning(`handleRequestPrice params: {},{},{}`, [
