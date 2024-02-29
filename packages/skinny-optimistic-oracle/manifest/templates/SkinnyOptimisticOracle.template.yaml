@@ -16,6 +16,8 @@
     abis:
       - name: SkinnyOptimisticOracle
         file: ./abis/SkinnyOptimisticOracle.json
+      - name: Store
+        file: ./abis/Store.json
     eventHandlers:
       - event: RequestPrice(indexed address,indexed bytes32,uint32,bytes,(address,address,address,bool,int256,int256,uint256,uint256,uint256,uint256,uint256))
         handler: handleOptimisticRequestPrice
@@ -25,3 +27,8 @@
         handler: handleOptimisticDisputePrice
       - event: Settle(indexed address,indexed bytes32,uint32,bytes,(address,address,address,bool,int256,int256,uint256,uint256,uint256,uint256,uint256))
         handler: handleOptimisticSettle
+    callHandlers:
+      - function: requestPrice(bytes32,uint32,bytes,address,uint256,uint256,uint256)
+        handler: handleRequestPrice
+      - function: requestAndProposePriceFor(bytes32,uint32,bytes,address,uint256,uint256,uint256,address,int256)
+        handler: handleRequestPrice

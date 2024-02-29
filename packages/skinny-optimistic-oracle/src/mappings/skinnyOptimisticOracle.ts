@@ -4,15 +4,28 @@ import {
   ProposePrice,
   ProposePriceRequestStruct,
   RequestPrice,
+  RequestPriceCall,
   RequestPriceRequestStruct,
   Settle,
   SettleRequestStruct,
   SkinnyOptimisticOracle,
   SkinnyOptimisticOracle__getStateInputRequestStruct,
 } from "../../generated/SkinnyOptimisticOracle/SkinnyOptimisticOracle";
+import { Store } from "../../generated/templates/Store/Store";
+import { BIGINT_ZERO, ZERO_ADDRESS } from "../utils/constants";
 import { getOrCreateOptimisticPriceRequest } from "../utils/helpers";
 
-import { Address, BigInt, Bytes, ethereum, log } from "@graphprotocol/graph-ts";
+import { Address, BigInt, Bytes, dataSource, ethereum, log } from "@graphprotocol/graph-ts";
+
+let network = dataSource.network();
+
+function getStore(): string {
+  if (network == "mainnet") {
+    return "0x54f44eA3D2e7aA0ac089c4d8F7C93C27844057BF";
+  }
+  log.error("No store found for network: {}", [network]);
+  return ZERO_ADDRESS;
+}
 
 function getState<T extends RequestPriceRequestStruct>(
   ooAddress: Address,
@@ -230,5 +243,40 @@ export function handleOptimisticSettle(event: Settle): void {
     event.params.request
   );
 
+  request.save();
+}
+
+// requestPrice(bytes32,uint32,bytes,address,uint256,uint256,uint256)
+// requestAndProposePriceFor(bytes32,uint32,bytes,address,uint256,uint256,uint256,address,int256)
+
+export function handleRequestPrice(call: RequestPriceCall): void {
+  log.warning(`handleRequestPrice params: {},{},{}`, [
+    call.inputs.timestamp.toString(),
+    call.inputs.identifier.toString(),
+    call.inputs.ancillaryData.toHex(),
+  ]);
+  let requestId = call.inputs.identifier
+    .toString()
+    .concat("-")
+    .concat(call.inputs.timestamp.toString())
+    .concat("-")
+    .concat(call.inputs.ancillaryData.toHex());
+
+  let request = getOrCreateOptimisticPriceRequest(requestId);
+
+  let store = Store.bind(Address.fromString(getStore()));
+  let finalFee = store.try_computeFinalFee(call.inputs.currency);
+
+  request.identifier = call.inputs.identifier.toString();
+  request.time = call.inputs.timestamp;
+  request.ancillaryData = call.inputs.ancillaryData.toHex();
+  request.requester = call.from
+  request.currency = call.inputs.currency;
+  request.reward = call.inputs.reward;
+  request.bond = call.inputs.bond.gt(BIGINT_ZERO) ? call.inputs.bond : finalFee.reverted ? BIGINT_ZERO : finalFee.value.rawValue;
+  request.customLiveness = call.inputs.customLiveness;
+  request.requestTimestamp = call.inputs.timestamp;
+  request.requestBlockNumber = call.block.number;
+  request.requestHash = call.transaction.hash;
   request.save();
 }

@@ -2,5 +2,6 @@ export {
   handleOptimisticRequestPrice,
   handleOptimisticProposePrice,
   handleOptimisticDisputePrice,
-  handleOptimisticSettle
+  handleOptimisticSettle,
+  handleRequestPrice
 } from "./mappings/skinnyOptimisticOracle";

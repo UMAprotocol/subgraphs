@@ -6,5 +6,11 @@
       "address": "0xeE3Afe347D5C74317041E2618C49534dAf887c24",
       "startBlock": 13545034
     }
+  ],
+  "StoreDataSources": [
+    {
+      "name": "Store",
+      "network": "mainnet"
+    }
   ]
 }

@@ -73,4 +73,8 @@ type OptimisticPriceRequest @entity {
   settlementHash: Bytes
 
   settlementLogIndex: BigInt
+
+  customLiveness: BigInt
+
+  bond: BigInt
 }

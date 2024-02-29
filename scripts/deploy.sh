@@ -27,8 +27,8 @@ if [[ -z "${API_KEY}" ]]; then
     exit 1
 fi
 
-# Default values for NODE and IPFS
-NODE="${NODE:-https://api.thegraph.com/deploy/}"
+# Default values for GRAPH_NODE and IPFS
+GRAPH_NODE="${GRAPH_NODE:-https://api.thegraph.com/deploy/}"
 IPFS="${IPFS:-https://api.thegraph.com/ipfs/}"
 
 echo "$NAMESPACE/$SUBGRAPH_NAME"
@@ -37,7 +37,7 @@ if [ "$DOCKER" ]; then
     yarn graph create --node http://127.0.0.1:8020 $NAMESPACE/$SUBGRAPH_NAME && yarn graph deploy --node http://localhost:8020 --ipfs http://localhost:5001 $NAMESPACE/$SUBGRAPH_NAME
 else
     if [ "$CREATE" ]; then
-        yarn graph create --node "$NODE" "$NAMESPACE/$SUBGRAPH_NAME" --access-token "$API_KEY"
+        yarn graph create --node "$GRAPH_NODE" "$NAMESPACE/$SUBGRAPH_NAME" --access-token "$API_KEY"
     fi
-    yarn graph deploy --node "$NODE" --ipfs "$IPFS" "$NAMESPACE/$SUBGRAPH_NAME" --access-token "$API_KEY"
+    yarn graph deploy --node "$GRAPH_NODE" --ipfs "$IPFS" "$NAMESPACE/$SUBGRAPH_NAME" --access-token "$API_KEY"
 fi
