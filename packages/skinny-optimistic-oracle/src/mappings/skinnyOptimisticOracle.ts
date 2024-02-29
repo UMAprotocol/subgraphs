@@ -83,6 +83,8 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
   request.requestBlockNumber = event.block.number;
   request.requestLogIndex = event.logIndex;
   request.requestHash = event.transaction.hash;
+  request.bond = event.params.request.bond;
+  request.customLiveness = event.params.request.customLiveness;
 
   request.state = getState<RequestPriceRequestStruct>(
     event.address,
@@ -232,3 +234,4 @@ export function handleOptimisticSettle(event: Settle): void {
 
   request.save();
 }
+
