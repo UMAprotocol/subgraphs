@@ -10,3 +10,4 @@
 - Goerli: `yarn prepare:goerli && yarn deploy:goerli`
 - Core Testnet: `yarn prepare:core-testnet && yarn deploy:core-testnet`
 - Core: `yarn prepare:core && yarn deploy:core`
+- Sepolia: `yarn prepare:sepolia && yarn deploy:sepolia`

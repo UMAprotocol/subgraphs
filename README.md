@@ -18,6 +18,7 @@ This subgraph indexes events emitted by the core Oracle contracts. The code can 
 This subgraph indexes events emitted by the "Skinny Optimistic Oracle" contracts. The code can be found in `packages/skinny-optimistic-oracle`
 
 - Mainnet: https://thegraph.com/hosted-service/subgraph/umaprotocol/mainnet-skinny-oo
+- (staging) Sepolia: https://thegraph.com/hosted-service/subgraph/reinis-frp/sepolia-skinny-oo
 
 ## Optimistic Oracle Events:
 
@@ -31,6 +32,7 @@ This subgraph indexes events emitted by the "Optimistic Oracle" contracts. The c
 - (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-oracle
 - (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-oracle
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle
+- (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-oracle
 
 ## Optimistic Oracle V2 Events and Calls:
 
@@ -46,6 +48,7 @@ This subgraph indexes events and function calls by the "Optimistic Oracle V2" co
 - (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-oracle-v2
 - (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-oracle-v2
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle-v2
+- (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-oracle-v2
 
 ## Financial Contract Events:
 
@@ -71,6 +74,7 @@ This subgraph indexes events emitted by the core Oracle contracts. The code can 
 
 - Mainnet: https://thegraph.com/hosted-service/subgraph/umaprotocol/mainnet-voting-v2
 - Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-voting-v2
+- (staging) Sepolia: https://thegraph.com/hosted-service/subgraph/reinis-frp/sepolia-voting-v2
 
 ## Optimistic Oracle V3 Events:
 
@@ -86,6 +90,7 @@ This subgraph indexes events emitted by the "Optimistic Oracle V3" contracts. Th
 - (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-oracle-v3
 - (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-oracle-v3
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle-v3
+- (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-oracle-v3
 
 ## Optimistic Governor Events:
 
@@ -100,6 +105,7 @@ This subgraph indexes events emitted by all the Optimistic Governor deployments.
 - (testnet) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-governor
 - (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-governor
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-governor
+- (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-governor
 
 ## Resources
 

@@ -10,3 +10,4 @@
 - (staging) Goerli: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/goerli-oov2-staging
 - (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-oracle-v2
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle-v2
+- (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-oracle-v2

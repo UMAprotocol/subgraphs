@@ -1,0 +1,10 @@
+{
+  "network": "sepolia",
+  "OptimisticOracleV2DataSources": [
+    {
+      "name": "OptimisticOracleV2",
+      "address": "0x9f1263B8f0355673619168b5B8c0248f1d03e88C",
+      "startBlock": 5421127
+    }
+  ]
+}

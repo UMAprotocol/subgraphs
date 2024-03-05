@@ -1,0 +1,24 @@
+{
+  "network": "sepolia",
+  "votingTokenStartBlock": 5421128,
+  "votingTokenAddress": "0xc00F1d7E535D83404587437738974A8762bE266a",
+  "identifierWhitelistAddress": "0xfcb6f77112951e1995d37542b519Fe0a85a1AA77",
+  "identifierWhitelistStartBlock": 5421114,
+  "registryAddress": "0x827C4fABBe65ee852D7Cd6Ddf042cFC9eb500ef8",
+  "registryStartBlock": 5421113,
+  "addressWhitelistAddress": "0xE8DE4bcE27f6214dcE18D8a7629f233C66A97B84",
+  "addressWhitelistStartBlock": 5421120,
+  "VotingDataSources": [
+    {
+      "name": "Voting",
+      "address": "0xd6Fc66498aE366892BDa974Fd4eF903Ca7202F76",
+      "startBlock": 5421133
+    }
+  ],
+  "StoreDataSources": [
+    {
+      "address": "0x39e7FFA77A4ac4D34021C6BbE4C8778d47F684F2",
+      "startBlock": 5421116
+    }
+  ]
+}
