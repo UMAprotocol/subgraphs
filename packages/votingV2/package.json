@@ -11,11 +11,13 @@
     "prepare:mainnet": "scripts/build-manifest.sh mainnet && yarn codegen && yarn build",
     "prepare:kovan": "npm run importAbi && scripts/build-manifest.sh kovan && yarn codegen && yarn build",
     "prepare:polygon": "npm run importAbi && scripts/build-manifest.sh polygon && yarn codegen && yarn build",
+    "prepare:sepolia": "scripts/build-manifest.sh sepolia && yarn codegen && yarn build",
     "deploy:kovan": "env STAGING=true scripts/deploy.sh kovan",
     "deploy:docker:goerli": "env STAGING=true DOCKER=true scripts/deploy.sh goerli",
     "deploy:goerli": "env STAGING=true scripts/deploy.sh goerli",
     "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",
     "deploy:polygon": "env STAGING=true scripts/deploy.sh polygon",
+    "deploy:sepolia": "env STAGING=true scripts/deploy.sh sepolia",
     "deploy-prod:kovan": "scripts/deploy.sh kovan",
     "deploy-prod:mainnet": "scripts/deploy.sh mainnet",
     "deploy-prod:polygon": "scripts/deploy.sh polygon"

@@ -13,3 +13,4 @@ This subgraph indexes events emitted by all the Optimistic Governor deployments.
 - (testnet) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-governor
 - (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-governor
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-governor
+- (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-governor
