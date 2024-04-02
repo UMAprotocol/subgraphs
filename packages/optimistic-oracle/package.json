@@ -16,7 +16,7 @@
     "prepare:core-testnet": "scripts/build-manifest.sh core-testnet && yarn remove-call-handlers && yarn codegen && yarn build",
     "prepare:core": "scripts/build-manifest.sh core && yarn remove-call-handlers && yarn codegen && yarn build",
     "prepare:sepolia": "scripts/build-manifest.sh sepolia && yarn codegen && yarn build",
-    "prepare:base": "scripts/build-manifest.sh base && yarn codegen && yarn build",
+    "prepare:base": "scripts/build-manifest.sh base && yarn remove-call-handlers && yarn codegen && yarn build",
     "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",
     "deploy:goerli": "env STAGING=true scripts/deploy.sh goerli",
     "deploy:polygon": "env STAGING=true scripts/deploy.sh polygon",
