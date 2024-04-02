@@ -18,6 +18,7 @@
     "prepare:core-testnet": "scripts/build-manifest.sh core-testnet && yarn codegen && yarn build",
     "prepare:core": "scripts/build-manifest.sh core && yarn codegen && yarn build",
     "prepare:sepolia": "scripts/build-manifest.sh sepolia && yarn codegen && yarn build",
+    "prepare:base": "scripts/build-manifest.sh base && yarn codegen && yarn build",
     "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",
     "deploy:goerli": "env STAGING=true scripts/deploy.sh goerli",
     "deploy:polygon": "env STAGING=true scripts/deploy.sh polygon",
@@ -38,7 +39,8 @@
     "deploy-prod:gnosis": "scripts/deploy.sh gnosis",
     "deploy-prod:avalanche": "scripts/deploy.sh avalanche",
     "deploy-prod:core": "CREATE=true scripts/deploy.sh core",
-    "deploy:all-prod": "yarn prepare:mainnet && yarn deploy-prod:mainnet && yarn prepare:polygon && yarn deploy-prod:polygon && yarn prepare:optimism && yarn deploy-prod:optimism && yarn prepare:arbitrum && yarn deploy-prod:arbitrum && yarn prepare:boba && yarn deploy-prod:boba && yarn prepare:gnosis && yarn deploy-prod:gnosis && yarn prepare:avalanche && yarn deploy-prod:avalanche && yarn prepare:core && yarn deploy-prod:core",
+    "deploy-prod:base": "STUDIO=true scripts/deploy.sh base",
+    "deploy:all-prod": "yarn prepare:mainnet && yarn deploy-prod:mainnet && yarn prepare:polygon && yarn deploy-prod:polygon && yarn prepare:optimism && yarn deploy-prod:optimism && yarn prepare:arbitrum && yarn deploy-prod:arbitrum && yarn prepare:boba && yarn deploy-prod:boba && yarn prepare:gnosis && yarn deploy-prod:gnosis && yarn prepare:avalanche && yarn deploy-prod:avalanche && yarn prepare:core && yarn deploy-prod:core && yarn prepare:base && yarn deploy-prod:base",
     "deploy:all": "yarn prepare:goerli && yarn deploy:goerli && yarn prepare:mainnet && yarn deploy:mainnet && yarn prepare:polygon && yarn deploy:polygon && yarn prepare:arbitrum && yarn deploy:arbitrum && yarn prepare:optimism && yarn deploy:optimism && yarn prepare:boba && yarn deploy:boba && yarn prepare:gnosis && yarn deploy:gnosis && yarn prepare:avalanche && yarn deploy:avalanche && yarn prepare:core-testnet && yarn deploy:core-testnet && yarn prepare:core && yarn deploy:core"
   },
   "repository": {
