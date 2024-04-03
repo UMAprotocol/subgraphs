@@ -33,6 +33,7 @@ This subgraph indexes events emitted by the "Optimistic Oracle" contracts. The c
 - (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-oracle
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle
 - (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-oracle
+- Base: https://thegraph.com/studio/subgraph/base-optimistic-oracle
 
 ## Optimistic Oracle V2 Events and Calls:
 
@@ -49,6 +50,7 @@ This subgraph indexes events and function calls by the "Optimistic Oracle V2" co
 - (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-oracle-v2
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle-v2
 - (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-oracle-v2
+- Base: https://thegraph.com/studio/subgraph/base-optimistic-oracle-v2
 
 ## Financial Contract Events:
 
@@ -91,6 +93,7 @@ This subgraph indexes events emitted by the "Optimistic Oracle V3" contracts. Th
 - (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-oracle-v3
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle-v3
 - (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-oracle-v3
+- Base: https://thegraph.com/studio/subgraph/base-optimistic-oracle-v3
 
 ## Optimistic Governor Events:
 

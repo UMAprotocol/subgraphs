@@ -16,6 +16,7 @@
     "prepare:core-testnet": "scripts/build-manifest.sh core-testnet && yarn remove-call-handlers && yarn codegen && yarn build",
     "prepare:core": "scripts/build-manifest.sh core && yarn remove-call-handlers && yarn codegen && yarn build",
     "prepare:sepolia": "scripts/build-manifest.sh sepolia && yarn codegen && yarn build",
+    "prepare:base": "scripts/build-manifest.sh base && yarn remove-call-handlers && yarn codegen && yarn build",
     "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",
     "deploy:goerli": "env STAGING=true scripts/deploy.sh goerli",
     "deploy:polygon": "env STAGING=true scripts/deploy.sh polygon",
@@ -31,7 +32,8 @@
     "deploy-prod:optimism": "scripts/deploy.sh optimism",
     "deploy-prod:arbitrum": "scripts/deploy.sh arbitrum",
     "deploy-prod:core": "CREATE=true scripts/deploy.sh core",
-    "deploy:all-prod": "yarn prepare:mainnet && yarn deploy-prod:mainnet && yarn prepare:polygon && yarn deploy-prod:polygon && yarn prepare:optimism && yarn deploy-prod:optimism && yarn prepare:arbitrum && yarn deploy-prod:arbitrum && yarn prepare:boba && yarn deploy-prod:boba && yarn prepare:core && yarn deploy-prod:core"
+    "deploy-prod:base": "env STUDIO=true scripts/deploy.sh base",
+    "deploy:all-prod": "yarn prepare:mainnet && yarn deploy-prod:mainnet && yarn prepare:polygon && yarn deploy-prod:polygon && yarn prepare:optimism && yarn deploy-prod:optimism && yarn prepare:arbitrum && yarn deploy-prod:arbitrum && yarn prepare:boba && yarn deploy-prod:boba && yarn prepare:core && yarn deploy-prod:core && yarn prepare:base && yarn deploy-prod:base"
   },
   "repository": {
     "type": "git",

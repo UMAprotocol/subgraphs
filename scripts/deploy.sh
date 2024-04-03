@@ -39,5 +39,9 @@ else
     if [ "$CREATE" ]; then
         yarn graph create --node "$GRAPH_NODE" "$NAMESPACE/$SUBGRAPH_NAME" --access-token "$API_KEY"
     fi
-    yarn graph deploy --node "$GRAPH_NODE" --ipfs "$IPFS" "$NAMESPACE/$SUBGRAPH_NAME" --access-token "$API_KEY"
+    if [ "$STUDIO" ]; then
+        yarn graph deploy --studio "$SUBGRAPH_NAME" --access-token "$API_KEY"
+    else
+        yarn graph deploy --node "$GRAPH_NODE" --ipfs "$IPFS" "$NAMESPACE/$SUBGRAPH_NAME" --access-token "$API_KEY"
+    fi
 fi

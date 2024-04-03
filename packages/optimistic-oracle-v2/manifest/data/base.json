@@ -1,0 +1,10 @@
+{
+  "network": "base",
+  "OptimisticOracleV2DataSources": [
+    {
+      "name": "OptimisticOracleV2",
+      "address": "0x880d041D67aaB3B062995d11d4aD9c1018A3b02f",
+      "startBlock": 12032132
+    }
+  ]
+}
