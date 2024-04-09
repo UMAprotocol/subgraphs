@@ -27,6 +27,12 @@ if [[ -z "${API_KEY}" ]]; then
     exit 1
 fi
 
+# Check if goldsky is installed when using Goldsky indexer.
+if [ "$GOLDSKY" ] && ! command -v goldsky >/dev/null 2>&1; then
+    echo "Error: goldsky command not available. Install it with: curl https://goldsky.com | sh"
+    exit 1
+fi
+
 # Default values for GRAPH_NODE and IPFS
 GRAPH_NODE="${GRAPH_NODE:-https://api.thegraph.com/deploy/}"
 IPFS="${IPFS:-https://api.thegraph.com/ipfs/}"
@@ -35,13 +41,16 @@ echo "$NAMESPACE/$SUBGRAPH_NAME"
 if [ "$DOCKER" ]; then
     echo "Deploying to local docker node"
     yarn graph create --node http://127.0.0.1:8020 $NAMESPACE/$SUBGRAPH_NAME && yarn graph deploy --node http://localhost:8020 --ipfs http://localhost:5001 $NAMESPACE/$SUBGRAPH_NAME
+elif [ "$CREATE" ]; then
+    echo "Creating and deploying on graph node"
+    yarn graph create --node "$GRAPH_NODE" "$NAMESPACE/$SUBGRAPH_NAME" --access-token "$API_KEY" && yarn graph deploy --node "$GRAPH_NODE" --ipfs "$IPFS" "$NAMESPACE/$SUBGRAPH_NAME" --access-token "$API_KEY"
+elif [ "$STUDIO" ]; then
+    echo "Deploying on graph studio"
+    yarn graph deploy --studio "$SUBGRAPH_NAME" --access-token "$API_KEY"
+elif [ "$GOLDSKY" ]; then
+    echo "Deploying on Goldsky indexer"
+    goldsky subgraph deploy "$SUBGRAPH_NAME/latest" --path . --token "$API_KEY"
 else
-    if [ "$CREATE" ]; then
-        yarn graph create --node "$GRAPH_NODE" "$NAMESPACE/$SUBGRAPH_NAME" --access-token "$API_KEY"
-    fi
-    if [ "$STUDIO" ]; then
-        yarn graph deploy --studio "$SUBGRAPH_NAME" --access-token "$API_KEY"
-    else
-        yarn graph deploy --node "$GRAPH_NODE" --ipfs "$IPFS" "$NAMESPACE/$SUBGRAPH_NAME" --access-token "$API_KEY"
-    fi
+    echo "Deploying on graph node"
+    yarn graph deploy --node "$GRAPH_NODE" --ipfs "$IPFS" "$NAMESPACE/$SUBGRAPH_NAME" --access-token "$API_KEY"
 fi
