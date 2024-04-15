@@ -44,6 +44,9 @@ function getMasterCopy(_network: string): string {
     // Network name conflicts with Core Testnet, below is mainnet, but need to manually set to testnet address if redeploying.
     return "0x596Fd6A5A185c67aBD1c845b39f593fBA9C233aa";
   }
+  if (_network == "base") {
+    return "0x80bCA2E1c272239AdFDCdc87779BC8Af6E12e633";
+  }
   if (_network == "sepolia") {
     return "0x40153DdFAd90C49dbE3F5c9F96f2a5B25ec67461";
   }

@@ -27,6 +27,15 @@ if [[ -z "${API_KEY}" ]]; then
     exit 1
 fi
 
+# Graph studio deploy key
+DEPLOY_KEY=$DEPLOY_KEY
+
+# Require $DEPLOY_KEY to be set if $STUDIO is set
+if [[ "$STUDIO" && -z "${DEPLOY_KEY}" ]]; then
+    echo >&2 "DEPLOY_KEY not defined in .env. This should be the deploy key for the graph studio"
+    exit 1
+fi
+
 # Check if goldsky is installed when using Goldsky indexer.
 if [ "$GOLDSKY" ] && ! command -v goldsky >/dev/null 2>&1; then
     echo "Error: goldsky command not available. Install it with: curl https://goldsky.com | sh"
@@ -46,7 +55,7 @@ elif [ "$CREATE" ]; then
     yarn graph create --node "$GRAPH_NODE" "$NAMESPACE/$SUBGRAPH_NAME" --access-token "$API_KEY" && yarn graph deploy --node "$GRAPH_NODE" --ipfs "$IPFS" "$NAMESPACE/$SUBGRAPH_NAME" --access-token "$API_KEY"
 elif [ "$STUDIO" ]; then
     echo "Deploying on graph studio"
-    yarn graph deploy --studio "$SUBGRAPH_NAME" --access-token "$API_KEY"
+    yarn graph deploy --studio "$SUBGRAPH_NAME" --deploy-key "$DEPLOY_KEY"
 elif [ "$GOLDSKY" ]; then
     echo "Deploying on Goldsky indexer"
     goldsky subgraph deploy "$SUBGRAPH_NAME/latest" --path . --token "$API_KEY"
