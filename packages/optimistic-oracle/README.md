@@ -9,3 +9,4 @@
 - Core: `yarn prepare:core && yarn deploy:core`
 - Sepolia: `yarn prepare:sepolia && yarn deploy:sepolia`
 - Base: `yarn prepare:base && yarn deploy-prod:base`
+- Blast: `yarn prepare:blast && yarn deploy-prod:blast`
