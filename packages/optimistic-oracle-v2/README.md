@@ -12,3 +12,4 @@
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle-v2
 - (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-oracle-v2
 - Base: https://thegraph.com/studio/subgraph/base-optimistic-oracle-v2
+- Blast: https://thegraph.com/studio/subgraph/blast-optimistic-oracle-v2

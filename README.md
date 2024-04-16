@@ -34,6 +34,7 @@ This subgraph indexes events emitted by the "Optimistic Oracle" contracts. The c
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle
 - (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-oracle
 - Base: https://thegraph.com/studio/subgraph/base-optimistic-oracle
+- Blast: https://thegraph.com/studio/subgraph/blast-optimistic-oracle
 
 ## Optimistic Oracle V2 Events and Calls:
 
@@ -51,6 +52,7 @@ This subgraph indexes events and function calls by the "Optimistic Oracle V2" co
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle-v2
 - (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-oracle-v2
 - Base: https://thegraph.com/studio/subgraph/base-optimistic-oracle-v2
+- Blast: https://thegraph.com/studio/subgraph/blast-optimistic-oracle-v2
 
 ## Financial Contract Events:
 
@@ -94,6 +96,7 @@ This subgraph indexes events emitted by the "Optimistic Oracle V3" contracts. Th
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle-v3
 - (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-oracle-v3
 - Base: https://thegraph.com/studio/subgraph/base-optimistic-oracle-v3
+- Blast: https://thegraph.com/studio/subgraph/blast-optimistic-oracle-v3
 
 ## Optimistic Governor Events:
 
