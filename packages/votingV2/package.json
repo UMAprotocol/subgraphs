@@ -17,9 +17,9 @@
     "deploy:goerli": "env STAGING=true scripts/deploy.sh goerli",
     "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",
     "deploy:polygon": "env STAGING=true scripts/deploy.sh polygon",
-    "deploy:sepolia": "env STAGING=true scripts/deploy.sh sepolia",
+    "deploy:sepolia": "env STUDIO=true scripts/deploy.sh sepolia",
     "deploy-prod:kovan": "scripts/deploy.sh kovan",
-    "deploy-prod:mainnet": "scripts/deploy.sh mainnet",
+    "deploy-prod:mainnet": "env STUDIO=true scripts/deploy.sh mainnet",
     "deploy-prod:polygon": "scripts/deploy.sh polygon"
   },
   "repository": {

@@ -17,22 +17,22 @@ This subgraph indexes events emitted by the core Oracle contracts. The code can 
 
 This subgraph indexes events emitted by the "Skinny Optimistic Oracle" contracts. The code can be found in `packages/skinny-optimistic-oracle`
 
-- Mainnet: https://thegraph.com/hosted-service/subgraph/umaprotocol/mainnet-skinny-oo
-- (staging) Sepolia: https://thegraph.com/hosted-service/subgraph/reinis-frp/sepolia-skinny-oo
+- Mainnet: https://thegraph.com/studio/subgraph/mainnet-skinny-oo
+- (testnet) Sepolia: https://thegraph.com/studio/subgraph/sepolia-skinny-oo
 
 ## Optimistic Oracle Events:
 
 This subgraph indexes events emitted by the "Optimistic Oracle" contracts. The code can be found in `packages/optimistic-oracle`
 
-- Mainnet: https://thegraph.com/hosted-service/subgraph/umaprotocol/mainnet-optimistic-oracle
-- Polygon: https://thegraph.com/hosted-service/subgraph/umaprotocol/polygon-optimistic-oracle
-- Arbitrum: https://thegraph.com/hosted-service/subgraph/umaprotocol/arbitrum-optimistic-oracle
-- Optimism: https://thegraph.com/hosted-service/subgraph/umaprotocol/optimism-optimistic-oracle
-- Boba: https://thegraph.com/hosted-service/subgraph/umaprotocol/boba-optimistic-oracle
+- Mainnet: https://thegraph.com/studio/subgraph/mainnet-optimistic-oracle
+- Polygon: https://thegraph.com/studio/subgraph/polygon-optimistic-oracle
+- Arbitrum: https://thegraph.com/studio/subgraph/arbitrum-optimistic-oracle
+- Optimism: https://thegraph.com/studio/subgraph/optimism-optimistic-oracle
+- Boba: https://thegraph.com/studio/subgraph/boba-optimistic-oracle
 - (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-oracle
 - (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-oracle
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle
-- (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-oracle
+- (testnet) Sepolia: https://thegraph.com/studio/subgraph/sepolia-optimistic-oracle
 - Base: https://thegraph.com/studio/subgraph/base-optimistic-oracle
 - Blast: https://thegraph.com/studio/subgraph/blast-optimistic-oracle
 
@@ -42,15 +42,15 @@ This subgraph indexes events and function calls by the "Optimistic Oracle V2" co
 
 **Note:** L2 chains does not support `callHandlers`. This means we cannot use callHandlers to index the `setBond`, `setCustomLiveness`, and `setEventBased` function calls. These properties are also not available via events. Our compromise here is that in the case of L2 chains, we read this data from the contract state in the event handler instead. **This workaround works when `setCustomLiveness` and `setEventBased` are called in the same transaction as `requestPrice`. So it doesn't work for all cases. Ideally we should have `callHandlers` in the chains that support this.** We therefore must also remove the call handlers from the subgraph.yaml file for Polygon. See `scripts/remove-call-handlers.js` for implementation.
 
-- Mainnet: https://thegraph.com/hosted-service/subgraph/umaprotocol/mainnet-optimistic-oracle-v2
-- Polygon: https://thegraph.com/hosted-service/subgraph/umaprotocol/polygon-optimistic-oracle-v2
-- Arbitrum: https://thegraph.com/hosted-service/subgraph/umaprotocol/arbitrum-optimistic-oracle-v2
-- Optimism: https://thegraph.com/hosted-service/subgraph/umaprotocol/optimism-optimistic-oracle-v2
-- Boba: https://thegraph.com/hosted-service/subgraph/umaprotocol/boba-optimistic-oracle-v2
+- Mainnet: https://thegraph.com/studio/subgraph/mainnet-optimistic-oracle-v2
+- Polygon: https://thegraph.com/studio/subgraph/polygon-optimistic-oracle-v2
+- Arbitrum: https://thegraph.com/studio/subgraph/arbitrum-optimistic-oracle-v2
+- Optimism: https://thegraph.com/studio/subgraph/optimism-optimistic-oracle-v2
+- Boba: https://thegraph.com/studio/subgraph/boba-optimistic-oracle-v2
 - (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-oracle-v2
 - (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-oracle-v2
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle-v2
-- (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-oracle-v2
+- (testnet) Sepolia: https://thegraph.com/studio/subgraph/sepolia-optimistic-oracle-v2
 - Base: https://thegraph.com/studio/subgraph/base-optimistic-oracle-v2
 - (staging) Base Sepolia: https://thegraph.com/studio/subgraph/base-sepolia-oo-v2
 - Blast: https://thegraph.com/studio/subgraph/blast-optimistic-oracle-v2
@@ -77,25 +77,25 @@ This subgraph indexes events emitted by the UMA voting token contracts. The code
 
 This subgraph indexes events emitted by the core Oracle contracts. The code can be found in `packages/votingV2`
 
-- Mainnet: https://thegraph.com/hosted-service/subgraph/umaprotocol/mainnet-voting-v2
+- Mainnet: https://thegraph.com/studio/subgraph/mainnet-voting-v2
 - Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-voting-v2
-- (staging) Sepolia: https://thegraph.com/hosted-service/subgraph/reinis-frp/sepolia-voting-v2
+- (testnet) Sepolia: https://thegraph.com/studio/subgraph/sepolia-voting-v2
 
 ## Optimistic Oracle V3 Events:
 
 This subgraph indexes events emitted by the "Optimistic Oracle V3" contracts. The code can be found in `packages/optimistic-oracle-v3`
 
-- Mainnet: https://thegraph.com/hosted-service/subgraph/umaprotocol/mainnet-optimistic-oracle-v3
-- Polygon: https://thegraph.com/hosted-service/subgraph/umaprotocol/polygon-optimistic-oracle-v3
-- Arbitrum: https://thegraph.com/hosted-service/subgraph/umaprotocol/arbitrum-optimistic-oracle-v3
-- Optimism: https://thegraph.com/hosted-service/subgraph/umaprotocol/optimism-optimistic-oracle-v3
-- Boba: https://thegraph.com/hosted-service/subgraph/umaprotocol/boba-optimistic-oracle-v3
-- Avalanche: https://thegraph.com/hosted-service/subgraph/umaprotocol/avalanche-optimistic-oracle-v3
-- Gnosis: https://thegraph.com/hosted-service/subgraph/umaprotocol/gnosis-optimistic-oracle-v3
+- Mainnet: https://thegraph.com/studio/subgraph/mainnet-optimistic-oracle-v3
+- Polygon: https://thegraph.com/studio/subgraph/polygon-optimistic-oracle-v3
+- Arbitrum: https://thegraph.com/studio/subgraph/arbitrum-optimistic-oracle-v3
+- Optimism: https://thegraph.com/studio/subgraph/optimism-optimistic-oracle-v3
+- Boba: https://thegraph.com/studio/subgraph/boba-optimistic-oracle-v3
+- Avalanche: https://thegraph.com/studio/subgraph/avalanche-optimistic-oracle-v3
+- Gnosis: https://thegraph.com/studio/subgraph/gnosis-optimistic-oracle-v3
 - (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-oracle-v3
 - (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-oracle-v3
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle-v3
-- (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-oracle-v3
+- (testnet) Sepolia: https://thegraph.com/studio/subgraph/sepolia-optimistic-oracle-v3
 - Base: https://thegraph.com/studio/subgraph/base-optimistic-oracle-v3
 - (staging) Base Sepolia: https://thegraph.com/studio/subgraph/base-sepolia-oo-v3
 - Blast: https://thegraph.com/studio/subgraph/blast-optimistic-oracle-v3
@@ -104,17 +104,17 @@ This subgraph indexes events emitted by the "Optimistic Oracle V3" contracts. Th
 
 This subgraph indexes events emitted by all the Optimistic Governor deployments. 
 
-- Mainnet: https://thegraph.com/hosted-service/subgraph/umaprotocol/mainnet-optimistic-governor
-- Polygon: https://thegraph.com/hosted-service/subgraph/umaprotocol/polygon-optimistic-governor
-- Arbitrum: https://thegraph.com/hosted-service/subgraph/umaprotocol/arbitrum-optimistic-governor
-- Optimism: https://thegraph.com/hosted-service/subgraph/umaprotocol/optimism-optimistic-governor
-- Avalanche: https://thegraph.com/hosted-service/subgraph/umaprotocol/avalanche-optimistic-governor
-- Gnosis: https://thegraph.com/hosted-service/subgraph/umaprotocol/gnosis-optimistic-governor
+- Mainnet: https://thegraph.com/studio/subgraph/mainnet-optimistic-governor
+- Polygon: https://thegraph.com/studio/subgraph/polygon-optimistic-governor
+- Arbitrum: https://thegraph.com/studio/subgraph/arbitrum-optimistic-governor
+- Optimism: https://thegraph.com/studio/subgraph/optimism-optimistic-governor
+- Avalanche: https://thegraph.com/studio/subgraph/avalanche-optimistic-governor
+- Gnosis: https://thegraph.com/studio/subgraph/gnosis-optimistic-governor
 - (testnet) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-governor
 - (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-governor
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-governor
 - Base: https://thegraph.com/studio/subgraph/base-optimistic-governor
-- (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-governor
+- (testnet) Sepolia: https://thegraph.com/studio/subgraph/sepolia-optimistic-governor
 
 ## Resources
 
