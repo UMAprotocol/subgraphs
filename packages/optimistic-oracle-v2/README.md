@@ -2,14 +2,14 @@
 
 ## Deploying the subgraph
 
-- (unofficial) Mainnet: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/mainnet-oov2-staging
-- (unofficial) Polygon: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/polygon-oov2-staging
-- (unofficial) Arbitrum: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/arbitrum-oov2-staging
-- (unofficial) Optimism: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/optimism-oov2-staging
-- (unofficial) Boba: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/boba-oov2-staging
+- Mainnet: https://thegraph.com/studio/subgraph/mainnet-optimistic-oracle-v2
+- Polygon: https://thegraph.com/studio/subgraph/polygon-optimistic-oracle-v2
+- Arbitrum: https://thegraph.com/studio/subgraph/arbitrum-optimistic-oracle-v2
+- Optimism: https://thegraph.com/studio/subgraph/optimism-optimistic-oracle-v2
+- Boba: https://thegraph.com/studio/subgraph/boba-optimistic-oracle-v2
 - (staging) Goerli: https://thegraph.com/hosted-service/subgraph/ryanwolhuter/goerli-oov2-staging
 - (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-oracle-v2
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle-v2
-- (staging) Sepolia: https://thegraph.com/explorer/subgraph/reinis-frp/sepolia-optimistic-oracle-v2
+- (testnet) Sepolia: https://thegraph.com/studio/subgraph/sepolia-optimistic-oracle-v2
 - Base: https://thegraph.com/studio/subgraph/base-optimistic-oracle-v2
 - Blast: https://thegraph.com/studio/subgraph/blast-optimistic-oracle-v2
