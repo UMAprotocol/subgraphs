@@ -422,8 +422,9 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   const voterStakeData = votingContract.try_voterStakes(event.params.voter);
 
   const voterTokensCommitted = voterStakeData.reverted
-  ? toDecimal(BigInt.fromString("0"))
-  : toDecimal(voterStakeData.value.value0);
+    ? toDecimal(BigInt.fromString("0"))
+    : toDecimal(voterStakeData.value.value0);
+  let totalCommittedToAdd = vote.voter === null ? voterTokensCommitted : toDecimal(BigInt.fromString("0"));
 
   let requestId = getPriceRequestId(
     event.params.identifier.toString(),
@@ -445,7 +446,7 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   requestRound.identifier = event.params.identifier.toString();
   requestRound.time = event.params.time;
   requestRound.roundId = event.params.roundId;
-  requestRound.totalTokensCommitted = requestRound.totalTokensCommitted.plus(voterTokensCommitted)
+  requestRound.totalTokensCommitted = requestRound.totalTokensCommitted.plus(totalCommittedToAdd)
 
   requestRound.save();
   request.save();
