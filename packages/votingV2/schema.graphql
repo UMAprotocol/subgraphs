@@ -189,6 +189,8 @@ type PriceRequestRound @entity {
 
   totalVotesRevealed: BigDecimal!
 
+  totalTokensCommitted: BigDecimal!
+
   cumulativeStakeAtRound: BigDecimal
 
   countNoVotes: BigInt!
@@ -286,7 +288,7 @@ type SlashedVote @entity {
 }
 
 type CommittedVote @entity {
-  "Commited votes won't show the price until a reveal happens and a RevealedVote is created"
+  "Committed votes won't show the price until a reveal happens and a RevealedVote is created"
   id: ID!
 
   identifier: PriceIdentifier!
@@ -300,6 +302,8 @@ type CommittedVote @entity {
   round: PriceRequestRound!
 
   voter: User!
+
+  numTokens: BigInt!
 }
 
 type RevealedVote @entity {

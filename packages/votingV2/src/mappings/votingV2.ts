@@ -418,6 +418,13 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   );
   let vote = getOrCreateCommittedVote(voteId);
   let voter = getOrCreateUser(event.params.voter);
+  let votingContract = VotingV2.bind(event.address);
+  const voterStakeData = votingContract.try_voterStakes(event.params.voter);
+
+  // get voter's stake at time of commit
+  const voterTokensCommitted = voterStakeData.reverted
+  ? BigInt.fromString("0")
+  : voterStakeData.value.value0;
 
   let requestId = getPriceRequestId(
     event.params.identifier.toString(),
@@ -439,6 +446,11 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   requestRound.identifier = event.params.identifier.toString();
   requestRound.time = event.params.time;
   requestRound.roundId = event.params.roundId;
+  // if user has voted previously, remove previous token amount, add new
+  requestRound.totalTokensCommitted = requestRound.totalTokensCommitted.minus(toDecimal(vote.numTokens)).plus(toDecimal(voterTokensCommitted));
+
+  // update voter's stake value
+  vote.numTokens = voterTokensCommitted;   
 
   requestRound.save();
   request.save();
