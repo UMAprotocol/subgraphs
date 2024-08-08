@@ -422,9 +422,7 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   const voterStakeData = votingContract.try_voterStakes(event.params.voter);
 
   // get voter's stake at time of commit
-  const voterTokensCommitted = voterStakeData.reverted
-  ? BigInt.fromString("0")
-  : voterStakeData.value.value0;
+  const voterTokensCommitted = voterStakeData.reverted ? BigInt.fromString("0") : voterStakeData.value.value0;
 
   let requestId = getPriceRequestId(
     event.params.identifier.toString(),
@@ -447,10 +445,12 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   requestRound.time = event.params.time;
   requestRound.roundId = event.params.roundId;
   // if user has voted previously, remove previous token amount, add new
-  requestRound.totalTokensCommitted = requestRound.totalTokensCommitted.minus(toDecimal(vote.numTokens)).plus(toDecimal(voterTokensCommitted));
+  requestRound.totalTokensCommitted = requestRound.totalTokensCommitted
+    .minus(toDecimal(vote.numTokens))
+    .plus(toDecimal(voterTokensCommitted));
 
   // update voter's stake value
-  vote.numTokens = voterTokensCommitted;   
+  vote.numTokens = voterTokensCommitted;
 
   requestRound.save();
   request.save();
@@ -502,7 +502,6 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   vote.identifier = event.params.identifier.toString();
   vote.time = event.params.time;
   vote.price = event.params.price;
-  vote.numTokens = event.params.numTokens;
   vote.group = voterGroup.id;
 
   voter.countReveals = defaultBigInt(voter.countReveals).plus(BIGINT_ONE);
