@@ -1,0 +1,10 @@
+{
+  "network": "odyssey-testnet",
+  "OptimisticOracleV3DataSources": [
+    {
+      "name": "OptimisticOracleV3",
+      "address": "0x3CA11702f7c0F28e0b4e03C31F7492969862C569",
+      "startBlock": 298453
+    }
+  ]
+}
