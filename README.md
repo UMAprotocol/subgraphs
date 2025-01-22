@@ -43,7 +43,8 @@ This subgraph indexes events and function calls by the "Optimistic Oracle V2" co
 **Note:** L2 chains does not support `callHandlers`. This means we cannot use callHandlers to index the `setBond`, `setCustomLiveness`, and `setEventBased` function calls. These properties are also not available via events. Our compromise here is that in the case of L2 chains, we read this data from the contract state in the event handler instead. **This workaround works when `setCustomLiveness` and `setEventBased` are called in the same transaction as `requestPrice`. So it doesn't work for all cases. Ideally we should have `callHandlers` in the chains that support this.** We therefore must also remove the call handlers from the subgraph.yaml file for Polygon. See `scripts/remove-call-handlers.js` for implementation.
 
 - Mainnet: https://thegraph.com/studio/subgraph/mainnet-optimistic-oracle-v2
-- Polygon: https://thegraph.com/studio/subgraph/polygon-optimistic-oracle-v2
+- Polygon TheGraph: https://thegraph.com/studio/subgraph/polygon-optimistic-oracle-v2
+- Polygon Goldsky: https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/polygon-optimistic-oracle-v2/latest/gn
 - Arbitrum: https://thegraph.com/studio/subgraph/arbitrum-optimistic-oracle-v2
 - Optimism: https://thegraph.com/studio/subgraph/optimism-optimistic-oracle-v2
 - Boba: https://thegraph.com/studio/subgraph/boba-optimistic-oracle-v2
@@ -96,7 +97,8 @@ This subgraph indexes events emitted by the "Optimistic Oracle V3" contracts. Th
 - (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-oracle-v3
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle-v3
 - (testnet) Sepolia: https://thegraph.com/studio/subgraph/sepolia-optimistic-oracle-v3
-- Base: https://thegraph.com/studio/subgraph/base-optimistic-oracle-v3
+- Base TheGraph: https://thegraph.com/studio/subgraph/base-optimistic-oracle-v3
+- Base Goldsky: https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/base-optimistic-oracle-v3/latest/gn
 - (staging) Base Sepolia: https://thegraph.com/studio/subgraph/base-sepolia-oo-v3
 - Blast: https://thegraph.com/studio/subgraph/blast-optimistic-oracle-v3
 
