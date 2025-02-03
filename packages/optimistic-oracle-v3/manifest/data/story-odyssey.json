@@ -1,5 +1,5 @@
 {
-  "network": "story-odyssey",
+  "network": "odyssey-testnet",
   "OptimisticOracleV3DataSources": [
     {
       "name": "OptimisticOracleV3",
