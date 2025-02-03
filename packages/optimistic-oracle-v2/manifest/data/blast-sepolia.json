@@ -1,0 +1,10 @@
+{
+  "network": "blast-sepolia",
+  "OptimisticOracleV2DataSources": [
+    {
+      "name": "OptimisticOracleV2",
+      "address": "0xD8c6dD978a3768F7DDfE3A9aAD2c3Fd75Fa9B6Fd",
+      "startBlock": 8274989
+    }
+  ]
+}
