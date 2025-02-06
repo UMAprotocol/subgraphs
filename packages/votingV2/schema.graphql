@@ -166,6 +166,31 @@ type PriceRequest @entity {
 
   "Is this request a governance action"
   isGovernance: Boolean!
+
+  "SlashingTracker entity corresponding to this request"
+  slashingTracker: SlashingTracker
+}
+
+type SlashingTracker @entity {
+  id: ID!
+
+  "PriceRequest entity corresponding to this slashing tracker"
+  request: PriceRequest! @derivedFrom(field: "slashingTracker")
+
+  "Last voting round that this request was voted on (when it resolved)"
+  lastVotingRound: BigInt!
+
+  "Amount of tokens slashed per token staked for a wrong vote"
+  wrongVoteSlashPerToken: BigDecimal!
+
+  "Amount of tokens slashed per token staked for a no vote"
+  noVoteSlashPerToken: BigDecimal!
+
+  "Total amount of tokens slashed for this request"
+  totalSlashed: BigDecimal!
+
+  "Total number of correct votes for this request"
+  totalCorrectVotes: BigDecimal!
 }
 
 type PriceRequestRound @entity {
@@ -246,25 +271,6 @@ type VoterGroup @entity {
   won: Boolean!
 }
 
-type TransactionSlashedVotes @entity {
-  id: ID!
-
-  "List of all slashed votes in this transaction"
-  slashedVotesIDs: [String!]!
-
-  cumulativeTransactionSlashAmount: BigDecimal!
-
-  stakedAmount: BigDecimal
-
-  countNoVotes: BigInt!
-
-  countWrongVotes: BigInt!
-
-  countCorrectVotes: BigInt!
-
-  slashedVotes: [SlashedVote!] @derivedFrom(field: "transactionSlashedVotes")
-}
-
 type SlashedVote @entity {
   id: ID!
 
@@ -283,8 +289,6 @@ type SlashedVote @entity {
   resolutionTimestamp: BigInt
 
   isGovernance: Boolean!
-
-  transactionSlashedVotes: TransactionSlashedVotes!
 }
 
 type CommittedVote @entity {
