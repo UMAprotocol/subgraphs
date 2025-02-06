@@ -466,7 +466,6 @@ export function handleVoterSlashed(event: VoterSlashed): void {
     event.params.requestIndex.toString()
   );
 
-
   let votedCorrectly = false;
   let revealedVote = RevealedVote.load(revealVoteId);
   if (revealedVote != null) {
@@ -475,10 +474,10 @@ export function handleVoterSlashed(event: VoterSlashed): void {
 
   // The non-null assertion operator '!' is safe here because the request has been resolved.
   let requestRound: PriceRequestRound = getOrCreatePriceRequestRound(
-    requestId.concat("-").concat(request.latestRound!)
+    request.latestRound!
   );
 
-  // The non-null assertion is also safe here.
+  // The non-null assertion operator '!' is safe here because the request has been resolved.
   if (votedCorrectly) {
     // User has voted correctly
     voteSlashed.correctness = true;
