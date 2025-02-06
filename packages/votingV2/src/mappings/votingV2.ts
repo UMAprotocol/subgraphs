@@ -143,6 +143,7 @@ export function handlePriceResolved(event: RequestResolved): void {
   request.resolutionTimestamp = event.block.timestamp;
   request.resolutionBlock = event.block.number;
   request.isResolved = true;
+  request.slashingTracker = slashingTracker.id;
 
   voterGroup.won = true;
 
