@@ -30,7 +30,6 @@
     "deploy:core-testnet": "env STAGING=true CREATE=true scripts/deploy.sh core-testnet",
     "deploy:core": "env STAGING=true CREATE=true scripts/deploy.sh core",
     "deploy:sepolia": "env STUDIO=true scripts/deploy.sh sepolia",
-    "deploy:amoy": "env GOLDSKY=true scripts/deploy.sh amoy",
     "deploy-prod:mainnet": "env STUDIO=true scripts/deploy.sh mainnet",
     "deploy-prod:polygon": "env STUDIO=true scripts/deploy.sh polygon",
     "deploy-prod:boba": "env STUDIO=true scripts/deploy.sh boba",
@@ -39,7 +38,18 @@
     "deploy-prod:core": "CREATE=true scripts/deploy.sh core",
     "deploy-prod:base": "env STUDIO=true scripts/deploy.sh base",
     "deploy-prod:blast": "env STUDIO=true scripts/deploy.sh blast",
-    "deploy:all-prod": "yarn prepare:mainnet && yarn deploy-prod:mainnet && yarn prepare:polygon && yarn deploy-prod:polygon && yarn prepare:optimism && yarn deploy-prod:optimism && yarn prepare:arbitrum && yarn deploy-prod:arbitrum && yarn prepare:boba && yarn deploy-prod:boba && yarn prepare:core && yarn deploy-prod:core && yarn prepare:base && yarn deploy-prod:base && yarn prepare:blast && yarn deploy-prod:blast"
+    "deploy:all-prod": "yarn prepare:mainnet && yarn deploy-prod:mainnet && yarn prepare:polygon && yarn deploy-prod:polygon && yarn prepare:optimism && yarn deploy-prod:optimism && yarn prepare:arbitrum && yarn deploy-prod:arbitrum && yarn prepare:boba && yarn deploy-prod:boba && yarn prepare:core && yarn deploy-prod:core && yarn prepare:base && yarn deploy-prod:base && yarn prepare:blast && yarn deploy-prod:blast",
+    "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",
+    "deploy:goldsky:amoy": "env GOLDSKY=true scripts/deploy.sh amoy",
+    "deploy:goldsky:base-sepolia": "env GOLDSKY=true scripts/deploy.sh base-sepolia",
+    "deploy:sepolia:goldsky": "env GOLDSKY=true scripts/deploy.sh sepolia",
+    "deploy-prod:goldsky:mainnet": "env GOLDSKY=true scripts/deploy.sh mainnet",
+    "deploy-prod:goldsky:polygon": "env GOLDSKY=true scripts/deploy.sh polygon",
+    "deploy-prod:goldsky:boba": "env GOLDSKY=true scripts/deploy.sh boba",
+    "deploy-prod:goldsky:optimism": "env GOLDSKY=true scripts/deploy.sh optimism",
+    "deploy-prod:goldsky:arbitrum": "env GOLDSKY=true scripts/deploy.sh arbitrum",
+    "deploy-prod:goldsky:base": "env GOLDSKY=true scripts/deploy.sh base",
+    "deploy-prod:goldsky:blast": "env GOLDSKY=true scripts/deploy.sh blast"
   },
   "repository": {
     "type": "git",
