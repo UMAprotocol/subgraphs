@@ -20,7 +20,7 @@
     "prepare:base-sepolia": "scripts/build-manifest.sh base-sepolia && yarn remove-call-handlers && yarn codegen && yarn build",
     "prepare:amoy": "scripts/build-manifest.sh amoy && yarn remove-call-handlers && yarn codegen && yarn build",
     "prepare:blast": "scripts/build-manifest.sh blast && yarn remove-call-handlers && yarn codegen && yarn build",
-    "prepare:goldsky:blast": "OVERRIDE_CHAIN_ID=blast scripts/build-manifest.sh blast && yarn remove-call-handlers && yarn codegen && yarn build",
+    "prepare:goldsky:blast": "scripts/build-manifest.sh blast-goldsky && yarn remove-call-handlers && yarn codegen && yarn build",
     "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",
     "deploy:goerli": "env STAGING=true scripts/deploy.sh goerli",
     "deploy:polygon": "env STAGING=true scripts/deploy.sh polygon",
@@ -49,7 +49,7 @@
     "deploy-prod:goldsky:optimism": "env GOLDSKY=true scripts/deploy.sh optimism",
     "deploy-prod:goldsky:arbitrum": "env GOLDSKY=true scripts/deploy.sh arbitrum",
     "deploy-prod:goldsky:base": "env GOLDSKY=true scripts/deploy.sh base",
-    "deploy-prod:goldsky:blast": "env GOLDSKY=true scripts/deploy.sh blast"
+    "deploy-prod:goldsky:blast": "env GOLDSKY=true scripts/deploy.sh blast-goldsky"
   },
   "repository": {
     "type": "git",
