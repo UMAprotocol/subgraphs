@@ -45,16 +45,20 @@ This subgraph indexes events and function calls by the "Optimistic Oracle V2" co
 - Mainnet: https://thegraph.com/studio/subgraph/mainnet-optimistic-oracle-v2
 - Polygon TheGraph: https://thegraph.com/studio/subgraph/polygon-optimistic-oracle-v2
 - Polygon Goldsky: https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/polygon-optimistic-oracle-v2/latest/gn
-- Arbitrum: https://thegraph.com/studio/subgraph/arbitrum-optimistic-oracle-v2
-- Optimism: https://thegraph.com/studio/subgraph/optimism-optimistic-oracle-v2
+- Arbitrum TheGraph: https://thegraph.com/studio/subgraph/arbitrum-optimistic-oracle-v2
+- Arbitrum Goldsky: https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/arbitrum-optimistic-oracle-v2/latest/gn
+- Optimism TheGraph: https://thegraph.com/studio/subgraph/optimism-optimistic-oracle-v2
+- Optimism Goldsky: https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/optimism-optimistic-oracle-v2/latest/gn
 - Boba: https://thegraph.com/studio/subgraph/boba-optimistic-oracle-v2
 - (staging) Goerli: https://thegraph.com/hosted-service/subgraph/md0x/goerli-optimistic-oracle-v2
 - (staging) Core Testnet: https://thegraph.test.btcs.network/subgraphs/name/Reinis-FRP/core-testnet-optimistic-oracle-v2
 - Core: https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle-v2
 - (testnet) Sepolia: https://thegraph.com/studio/subgraph/sepolia-optimistic-oracle-v2
-- Base: https://thegraph.com/studio/subgraph/base-optimistic-oracle-v2
+- Base TheGraph: https://thegraph.com/studio/subgraph/base-optimistic-oracle-v2
+- Base Goldsky: https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/base-optimistic-oracle-v2/latest/gn
 - (staging) Base Sepolia: https://thegraph.com/studio/subgraph/base-sepolia-oo-v2
-- Blast: https://thegraph.com/studio/subgraph/blast-optimistic-oracle-v2
+- Blast TheGraph: https://thegraph.com/studio/subgraph/blast-optimistic-oracle-v2
+- Blast Goldsky: https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/blast-optimistic-oracle-v2/1.0.0/gn
 
 ## Financial Contract Events:
 
