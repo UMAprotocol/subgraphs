@@ -90,10 +90,14 @@ This subgraph indexes events emitted by the core Oracle contracts. The code can 
 
 This subgraph indexes events emitted by the "Optimistic Oracle V3" contracts. The code can be found in `packages/optimistic-oracle-v3`
 
-- Mainnet: https://thegraph.com/studio/subgraph/mainnet-optimistic-oracle-v3
-- Polygon: https://thegraph.com/studio/subgraph/polygon-optimistic-oracle-v3
-- Arbitrum: https://thegraph.com/studio/subgraph/arbitrum-optimistic-oracle-v3
-- Optimism: https://thegraph.com/studio/subgraph/optimism-optimistic-oracle-v3
+- Mainnet TheGraph: https://thegraph.com/studio/subgraph/mainnet-optimistic-oracle-v3
+- Mainnet Goldsky: https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/mainnet-optimistic-oracle-v3/latest/gn  
+- Polygon TheGraph: https://thegraph.com/studio/subgraph/polygon-optimistic-oracle-v3
+- Polygon Goldsky: https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/polygon-optimistic-oracle-v3/1/gn
+- Arbitrum TheGraph: https://thegraph.com/studio/subgraph/arbitrum-optimistic-oracle-v3
+- Arbitrum Goldsky: https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/arbitrum-optimistic-oracle-v3/1/gn
+- Optimism TheGraph: https://thegraph.com/studio/subgraph/optimism-optimistic-oracle-v3
+- Optimism Goldsky: https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/optimism-optimistic-oracle-v3/1/gn
 - Boba: https://thegraph.com/studio/subgraph/boba-optimistic-oracle-v3
 - Avalanche: https://thegraph.com/studio/subgraph/avalanche-optimistic-oracle-v3
 - Gnosis: https://thegraph.com/studio/subgraph/gnosis-optimistic-oracle-v3
@@ -104,7 +108,8 @@ This subgraph indexes events emitted by the "Optimistic Oracle V3" contracts. Th
 - Base TheGraph: https://thegraph.com/studio/subgraph/base-optimistic-oracle-v3
 - Base Goldsky: https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/base-optimistic-oracle-v3/latest/gn
 - (staging) Base Sepolia: https://thegraph.com/studio/subgraph/base-sepolia-oo-v3
-- Blast: https://thegraph.com/studio/subgraph/blast-optimistic-oracle-v3
+- Blast TheGraph: https://thegraph.com/studio/subgraph/blast-optimistic-oracle-v3
+- Blast Goldsky: https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/blast-goldsky-optimistic-oracle-v3/1/gn
 
 ## Optimistic Governor Events:
 
