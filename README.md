@@ -58,7 +58,7 @@ This subgraph indexes events and function calls by the "Optimistic Oracle V2" co
 - Base Goldsky: https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/base-optimistic-oracle-v2/latest/gn
 - (staging) Base Sepolia: https://thegraph.com/studio/subgraph/base-sepolia-oo-v2
 - Blast TheGraph: https://thegraph.com/studio/subgraph/blast-optimistic-oracle-v2
-- Blast Goldsky: N/A
+- Blast Goldsky: https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/blast-optimistic-oracle-v2/1.0.0/gn
 
 ## Financial Contract Events:
 
