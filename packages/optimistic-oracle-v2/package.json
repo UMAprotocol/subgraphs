@@ -20,7 +20,7 @@
     "prepare:base-sepolia": "scripts/build-manifest.sh base-sepolia && yarn remove-call-handlers && yarn codegen && yarn build",
     "prepare:amoy": "scripts/build-manifest.sh amoy && yarn remove-call-handlers && yarn codegen && yarn build",
     "prepare:blast": "scripts/build-manifest.sh blast && yarn remove-call-handlers && yarn codegen && yarn build",
-    "prepare:blast:goldsky": "RENAME_CHAIN_ID=blast scripts/build-manifest.sh blast && yarn remove-call-handlers && yarn codegen && yarn build",
+    "prepare:blast:goldsky": "OVERRIDE_CHAIN_ID=blast scripts/build-manifest.sh blast && yarn remove-call-handlers && yarn codegen && yarn build",
     "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",
     "deploy:goerli": "env STAGING=true scripts/deploy.sh goerli",
     "deploy:polygon": "env STAGING=true scripts/deploy.sh polygon",
