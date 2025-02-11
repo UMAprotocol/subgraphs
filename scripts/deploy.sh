@@ -57,8 +57,12 @@ elif [ "$STUDIO" ]; then
     echo "Deploying on graph studio"
     yarn graph deploy --studio "$SUBGRAPH_NAME" --deploy-key "$DEPLOY_KEY"
 elif [ "$GOLDSKY" ]; then
-    echo "Deploying on Goldsky indexer"
-    goldsky subgraph deploy "$SUBGRAPH_NAME/latest" --path . --token "$API_KEY"
+    echo "Deploying $SUBGRAPH_NAME on Goldsky indexer"
+    echo "Existing versions:"
+    goldsky subgraph list "$SUBGRAPH_NAME" --summary --token "$GOLDSKY_API_KEY"
+    echo "Enter the version number"
+    read VERSION
+    goldsky subgraph deploy "$SUBGRAPH_NAME/$VERSION" --path . --token "$GOLDSKY_API_KEY"
 else
     echo "Deploying on graph node"
     yarn graph deploy --node "$GRAPH_NODE" --ipfs "$IPFS" "$NAMESPACE/$SUBGRAPH_NAME" --access-token "$API_KEY"
