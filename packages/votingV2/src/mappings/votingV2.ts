@@ -1,8 +1,10 @@
-import { PriceRequestRound, RevealedVote, SlashedVote, TransactionSlashedVotes, User } from "../../generated/schema";
+import { PriceRequestRound, RevealedVote } from "../../generated/schema";
 import {
   ExecutedUnstake,
   RequestAdded,
+  RequestDeleted,
   RequestResolved,
+  RequestRolled,
   RequestedUnstake,
   Staked,
   UpdatedReward,
@@ -11,17 +13,13 @@ import {
   VoterSlashed,
   VotingV2,
   WithdrawnRewards,
-  RequestDeleted,
-  RequestRolled,
 } from "../../generated/Voting/VotingV2";
 import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ONE, BIGINT_ZERO } from "../utils/constants";
 import {
   defaultBigDecimal,
   defaultBigInt,
   safeDivBigDecimal,
-  toDecimal,
-  absMax,
-  bigDecimalMin,
+  toDecimal
 } from "../utils/decimals";
 import {
   getOrCreateCommittedVote,
@@ -30,14 +28,14 @@ import {
   getOrCreatePriceRequestRound,
   getOrCreateRevealedVote,
   getOrCreateUser,
-  getOrCreateVoterGroup,
-  getTokenContract,
+  getOrCreateVoterGroup
 } from "../utils/helpers";
 
 import { Address, BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
 import {
-  getOrCreateSlashedVote,
   getOrCreateGlobals,
+  getOrCreateSlashedVote,
+  getOrCreateSlashingTracker,
   getPriceRequestId,
   getVoteId,
   getVoteIdNoRoundId,
@@ -131,12 +129,21 @@ export function handlePriceResolved(event: RequestResolved): void {
     ? toDecimal(BigInt.fromString("0"))
     : toDecimal(roundInfo.value.value3);
 
+  let slashingTrackers = votingContract.try_requestSlashingTrackers(event.params.resolvedPriceRequestIndex);
+  let slashingTracker = getOrCreateSlashingTracker(requestId);
+  slashingTracker.lastVotingRound = event.params.roundId;
+  slashingTracker.totalSlashed = toDecimal(slashingTrackers.value.totalSlashed);
+  slashingTracker.totalCorrectVotes = toDecimal(slashingTrackers.value.totalCorrectVotes);
+  slashingTracker.wrongVoteSlashPerToken = toDecimal(slashingTrackers.value.wrongVoteSlashPerToken);
+  slashingTracker.noVoteSlashPerToken = toDecimal(slashingTrackers.value.noVoteSlashPerToken);
+
   request.latestRound = requestRound.id;
   request.price = event.params.price;
   request.resolutionTransaction = event.transaction.hash;
   request.resolutionTimestamp = event.block.timestamp;
   request.resolutionBlock = event.block.number;
   request.isResolved = true;
+  request.slashingTracker = slashingTracker.id;
 
   voterGroup.won = true;
 
@@ -154,248 +161,7 @@ export function handlePriceResolved(event: RequestResolved): void {
   requestRound.save();
   request.save();
   voterGroup.save();
-
-  updateUsersSlashingTrackers(event);
-}
-
-function updateUsersSlashingTrackers(event: RequestResolved): void {
-  let votingContract = VotingV2.bind(event.address);
-  let global = getOrCreateGlobals();
-  let users = global.userAddresses;
-
-  let requestId = getPriceRequestId(
-    event.params.identifier.toString(),
-    event.params.time.toString(),
-    event.params.ancillaryData.toHexString()
-  );
-
-  let request = getOrCreatePriceRequest(requestId);
-
-  let requestRound: PriceRequestRound = getOrCreatePriceRequestRound(
-    requestId.concat("-").concat(event.params.roundId.toString())
-  );
-
-  log.warning(`Updating slashing trackers: {},{},{}`, [
-    requestId,
-    users.length.toString(),
-    event.params.roundId.toString(),
-  ]);
-
-  // loop through all users and update their slashing trackers
-  for (let i = 0; i < users.length; i++) {
-    let userAddress = users[i];
-    let user = getOrCreateUser(Address.fromString(userAddress as string));
-
-    // save the old calculated stake
-    let oldUserCalculatedStake = user.voterCalculatedStake;
-
-    // store the new calculated stake
-    user.voterCalculatedStake = toDecimal(
-      votingContract.try_getVoterStakePostUpdate(Address.fromString(userAddress as string)).value
-    );
-
-    var voteId = getVoteId(
-      userAddress,
-      event.params.identifier.toString(),
-      event.params.time.toString(),
-      event.params.ancillaryData.toHexString(),
-      event.params.roundId.toString()
-    );
-
-    let voteSlashedId = getVoteIdNoRoundId(
-      userAddress,
-      event.params.identifier.toString(),
-      event.params.time.toString(),
-      event.params.ancillaryData.toHexString()
-    );
-
-    let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id, event.transaction.hash.toHexString());
-    let transactionSlashedVotes = TransactionSlashedVotes.load(
-      voteSlashed.transactionSlashedVotes
-    ) as TransactionSlashedVotes;
-
-    voteSlashed.resolutionTimestamp = event.block.timestamp;
-    voteSlashed.isGovernance = request.isGovernance;
-
-    // This is the more accurate way to calculate the user's slash amount.
-    // We just need to handle appropriately the case where there is more than one price request
-    // resolved in the same transaction, this is done in processSlashesInSameTransaction function.
-    let slashing = voteSlashed.slashAmount.equals(BIGDECIMAL_ZERO)
-      ? user.voterCalculatedStake.minus(oldUserCalculatedStake)
-      : voteSlashed.slashAmount;
-
-    voteSlashed.slashAmount = slashing;
-
-    // Check if the user voted in the round
-    if (RevealedVote.load(voteId) != null) {
-      let vote = getOrCreateRevealedVote(voteId);
-      if (event.params.price.equals(vote.price)) {
-        // User voted correctly
-        // Update all the slashing trackers
-        voteSlashed.voted = true;
-        voteSlashed.correctness = true;
-        voteSlashed.staking = true;
-        user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
-        user.cumulativeCalculatedSlashPercentage = safeDivBigDecimal(
-          defaultBigDecimal(user.cumulativeCalculatedSlash),
-          user.cumulativeStakeNoSlashing
-        ).times(BigInt.fromI32(100).toBigDecimal());
-        user.countCorrectVotes = user.countCorrectVotes.plus(BigInt.fromI32(1));
-        global.countCorrectVotes = global.countCorrectVotes.plus(BigInt.fromI32(1));
-        requestRound.countCorrectVotes = defaultBigInt(requestRound.countCorrectVotes).plus(BigInt.fromI32(1));
-        requestRound.cumulativeCorrectVoteSlash = defaultBigDecimal(requestRound.cumulativeCorrectVoteSlash).plus(
-          slashing
-        );
-        transactionSlashedVotes.countCorrectVotes = transactionSlashedVotes.countCorrectVotes.plus(BigInt.fromI32(1));
-      } else {
-        // User voted incorrectly
-        // Update all the slashing trackers
-        voteSlashed.voted = true;
-        voteSlashed.correctness = false;
-        voteSlashed.staking = true;
-        user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
-        user.cumulativeCalculatedSlashPercentage = safeDivBigDecimal(
-          defaultBigDecimal(user.cumulativeCalculatedSlash),
-          user.cumulativeStakeNoSlashing
-        ).times(BigInt.fromI32(100).toBigDecimal());
-        requestRound.cumulativeWrongVoteSlash = defaultBigDecimal(requestRound.cumulativeWrongVoteSlash).plus(slashing);
-
-        // Only if not a governance vote we update the wrong votes counter
-        // In a governance vote there is no notion of correct or incorrect votes
-        // and the incorrect vote slashing is zero
-        if (!request.isGovernance) {
-          user.countWrongVotes = user.countWrongVotes.plus(BigInt.fromI32(1));
-          global.countWrongVotes = global.countWrongVotes.plus(BigInt.fromI32(1));
-          requestRound.countWrongVotes = defaultBigInt(requestRound.countWrongVotes).plus(BigInt.fromI32(1));
-          transactionSlashedVotes.countWrongVotes = transactionSlashedVotes.countWrongVotes.plus(BigInt.fromI32(1));
-        }
-      }
-    } else {
-      // User did not vote
-      // Update all the slashing trackers
-      voteSlashed.staking = oldUserCalculatedStake.equals(BIGDECIMAL_ZERO) ? false : true;
-      user.cumulativeCalculatedSlash = defaultBigDecimal(user.cumulativeCalculatedSlash).plus(slashing);
-      user.cumulativeCalculatedSlashPercentage = safeDivBigDecimal(
-        defaultBigDecimal(user.cumulativeCalculatedSlash),
-        user.cumulativeStakeNoSlashing
-      ).times(BigInt.fromI32(100).toBigDecimal());
-      user.countNoVotes = user.countNoVotes.plus(BigInt.fromI32(1));
-      global.countNoVotes = global.countNoVotes.plus(BigInt.fromI32(1));
-      requestRound.countNoVotes = defaultBigInt(requestRound.countNoVotes).plus(BigInt.fromI32(1));
-      requestRound.cumulativeNoVoteSlash = defaultBigDecimal(requestRound.cumulativeNoVoteSlash).plus(slashing);
-      transactionSlashedVotes.countNoVotes = transactionSlashedVotes.countNoVotes.plus(BigInt.fromI32(1));
-    }
-
-    user.save();
-    voteSlashed.save();
-
-    // Finally update votes slashed in the same transaction
-    processSlashesInSameTransaction(
-      transactionSlashedVotes,
-      voteSlashed,
-      oldUserCalculatedStake,
-      votingContract,
-      defaultBigInt(request.resolvedPriceRequestIndex)
-    );
-  }
-
-  log.warning(`Finished updating slashing trackers: {},{},{}`, [
-    requestId,
-    users.length.toString(),
-    event.params.roundId.toString(),
-  ]);
-
-  requestRound.save();
-  global.save();
-}
-
-function processSlashesInSameTransaction(
-  transactionSlashedVotes: TransactionSlashedVotes,
-  voteSlashed: SlashedVote,
-  oldUserCalculatedStake: BigDecimal,
-  votingContract: VotingV2,
-  resolvedPriceRequestIndex: BigInt
-): void {
-  let slashingTrackers = votingContract.try_requestSlashingTrackers(resolvedPriceRequestIndex);
-
-  let oldSlashedVotesIDs = transactionSlashedVotes.slashedVotesIDs;
-  oldSlashedVotesIDs.push(voteSlashed.id);
-  transactionSlashedVotes.slashedVotesIDs = oldSlashedVotesIDs;
-
-  // One of the slashes contains the cumulative sum of the others, so we look for the maximum in absolute value.
-  transactionSlashedVotes.cumulativeTransactionSlashAmount = absMax(
-    voteSlashed.slashAmount,
-    transactionSlashedVotes.cumulativeTransactionSlashAmount
-  );
-
-  // The staked amount is the minimum quantity of tokens that the wallet possessed before these slashes
-  // were applied
-  transactionSlashedVotes.stakedAmount =
-    transactionSlashedVotes.stakedAmount === null
-      ? oldUserCalculatedStake
-      : bigDecimalMin(transactionSlashedVotes.stakedAmount as BigDecimal, oldUserCalculatedStake);
-
-  // If this transaction contains more than one slashed vote, we rebalance the slash amounts such that the
-  // offchain computations are correct.
-  if (transactionSlashedVotes.slashedVotesIDs.length > 1) {
-    // Find the slash amounts
-    // This is the slashing calculated as in the contract for correct votes
-    let totalPositiveSlashAmount = transactionSlashedVotes.countCorrectVotes
-      .toBigDecimal()
-      .times(
-        safeDivBigDecimal(
-          defaultBigDecimal(transactionSlashedVotes.stakedAmount).times(toDecimal(slashingTrackers.value.totalSlashed)),
-          toDecimal(slashingTrackers.value.totalCorrectVotes)
-        )
-      );
-    // We derive totalNegativeSlashAmount from totalPositiveSlashAmount to ensure that their sum is accurate; otherwise,
-    // there would be slight differences due to the use of transactionSlashedVotes. stakedAmount to calculate rather than
-    // considering the variation in staked amount after each slash. We do this for convenience
-    let totalNegativeSlashAmount =
-      transactionSlashedVotes.cumulativeTransactionSlashAmount.minus(totalPositiveSlashAmount);
-
-    let totalWrongVoteSlashAmount = transactionSlashedVotes.countWrongVotes
-      .toBigDecimal()
-      .times(
-        defaultBigDecimal(transactionSlashedVotes.stakedAmount).times(
-          toDecimal(slashingTrackers.value.wrongVoteSlashPerToken)
-        )
-      )
-      .neg();
-
-    // Similarly we derive totalNoVoteSlashAmount from totalNegativeSlashAmount to ensure that their sum is accurate.
-    let totalNoVoteSlashAmount = totalNegativeSlashAmount.minus(totalWrongVoteSlashAmount);
-
-    // Update all slashed votes in the transaction
-    for (let i = 0; i < transactionSlashedVotes.slashedVotesIDs.length; i++) {
-      let slashedVote = SlashedVote.load(transactionSlashedVotes.slashedVotesIDs[i]) as SlashedVote;
-      if (slashedVote.voted) {
-        if (slashedVote.correctness) {
-          slashedVote.slashAmount = safeDivBigDecimal(
-            totalPositiveSlashAmount,
-            transactionSlashedVotes.countCorrectVotes.toBigDecimal()
-          );
-        } else {
-          if (slashedVote.isGovernance) {
-            slashedVote.slashAmount = BIGDECIMAL_ZERO;
-          } else {
-            slashedVote.slashAmount = safeDivBigDecimal(
-              totalWrongVoteSlashAmount,
-              transactionSlashedVotes.countWrongVotes.toBigDecimal()
-            );
-          }
-        }
-      } else {
-        slashedVote.slashAmount = safeDivBigDecimal(
-          totalNoVoteSlashAmount,
-          transactionSlashedVotes.countNoVotes.toBigDecimal()
-        );
-      }
-      slashedVote.save();
-    }
-  }
-
-  transactionSlashedVotes.save();
+  slashingTracker.save();
 }
 
 // - event: VoteCommitted(indexed address,indexed address,uint256,indexed bytes32,uint256,bytes)
@@ -423,8 +189,8 @@ export function handleVoteCommitted(event: VoteCommitted): void {
 
   // get voter's stake at time of commit
   const voterTokensCommitted = voterStakeData.reverted
-  ? BigInt.fromString("0")
-  : voterStakeData.value.value0;
+    ? BigInt.fromString("0")
+    : voterStakeData.value.value0;
 
   let requestId = getPriceRequestId(
     event.params.identifier.toString(),
@@ -441,6 +207,7 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   vote.identifier = event.params.identifier.toString();
   vote.time = event.params.time;
   vote.round = requestRound.id;
+  vote.numTokens = voterTokensCommitted;
 
   requestRound.request = requestId;
   requestRound.identifier = event.params.identifier.toString();
@@ -450,7 +217,6 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   requestRound.totalTokensCommitted = requestRound.totalTokensCommitted.minus(toDecimal(vote.numTokens)).plus(toDecimal(voterTokensCommitted));
 
   // update voter's stake value
-  vote.numTokens = voterTokensCommitted;   
 
   requestRound.save();
   request.save();
@@ -531,11 +297,23 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   requestRound.minParticipationRequirement = toDecimal(roundInfo.value.value1);
   requestRound.minAgreementRequirement = toDecimal(roundInfo.value.value2);
 
+  let voteSlashedId = getVoteIdNoRoundId(
+    event.params.voter.toHexString(),
+    event.params.identifier.toString(),
+    event.params.time.toString(),
+    event.params.ancillaryData.toHexString()
+  );
+
+  let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, voter.id);
+  voteSlashed.voted = true;
+  voteSlashed.staking = vote.numTokens.equals(BIGINT_ZERO) ? false : true;
+
   requestRound.save();
   vote.save();
   voter.save();
   voterGroup.save();
   request.save();
+  voteSlashed.save();
 }
 
 // - event: Staked(indexed address,indexed address,uint256,uint256,uint256,uint256)
@@ -647,16 +425,26 @@ export function handleWithdrawnRewards(event: WithdrawnRewards): void {
 // event VoterSlashed(address indexed voter, uint256 indexed requestIndex, int256 slashedTokens);
 
 export function handleVoterSlashed(event: VoterSlashed): void {
+  let global = getOrCreateGlobals();
   let user = getOrCreateUser(event.params.voter);
   let votingContract = VotingV2.bind(event.address);
   let priceRequestId = votingContract.try_resolvedPriceRequestIds(event.params.requestIndex);
   let priceRequest = votingContract.try_priceRequests(priceRequestId.value);
 
   user.cumulativeSlash = defaultBigDecimal(user.cumulativeSlash).plus(toDecimal(event.params.slashedTokens));
+  user.cumulativeCalculatedSlash = user.cumulativeSlash;
   user.cumulativeSlashPercentage = safeDivBigDecimal(user.cumulativeSlash, user.cumulativeStakeNoSlashing).times(
     BigInt.fromI32(100).toBigDecimal()
   );
+  user.cumulativeCalculatedSlashPercentage = user.cumulativeSlashPercentage;
   user.voterStake = user.voterStake.plus(toDecimal(event.params.slashedTokens));
+
+  let requestId = getPriceRequestId(
+    priceRequest.value.getIdentifier().toString(),
+    priceRequest.value.getTime().toString(),
+    priceRequest.value.getAncillaryData().toHexString()
+  );
+  let request = getOrCreatePriceRequest(requestId);
 
   // Update the voteSlashed
   let voteSlashedId = getVoteIdNoRoundId(
@@ -665,19 +453,61 @@ export function handleVoterSlashed(event: VoterSlashed): void {
     priceRequest.value.getTime().toString(),
     priceRequest.value.getAncillaryData().toHexString()
   );
-
-  let requestId = getPriceRequestId(
-    priceRequest.value.getIdentifier().toString(),
-    priceRequest.value.getTime().toString(),
-    priceRequest.value.getAncillaryData().toHexString()
-  );
-
-  let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id, event.transaction.hash.toHexString());
+  let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id);
+  voteSlashed.isGovernance = request.isGovernance;
+  voteSlashed.voter = user.id;
   voteSlashed.slashAmount = toDecimal(event.params.slashedTokens);
   voteSlashed.staking = voteSlashed.slashAmount.equals(BIGDECIMAL_ZERO) ? false : true;
 
+  let revealVoteId = getVoteId(
+    event.params.voter.toHexString(),
+    priceRequest.value.getIdentifier().toString(),
+    priceRequest.value.getTime().toString(),
+    priceRequest.value.getAncillaryData().toHexString(),
+    event.params.requestIndex.toString()
+  );
+
+  let votedCorrectly = false;
+  let revealedVote = RevealedVote.load(revealVoteId);
+  if (revealedVote != null) {
+    votedCorrectly = revealedVote.price.equals(request.price!);
+  }
+
+  // The non-null assertion operator '!' is safe here because the request has been resolved.
+  let requestRound: PriceRequestRound = getOrCreatePriceRequestRound(
+    request.latestRound!
+  );
+
+  // The non-null assertion operator '!' is safe here because the request has been resolved.
+  if (votedCorrectly) {
+    // User has voted correctly
+    voteSlashed.correctness = true;
+    user.countCorrectVotes = user.countCorrectVotes.plus(BigInt.fromI32(1));
+    requestRound.countCorrectVotes = defaultBigInt(requestRound.countCorrectVotes).plus(BigInt.fromI32(1));
+    requestRound.cumulativeCorrectVoteSlash = defaultBigDecimal(requestRound.cumulativeCorrectVoteSlash).plus(
+      voteSlashed.slashAmount
+    );
+    global.countCorrectVotes = global.countCorrectVotes.plus(BigInt.fromI32(1));
+  } else {
+    // User has voted incorrectly
+    voteSlashed.correctness = false;
+    // Only if not a governance vote we update the wrong votes counter
+    // In a governance vote there is no notion of correct or incorrect votes
+    // and the incorrect vote slashing is zero
+    if (!request.isGovernance) {
+      user.countWrongVotes = user.countWrongVotes.plus(BigInt.fromI32(1));
+      global.countWrongVotes = global.countWrongVotes.plus(BigInt.fromI32(1));
+      requestRound.countWrongVotes = defaultBigInt(requestRound.countWrongVotes).plus(BigInt.fromI32(1));
+      requestRound.cumulativeWrongVoteSlash = defaultBigDecimal(requestRound.cumulativeWrongVoteSlash).plus(
+        voteSlashed.slashAmount
+      );
+    }
+  }
+
   voteSlashed.save();
   user.save();
+  global.save();
+  requestRound.save();
 }
 
 // event ExecutedUnstake(address indexed voter, uint256 tokensSent, uint256 voterStake);
