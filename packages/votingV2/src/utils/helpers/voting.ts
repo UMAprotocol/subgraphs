@@ -5,7 +5,7 @@ import {
   PriceRequestRound,
   RevealedVote,
   SlashedVote,
-  TransactionSlashedVotes,
+  SlashingTracker,
   VoterGroup,
 } from "../../../generated/schema";
 import { BIGDECIMAL_ZERO, BIGINT_ZERO } from "../constants";
@@ -43,6 +43,21 @@ export function getOrCreatePriceRequest(id: String, createIfNotFound: boolean = 
   return request as PriceRequest;
 }
 
+export function getOrCreateSlashingTracker(id: String, createIfNotFound: boolean = true): SlashingTracker {
+  let slashingTracker = SlashingTracker.load(id);
+
+  if (slashingTracker == null && createIfNotFound) {
+    slashingTracker = new SlashingTracker(id);
+    slashingTracker.lastVotingRound = BIGINT_ZERO;
+    slashingTracker.wrongVoteSlashPerToken = BIGDECIMAL_ZERO;
+    slashingTracker.noVoteSlashPerToken = BIGDECIMAL_ZERO;
+    slashingTracker.totalSlashed = BIGDECIMAL_ZERO;
+    slashingTracker.totalCorrectVotes = BIGDECIMAL_ZERO;
+  }
+
+  return slashingTracker as SlashingTracker;
+}
+
 export function getOrCreatePriceRequestRound(id: String, createIfNotFound: boolean = true): PriceRequestRound {
   let requestRound = PriceRequestRound.load(id);
 
@@ -63,29 +78,10 @@ export function getOrCreatePriceRequestRound(id: String, createIfNotFound: boole
   return requestRound as PriceRequestRound;
 }
 
-export function getOrCreateTransactionSlashedVotes(
-  id: String,
-  createIfNotFound: boolean = true
-): TransactionSlashedVotes {
-  let transactionSlashedVotes = TransactionSlashedVotes.load(id);
-
-  if (transactionSlashedVotes == null && createIfNotFound) {
-    transactionSlashedVotes = new TransactionSlashedVotes(id);
-    transactionSlashedVotes.slashedVotesIDs = [];
-    transactionSlashedVotes.cumulativeTransactionSlashAmount = BIGDECIMAL_ZERO;
-    transactionSlashedVotes.countNoVotes = BIGINT_ZERO;
-    transactionSlashedVotes.countCorrectVotes = BIGINT_ZERO;
-    transactionSlashedVotes.countWrongVotes = BIGINT_ZERO;
-  }
-
-  return transactionSlashedVotes as TransactionSlashedVotes;
-}
-
 export function getOrCreateSlashedVote(
   id: String,
   requestId: string,
   voterId: string,
-  transactionHash: string,
   createIfNotFound: boolean = true
 ): SlashedVote {
   let vote = SlashedVote.load(id);
@@ -96,12 +92,10 @@ export function getOrCreateSlashedVote(
     vote.request = requestId;
     vote.slashAmount = BIGDECIMAL_ZERO;
     vote.voted = false;
+    vote.correctness = false;
+    vote.staking = false;
     vote.isGovernance = false;
 
-    vote.transactionSlashedVotes = getSlashingTransactionId(transactionHash, voterId);
-    let transactionSlashedVotes = getOrCreateTransactionSlashedVotes(vote.transactionSlashedVotes);
-
-    transactionSlashedVotes.save();
     vote.save();
   }
 
