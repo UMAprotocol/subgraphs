@@ -1,0 +1,10 @@
+{
+  "network": "story",
+  "OptimisticOracleV3DataSources": [
+    {
+      "name": "OptimisticOracleV3",
+      "address": "0x8EF424F90C6BC1b98153A09c0Cac5072545793e8",
+      "startBlock": 793649
+    }
+  ]
+}
