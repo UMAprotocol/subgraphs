@@ -35,7 +35,7 @@ This subgraph indexes events emitted by the "Optimistic Oracle" contracts. The c
 - (testnet) Sepolia: <https://thegraph.com/studio/subgraph/sepolia-optimistic-oracle>
 - Base: <https://thegraph.com/studio/subgraph/base-optimistic-oracle>
 - Blast: <https://thegraph.com/studio/subgraph/blast-optimistic-oracle>
-- Story: <https://app.goldsky.com/dashboard/subgraphs/story-optimistic-oracle/0.0.1>
+- Story Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/story-optimistic-oracle/0.0.1/gn>
 
 ## Optimistic Oracle V2 Events and Calls
 
