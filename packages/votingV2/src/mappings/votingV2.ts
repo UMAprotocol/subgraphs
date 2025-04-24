@@ -202,6 +202,8 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   let request = getOrCreatePriceRequest(requestId);
   request.latestRound = requestRound.id;
 
+  const _previousNumTokens = vote.numTokens; // defaults to 0 if first commit
+
   vote.voter = voter.id;
   vote.request = requestId;
   vote.identifier = event.params.identifier.toString();
@@ -214,9 +216,7 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   requestRound.time = event.params.time;
   requestRound.roundId = event.params.roundId;
   // if user has voted previously, remove previous token amount, add new
-  requestRound.totalTokensCommitted = requestRound.totalTokensCommitted.minus(toDecimal(vote.numTokens)).plus(toDecimal(voterTokensCommitted));
-
-  // update voter's stake value
+  requestRound.totalTokensCommitted = requestRound.totalTokensCommitted.minus(toDecimal(_previousNumTokens)).plus(toDecimal(voterTokensCommitted));
 
   requestRound.save();
   request.save();
