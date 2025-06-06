@@ -20,7 +20,8 @@
     "deploy:sepolia": "env STUDIO=true scripts/deploy.sh sepolia",
     "deploy-prod:kovan": "scripts/deploy.sh kovan",
     "deploy-prod:mainnet": "env STUDIO=true scripts/deploy.sh mainnet",
-    "deploy-prod:polygon": "scripts/deploy.sh polygon"
+    "deploy-prod:polygon": "scripts/deploy.sh polygon",
+    "deploy-prod:goldsky:mainnet": "env GOLDSKY=true scripts/deploy.sh mainnet"
   },
   "repository": {
     "type": "git",
