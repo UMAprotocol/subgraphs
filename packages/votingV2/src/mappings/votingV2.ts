@@ -459,18 +459,23 @@ export function handleVoterSlashed(event: VoterSlashed): void {
   voteSlashed.slashAmount = toDecimal(event.params.slashedTokens);
   voteSlashed.staking = voteSlashed.slashAmount.equals(BIGDECIMAL_ZERO) ? false : true;
 
+  let slashingTracker = getOrCreateSlashingTracker(requestId);
+
   let revealVoteId = getVoteId(
     event.params.voter.toHexString(),
     priceRequest.value.getIdentifier().toString(),
     priceRequest.value.getTime().toString(),
     priceRequest.value.getAncillaryData().toHexString(),
-    event.params.requestIndex.toString()
+    slashingTracker.lastVotingRound.toString()
   );
 
   let votedCorrectly = false;
   let revealedVote = RevealedVote.load(revealVoteId);
-  if (revealedVote != null) {
+  if ( revealedVote != null) {
     votedCorrectly = revealedVote.price.equals(request.price!);
+  }else{
+    user.countNoVotes = user.countNoVotes.plus(BigInt.fromI32(1));
+    global.countNoVotes = global.countNoVotes.plus(BigInt.fromI32(1));
   }
 
   // The non-null assertion operator '!' is safe here because the request has been resolved.
@@ -479,7 +484,7 @@ export function handleVoterSlashed(event: VoterSlashed): void {
   );
 
   // The non-null assertion operator '!' is safe here because the request has been resolved.
-  if (votedCorrectly) {
+  if ( revealedVote != null && votedCorrectly) {
     // User has voted correctly
     voteSlashed.correctness = true;
     user.countCorrectVotes = user.countCorrectVotes.plus(BigInt.fromI32(1));
@@ -488,7 +493,7 @@ export function handleVoterSlashed(event: VoterSlashed): void {
       voteSlashed.slashAmount
     );
     global.countCorrectVotes = global.countCorrectVotes.plus(BigInt.fromI32(1));
-  } else {
+  } else if ( revealedVote != null && !votedCorrectly) {
     // User has voted incorrectly
     voteSlashed.correctness = false;
     // Only if not a governance vote we update the wrong votes counter
@@ -501,6 +506,10 @@ export function handleVoterSlashed(event: VoterSlashed): void {
       requestRound.cumulativeWrongVoteSlash = defaultBigDecimal(requestRound.cumulativeWrongVoteSlash).plus(
         voteSlashed.slashAmount
       );
+    } else {
+      voteSlashed.correctness = true;
+      user.countCorrectVotes = user.countCorrectVotes.plus(BigInt.fromI32(1));
+      requestRound.countCorrectVotes = defaultBigInt(requestRound.countCorrectVotes).plus(BigInt.fromI32(1));
     }
   }
 
