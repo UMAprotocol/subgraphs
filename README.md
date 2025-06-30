@@ -85,6 +85,7 @@ This subgraph indexes events emitted by the UMA voting token contracts. The code
 This subgraph indexes events emitted by the core Oracle contracts. The code can be found in `packages/votingV2`
 
 - Mainnet: <https://thegraph.com/studio/subgraph/mainnet-voting-v2>
+- Mainnet Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/mainnet-voting-v2/0.0.8/gn>
 - Goerli: <https://thegraph.com/hosted-service/subgraph/md0x/goerli-voting-v2>
 - (testnet) Sepolia: <https://thegraph.com/studio/subgraph/sepolia-voting-v2>
 
