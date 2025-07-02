@@ -271,7 +271,7 @@ export function handleVoteRevealed(event: VoteRevealed): void {
 
   // Amount of tokens estimated at commit time
   const _previousCommittedTokens = committedVote.numTokens;
-  committedVote.numTokens = vote.numTokens;
+  committedVote.numTokens = event.params.numTokens;
 
   vote.voter = voter.id;
   vote.round = requestRound.id;
