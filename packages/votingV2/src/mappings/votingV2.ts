@@ -1,4 +1,4 @@
-import { PriceRequestRound, RevealedVote } from "../../generated/schema";
+import { CommittedVote, PriceRequestRound, RevealedVote } from "../../generated/schema";
 import {
   ExecutedUnstake,
   RequestAdded,
@@ -249,7 +249,7 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   );
   let vote = getOrCreateRevealedVote(voteId);
 
-  let committedVote = getOrCreateCommittedVote(voteId);
+  let committedVote = CommittedVote.load(voteId);
 
   let voter = getOrCreateUser(event.params.voter);
   let requestId = getPriceRequestId(
@@ -270,8 +270,11 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   request.latestRound = requestRound.id;
 
   // Amount of tokens estimated at commit time
-  const _previousCommittedTokens = committedVote.numTokens;
-  committedVote.numTokens = event.params.numTokens;
+  const _previousCommittedTokens = committedVote != null ? committedVote.numTokens : event.params.numTokens;
+  if (committedVote != null) {
+    committedVote.numTokens = event.params.numTokens;
+    committedVote.save();
+  }
 
   vote.voter = voter.id;
   vote.round = requestRound.id;
@@ -324,7 +327,6 @@ export function handleVoteRevealed(event: VoteRevealed): void {
 
   requestRound.save();
   vote.save();
-  committedVote.save();
   voter.save();
   voterGroup.save();
   request.save();
