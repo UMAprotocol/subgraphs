@@ -11,6 +11,8 @@
     "prepare:amoy": "scripts/build-manifest.sh amoy && yarn remove-call-handlers && yarn codegen && yarn build",
     "deploy:polygon": "env STAGING=true scripts/deploy.sh polygon",
     "deploy-prod:polygon": "env STUDIO=true scripts/deploy.sh polygon",
+    "deploy:amoy": "env STAGING=true scripts/deploy.sh amoy",
+    "deploy-prod:amoy": "env STUDIO=true scripts/deploy.sh amoy",
     "deploy:goldsky:amoy": "env GOLDSKY=true scripts/deploy.sh amoy",
     "deploy-prod:goldsky:polygon": "env GOLDSKY=true scripts/deploy.sh polygon"
   },
