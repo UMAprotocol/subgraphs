@@ -1,0 +1,10 @@
+{
+    "network": "polygon",
+    "OptimisticOracleV2DataSources": [
+      {
+        "name": "ManagedOptimisticOracleV2",
+        "address": "TODO",
+        "startBlock": "TODO"
+      }
+    ]
+  }
