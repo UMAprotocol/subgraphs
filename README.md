@@ -66,7 +66,7 @@ This subgraph indexes events and function calls by the "Optimistic Oracle V2" co
 
 This subgraph indexes events and function calls by the "Managed Optimistic Oracle V2" contracts. We reuse the code from `packages/optimistic-oracle-v2` because the events emitted are the same.
 
-- Amoy-Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/amoy-managed-optimistic-oracle-v2/1.0.0/gn>
+- Amoy-Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/amoy-managed-optimistic-oracle-v2/1.0.1/gn>
 - Polygon-Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/polygon-managed-optimistic-oracle-v2/1.0.0/gn>
 
 ## Financial Contract Events
