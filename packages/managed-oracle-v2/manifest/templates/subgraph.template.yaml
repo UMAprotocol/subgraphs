@@ -1,0 +1,9 @@
+specVersion: 0.0.2
+description: Subgraph with support for the UMA Managed Optimistic Oracle V2 contract data
+repository: https://github.com/UMAprotocol/subgraphs
+schema:
+  file: ./schema.graphql
+dataSources:
+{{#ManagedOracleV2DataSources}}
+  {{> ManagedOracleV2.template.yaml}}
+{{/ManagedOracleV2DataSources}}
