@@ -3,7 +3,7 @@ import { CustomBond, CustomLiveness } from "../../generated/schema";
 import { CustomBondSet, CustomLivenessSet } from "../../generated/ManagedOracleV2/ManagedOracleV2";
 
 export function handleCustomBondSet(event: CustomBondSet): void {
-  const managedRequestId = event.params.managedRequestId.toString();
+  const managedRequestId = event.params.managedRequestId.toHexString();
   log.debug("Custom Bond set event. Loading entity with managedRequestId, {}", [managedRequestId]);
 
   let entity = CustomBond.load(managedRequestId);
@@ -20,7 +20,7 @@ export function handleCustomBondSet(event: CustomBondSet): void {
 }
 
 export function handleCustomLivenessSet(event: CustomLivenessSet): void {
-  const managedRequestId = event.params.managedRequestId.toString();
+  const managedRequestId = event.params.managedRequestId.toHexString();
   log.debug("Custom Liveness set event. Loading entity with managedRequestId, {}", [managedRequestId]);
 
   let entity = CustomLiveness.load(managedRequestId);
