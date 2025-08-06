@@ -377,5 +377,30 @@
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "bytes32", "name": "managedRequestId", "type": "bytes32" },
+      { "indexed": false, "internalType": "address", "name": "requester", "type": "address" },
+      { "indexed": true, "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "indexed": false, "internalType": "bytes", "name": "ancillaryData", "type": "bytes" },
+      { "indexed": true, "internalType": "contract IERC20", "name": "currency", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "bond", "type": "uint256" }
+    ],
+    "name": "CustomBondSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "bytes32", "name": "managedRequestId", "type": "bytes32" },
+      { "indexed": true, "internalType": "address", "name": "requester", "type": "address" },
+      { "indexed": true, "internalType": "bytes32", "name": "identifier", "type": "bytes32" },
+      { "indexed": false, "internalType": "bytes", "name": "ancillaryData", "type": "bytes" },
+      { "indexed": false, "internalType": "uint256", "name": "customLiveness", "type": "uint256" }
+    ],
+    "name": "CustomLivenessSet",
+    "type": "event"
   }
 ]

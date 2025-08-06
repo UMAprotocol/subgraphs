@@ -13,6 +13,8 @@
     entities:
       - OptimisticPriceRequest
       - PriceIdentifier
+      - CustomLiveness
+      - CustomBond
     abis:
       - name: OptimisticOracleV2
         file: ./abis/OptimisticOracleV2.json
@@ -25,6 +27,10 @@
         handler: handleOptimisticDisputePrice
       - event: Settle(indexed address,indexed address,indexed address,bytes32,uint256,bytes,int256,uint256)
         handler: handleOptimisticSettle
+      - event: CustomLivenessSet(indexed bytes32,indexed address,indexed bytes32,bytes,uint256)
+        handler: handleCustomLivenessSet
+      - event: CustomBondSet(indexed bytes32,address,indexed bytes32,bytes,indexed address,uint256)
+        handler: handleCustomBondSet
     callHandlers:
       - function: setCustomLiveness(bytes32,uint256,bytes,uint256)
         handler: handleSetCustomLiveness
