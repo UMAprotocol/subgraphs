@@ -4,6 +4,6 @@ repository: https://github.com/UMAprotocol/subgraphs
 schema:
   file: ./schema.graphql
 dataSources:
-{{#ManagedOptimisticOracleV2DataSources}}
-  {{> ManagedOptimisticOracleV2.template.yaml}}
-{{/ManagedOptimisticOracleV2DataSources}}
+{{#ManagedOracleV2DataSources}}
+  {{> ManagedOracleV2.template.yaml}}
+{{/ManagedOracleV2DataSources}}

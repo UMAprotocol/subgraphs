@@ -3,7 +3,7 @@
   network: {{network}}
   source:
     address: "{{address}}"
-    abi: OptimisticOracleV2
+    abi: ManagedOracleV2
     startBlock: {{startBlock}} 
   mapping:
     kind: ethereum/events
@@ -13,9 +13,11 @@
     entities:
       - OptimisticPriceRequest
       - PriceIdentifier
+      - CustomLiveness
+      - CustomBond
     abis:
-      - name: OptimisticOracleV2
-        file: ./abis/OptimisticOracleV2.json
+      - name: ManagedOracleV2
+        file: ./abis/ManagedOracleV2.json
     eventHandlers:
       - event: RequestPrice(indexed address,bytes32,uint256,bytes,address,uint256,uint256)
         handler: handleOptimisticRequestPrice
@@ -25,10 +27,14 @@
         handler: handleOptimisticDisputePrice
       - event: Settle(indexed address,indexed address,indexed address,bytes32,uint256,bytes,int256,uint256)
         handler: handleOptimisticSettle
+      - event: CustomLivenessSet(indexed bytes32,indexed address,indexed bytes32,bytes,uint256)
+        handler: handleCustomLivenessSet
+      - event: CustomBondSet(indexed bytes32,address,indexed bytes32,bytes,indexed address,uint256)
+        handler: handleCustomBondSet
     callHandlers:
       - function: setCustomLiveness(bytes32,uint256,bytes,uint256)
         handler: handleSetCustomLiveness
       - function: setBond(bytes32,uint256,bytes,uint256)
         handler: handleSetBond
       - function: setEventBased(bytes32,uint256,bytes)
-        handler: handleSetEventBased 
+        handler: handleSetEventBased

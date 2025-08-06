@@ -1,13 +1,13 @@
 import {
   DisputePrice,
-  OptimisticOracleV2,
+  ManagedOracleV2,
   ProposePrice,
   RequestPrice,
   SetBondCall,
   SetCustomLivenessCall,
   SetEventBasedCall,
   Settle,
-} from "../../generated/OptimisticOracleV2/OptimisticOracleV2";
+} from "../../generated/ManagedOracleV2/ManagedOracleV2";
 import { getOrCreateOptimisticPriceRequest } from "../utils/helpers";
 
 import { Address, BigInt, Bytes, dataSource, log } from "@graphprotocol/graph-ts";
@@ -33,7 +33,7 @@ function getState(
     "Resolved", // Disputed and DVM price is available.
     "Settled", // Final price has been set in the contract (can get here from Expired or Resolved).
   ];
-  let oov2 = OptimisticOracleV2.bind(ooAddress);
+  let oov2 = ManagedOracleV2.bind(ooAddress);
   let state = oov2.try_getState(requester, identifier, timestamp, ancillaryData);
   return states[state.value];
 }
@@ -52,7 +52,7 @@ function getState(
 
 export function handleOptimisticRequestPrice(event: RequestPrice): void {
   log.warning(`(ancillary) OOV2 PriceRequest params: {},{},{}`, [
-    event.params.timestamp.toString(),
+    event.params. .timestamp.toString(),
     event.params.identifier.toString(),
     event.params.ancillaryData.toHex(),
   ]);
@@ -88,7 +88,7 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
   // workaround for L2 chains that don't support `callHandlers`
   // see readme for more info
   if (!isMainnet && !isGoerli) {
-    let oov2 = OptimisticOracleV2.bind(event.address);
+    let oov2 = ManagedOracleV2.bind(event.address);
     let requestSettings = oov2.try_getRequest(
       event.params.requester,
       event.params.identifier,

@@ -80,3 +80,29 @@ type OptimisticPriceRequest @entity {
 
   eventBased: Boolean
 }
+
+type CustomBond @entity {
+  "ID is managedRequestId, ie. the hash of requester, identifier, ancillaryData"
+  id: ID!
+
+  requester: Bytes!
+
+  identifier: String!
+
+  ancillaryData: String!
+
+  customBond: BigInt!
+}
+
+type CustomLiveness @entity {
+  "ID is managedRequestId, ie. the hash of requester, identifier, ancillaryData"
+  id: ID!
+
+  requester: Bytes!
+
+  identifier: String!
+
+  ancillaryData: String!
+
+  customLiveness: BigInt!
+}
