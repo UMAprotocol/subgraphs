@@ -3,8 +3,8 @@
   "ManagedOracleV2DataSources": [
     {
       "name": "ManagedOracleV2",
-      "address": "0x79950a8e152766f2282d315bdad889202c38fe8e",
-      "startBlock": 24350070
+      "address": "0xa3dE5F042EFD4C732498883100A2d319BbB3c1A1",
+      "startBlock": 24737019
     }
   ]
 }

@@ -52,7 +52,7 @@ function getState(
 
 export function handleOptimisticRequestPrice(event: RequestPrice): void {
   log.warning(`(ancillary) OOV2 PriceRequest params: {},{},{}`, [
-    event.params. .timestamp.toString(),
+    event.params.timestamp.toString(),
     event.params.identifier.toString(),
     event.params.ancillaryData.toHex(),
   ]);
