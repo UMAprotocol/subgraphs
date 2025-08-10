@@ -48,6 +48,7 @@ export function handleAssertionMade(event: AssertionMade): void {
   assertion.assertionBlockNumber = event.block.number;
   assertion.assertionHash = event.transaction.hash;
   assertion.assertionLogIndex = event.logIndex;
+  assertion.lastUpdated = event.block.timestamp;
 
   assertion.save();
 }
@@ -73,6 +74,7 @@ export function handleAssertionDisputed(event: AssertionDisputed): void {
   assertion.disputeBlockNumber = event.block.number;
   assertion.disputeLogIndex = event.logIndex;
   assertion.disputeHash = event.transaction.hash;
+  assertion.lastUpdated = event.block.timestamp;
 
   assertion.save();
 }
@@ -104,6 +106,7 @@ export function handleAssertionSettled(event: AssertionSettled): void {
   assertion.settlementBlockNumber = event.block.number;
   assertion.settlementLogIndex = event.logIndex;
   assertion.settlementHash = event.transaction.hash;
+  assertion.lastUpdated = event.block.timestamp;
 
   assertion.save();
 }

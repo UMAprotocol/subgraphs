@@ -17,6 +17,7 @@ export function getOrCreateOptimisticPriceRequest(
     request.currency = Bytes.fromI32(0);
     request.reward = BIGINT_ZERO;
     request.finalFee = BIGINT_ZERO;
+    request.lastUpdated = BIGINT_ZERO;
   }
 
   return request as OptimisticPriceRequest;

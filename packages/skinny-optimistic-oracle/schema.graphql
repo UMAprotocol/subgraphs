@@ -77,4 +77,6 @@ type OptimisticPriceRequest @entity {
   customLiveness: BigInt
 
   bond: BigInt
+
+  lastUpdated: BigInt
 }
