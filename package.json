@@ -18,10 +18,7 @@
   },
   "workspaces": {
     "packages": [
-      "packages/financial-contracts/**",
-      "packages/long-short-pair/**",
-      "packages/token/**",
-      "packages/voting/**"
+      "packages/*"
     ],
     "nohoist": [
       "packages/votingV2/**",

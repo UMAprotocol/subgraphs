@@ -1,7 +1,7 @@
 {
-  "name": "optimistic-oracle-subgraph",
+  "name": "skinny-optimistic-oracle-subgraph",
   "version": "0.1.0",
-  "description": "Optimistic Oracle Contract Events Subgraph",
+  "description": "Skinny Optimistic Oracle Contract Events Subgraph",
   "scripts": {
     "ganache": "ganache-cli -h 0.0.0.0",
     "codegen": "graph codegen",
