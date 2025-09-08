@@ -11,7 +11,13 @@
   },
   "scripts": {
     "lint": "prettier ./**",
-    "lint-fix": "prettier ./** --write"
+    "lint-fix": "prettier ./** --write",
+    "codegen": "lerna run codegen --scope='managed-optimistic-oracle-v2-subgraph' --scope='optimistic-oracle-subgraph' --scope='optimistic-oracle-v2-subgraph' --scope='optimistic-oracle-v3-subgraph' --scope='votingV2-subgraph'",
+    "build": "lerna run build --scope='managed-optimistic-oracle-v2-subgraph' --scope='optimistic-oracle-subgraph' --scope='optimistic-oracle-v2-subgraph' --scope='optimistic-oracle-v3-subgraph' --scope='votingV2-subgraph'",
+    "test": "lerna run test --scope='managed-optimistic-oracle-v2-subgraph' --scope='optimistic-oracle-subgraph' --scope='optimistic-oracle-v2-subgraph' --scope='optimistic-oracle-v3-subgraph' --scope='votingV2-subgraph'",
+    "test:parallel": "lerna run test --parallel --scope='managed-optimistic-oracle-v2-subgraph' --scope='optimistic-oracle-subgraph' --scope='optimistic-oracle-v2-subgraph' --scope='optimistic-oracle-v3-subgraph' --scope='votingV2-subgraph'",
+    "prepare": "lerna run prepare:mainnet",
+    "ci": "yarn codegen && yarn build && yarn test"
   },
   "bugs": {
     "url": "https://github.com/UMAprotocol/subgraphs/issues"
