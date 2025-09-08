@@ -12,7 +12,7 @@ export function createCustomLivenessSetEvent(
   customLiveness: i32 // BigInt
 ): CustomLivenessSet {
   let customLivenessEvent = changetype<CustomLivenessSet>(newMockEvent());
-
+  customLivenessEvent.address = contractAddress;
   customLivenessEvent.parameters = new Array();
   // managedRequestId
   customLivenessEvent.parameters.push(
@@ -47,7 +47,7 @@ export function createCustomBondSetEvent(
   bond: i32 // BigInt
 ): CustomBondSet {
   let customBondEvent = changetype<CustomBondSet>(newMockEvent());
-
+  customBondEvent.address = contractAddress;
   customBondEvent.parameters = new Array();
   // managedRequestId
   customBondEvent.parameters.push(
