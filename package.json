@@ -24,7 +24,8 @@
       "packages/votingV2/**",
       "packages/optimistic-oracle/**",
       "packages/optimistic-oracle-v3/**",
-      "packages/optimistic-governor/**"
+      "packages/optimistic-governor/**",
+      "packages/managed-oracle-v2/**"
     ]
   },
   "devDependencies": {

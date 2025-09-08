@@ -8,7 +8,8 @@ import {
   SetEventBasedCall,
   Settle,
 } from "../../generated/ManagedOracleV2/ManagedOracleV2";
-import { getOrCreateOptimisticPriceRequest } from "../utils/helpers";
+import { getManagedRequestId, getOrCreateOptimisticPriceRequest } from "../utils/helpers";
+import { CustomBond, CustomLiveness } from "../../generated/schema";
 
 import { Address, BigInt, Bytes, dataSource, log } from "@graphprotocol/graph-ts";
 
@@ -16,6 +17,18 @@ let network = dataSource.network();
 
 let isMainnet = network == "mainnet";
 let isGoerli = network == "goerli";
+
+function getCustomBond(requester: Address, identifier: Bytes, ancillaryData: Bytes): BigInt | null {
+  const managedRequestId = getManagedRequestId(requester, identifier, ancillaryData).toHex();
+  let customBondEntity = CustomBond.load(managedRequestId);
+  return customBondEntity ? customBondEntity.customBond : null;
+}
+
+function getCustomLiveness(requester: Address, identifier: Bytes, ancillaryData: Bytes): BigInt | null {
+  const managedRequestId = getManagedRequestId(requester, identifier, ancillaryData).toHex();
+  let customLivenessEntity = CustomLiveness.load(managedRequestId);
+  return customLivenessEntity ? customLivenessEntity.customLiveness : null;
+}
 
 function getState(
   ooAddress: Address,
@@ -98,6 +111,19 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
     request.bond = requestSettings.bond;
     request.eventBased = requestSettings.eventBased;
     request.customLiveness = requestSettings.customLiveness;
+  }
+
+  // Look up custom bond and liveness values that may have been set before the request
+  let customBond = getCustomBond(event.params.requester, event.params.identifier, event.params.ancillaryData);
+  if (customBond !== null) {
+    log.debug("custom bond of {} was set for request Id: {}", [customBond.toString(), requestId]);
+    request.bond = customBond;
+  }
+
+  let customLiveness = getCustomLiveness(event.params.requester, event.params.identifier, event.params.ancillaryData);
+  if (customLiveness !== null) {
+    log.debug("custom liveness of {} was set for request Id: {}", [customLiveness.toString(), requestId]);
+    request.customLiveness = customLiveness;
   }
 
   request.save();
