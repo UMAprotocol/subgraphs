@@ -18,16 +18,16 @@ let network = dataSource.network();
 let isMainnet = network == "mainnet";
 let isGoerli = network == "goerli";
 
-function getCustomBond(requester: Address, identifier: Bytes, ancillaryData: Bytes): BigInt | null {
+function getCustomBond(requester: Address, identifier: Bytes, ancillaryData: Bytes): CustomBond | null {
   const managedRequestId = getManagedRequestId(requester, identifier, ancillaryData).toHex();
   let customBondEntity = CustomBond.load(managedRequestId);
-  return customBondEntity ? customBondEntity.customBond : null;
+  return customBondEntity ? customBondEntity : null;
 }
 
-function getCustomLiveness(requester: Address, identifier: Bytes, ancillaryData: Bytes): BigInt | null {
+function getCustomLiveness(requester: Address, identifier: Bytes, ancillaryData: Bytes): CustomLiveness | null {
   const managedRequestId = getManagedRequestId(requester, identifier, ancillaryData).toHex();
   let customLivenessEntity = CustomLiveness.load(managedRequestId);
-  return customLivenessEntity ? customLivenessEntity.customLiveness : null;
+  return customLivenessEntity ? customLivenessEntity : null;
 }
 
 function getState(
@@ -120,14 +120,22 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
   // Look up custom bond and liveness values that may have been set before the request
   let customBond = getCustomBond(event.params.requester, event.params.identifier, event.params.ancillaryData);
   if (customBond !== null) {
-    log.debug("custom bond of {} was set for request Id: {}", [customBond.toString(), requestId]);
-    request.bond = customBond;
+    const bond = customBond.customBond;
+    const currency = customBond.currency;
+    log.debug("custom bond of {} of currency {} was set for request Id: {}", [
+      bond.toString(),
+      currency.toHexString(),
+      requestId,
+    ]);
+    request.bond = bond;
+    request.currency = currency;
   }
 
   let customLiveness = getCustomLiveness(event.params.requester, event.params.identifier, event.params.ancillaryData);
   if (customLiveness !== null) {
-    log.debug("custom liveness of {} was set for request Id: {}", [customLiveness.toString(), requestId]);
-    request.customLiveness = customLiveness;
+    const liveness = customLiveness.customLiveness;
+    log.debug("custom liveness of {} was set for request Id: {}", [liveness.toString(), requestId]);
+    request.customLiveness = customLiveness.customLiveness;
   }
 
   request.save();
