@@ -1,13 +1,4 @@
-import {
-  describe,
-  test,
-  clearStore,
-  beforeAll,
-  afterAll,
-  assert,
-  log,
-  createMockedFunction,
-} from "matchstick-as/assembly/index";
+import { describe, test, clearStore, afterAll, assert, log } from "matchstick-as/assembly/index";
 import { handleCustomLivenessSet, handleCustomBondSet } from "../../src/mappings/managedOracleV2";
 import { handleOptimisticRequestPrice } from "../../src/mappings/optimisticOracleV2";
 import {
@@ -23,27 +14,30 @@ import { BigInt, Bytes, Address } from "@graphprotocol/graph-ts";
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
 
+namespace Constants {
+  export const managedRequestId = "0x8aed060a05dfbb279705824d8b544fc58a63ebc4a1c26380cbd90297c0a7e33c";
+  export const requester = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
+  export const identifierHex = "0x00000000000000000000000000000000005945535f4f525f4e4f5f5155455259"; //  "YES_OR_NO_QUERY"
+  export const identifierString = "YES_OR_NO_QUERY";
+  export const ancillaryData = "0x5945535f4f525f4e4f5f5155455259";
+  export const currency = "0x9b4A302A548c7e313c2b74C461db7b84d3074A84";
+  export const customBond = 2000000;
+  export const customLiveness = 1757286231;
+}
+
 describe("CustomLiveness Handler Tests", () => {
   afterAll(() => {
     clearStore();
   });
 
   test("handleCustomLivenessSet creates CustomLiveness entity correctly", () => {
-    const timestamp = 1757284669;
-    const identifier = "0x00000000000000000000000000000000005945535f4f525f4e4f5f5155455259"; // YES_OR_NO_QUERY
-    const currency = "0x9b4A302A548c7e313c2b74C461db7b84d3074A84";
-    const bond = 1000000;
-    const ancillaryData = "0x5945535f4f525f4e4f5f5155455259";
-    const requester = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
-    const customLiveness = 1757286231;
-    const managedRequestId = "0x8aed060a05dfbb279705824d8b544fc58a63ebc4a1c26380cbd90297c0a7e33c";
     // Create test event
     const customLivenessEvent = createCustomLivenessSetEvent(
-      managedRequestId,
-      requester,
-      identifier,
-      ancillaryData,
-      customLiveness
+      Constants.managedRequestId,
+      Constants.requester,
+      Constants.identifierHex,
+      Constants.ancillaryData,
+      Constants.customLiveness
     );
 
     // Call the handler
@@ -64,18 +58,18 @@ describe("CustomLiveness Handler Tests", () => {
     // Assert the entity properties
     assert.addressEquals(
       Address.fromBytes(customLivenessEntity.requester),
-      Address.fromString(requester),
+      Address.fromString(Constants.requester),
       "Requester should match"
     );
     assert.stringEquals(customLivenessEntity.identifier, "YES_OR_NO_QUERY", "Identifier should match");
     assert.bytesEquals(
       Bytes.fromHexString(customLivenessEntity.ancillaryData),
-      Bytes.fromHexString(ancillaryData),
+      Bytes.fromHexString(Constants.ancillaryData),
       "Ancillary data should match"
     );
     assert.bigIntEquals(
       customLivenessEntity.customLiveness,
-      BigInt.fromI32(customLiveness),
+      BigInt.fromI32(Constants.customLiveness),
       "Custom liveness should match"
     );
 
@@ -94,21 +88,14 @@ describe("CustomBond Handler Tests", () => {
   });
 
   test("handleCustomBondSet creates CustomBond entity correctly", () => {
-    const managedRequestId = "0x8aed060a05dfbb279705824d8b544fc58a63ebc4a1c26380cbd90297c0a7e33c";
-    const requester = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
-    const identifier = "0x00000000000000000000000000000000005945535f4f525f4e4f5f5155455259"; // YES_OR_NO_QUERY
-    const ancillaryData = "0x5945535f4f525f4e4f5f5155455259";
-    const currency = "0x9b4A302A548c7e313c2b74C461db7b84d3074A84";
-    const customBond = 2000000;
-
     // Create test event
     const customBondEvent = createCustomBondSetEvent(
-      managedRequestId,
-      requester,
-      identifier,
-      ancillaryData,
-      currency,
-      customBond
+      Constants.managedRequestId,
+      Constants.requester,
+      Constants.identifierHex,
+      Constants.ancillaryData,
+      Constants.currency,
+      Constants.customBond
     );
 
     // Call the handler
@@ -130,16 +117,16 @@ describe("CustomBond Handler Tests", () => {
     // Assert the entity properties
     assert.addressEquals(
       Address.fromBytes(customBondEntity.requester),
-      Address.fromString(requester),
+      Address.fromString(Constants.requester),
       "Requester should match"
     );
-    assert.stringEquals(customBondEntity.identifier, "YES_OR_NO_QUERY", "Identifier should match");
+    assert.stringEquals(customBondEntity.identifier, Constants.identifierString, "Identifier should match");
     assert.bytesEquals(
       Bytes.fromHexString(customBondEntity.ancillaryData),
-      Bytes.fromHexString(ancillaryData),
+      Bytes.fromHexString(Constants.ancillaryData),
       "Ancillary data should match"
     );
-    assert.bigIntEquals(customBondEntity.customBond, BigInt.fromI32(customBond), "Custom bond should match");
+    assert.bigIntEquals(customBondEntity.customBond, BigInt.fromI32(Constants.customBond), "Custom bond should match");
 
     // Print the entity for debugging
     log.info("Created CustomBond entity: {}", [customBondEntity.id]);
