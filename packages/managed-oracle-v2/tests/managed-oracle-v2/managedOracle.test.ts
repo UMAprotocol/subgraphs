@@ -10,7 +10,13 @@ import {
 } from "matchstick-as/assembly/index";
 import { handleCustomLivenessSet, handleCustomBondSet } from "../../src/mappings/managedOracleV2";
 import { handleOptimisticRequestPrice } from "../../src/mappings/optimisticOracleV2";
-import { createCustomLivenessSetEvent, createCustomBondSetEvent, createRequestPriceEvent } from "./utils";
+import {
+  createCustomLivenessSetEvent,
+  createCustomBondSetEvent,
+  createRequestPriceEvent,
+  mockGetState,
+  State,
+} from "./utils";
 import { CustomLiveness, CustomBond, OptimisticPriceRequest } from "../../generated/schema";
 import { BigInt, Bytes, Address } from "@graphprotocol/graph-ts";
 
@@ -27,7 +33,7 @@ describe("CustomLiveness Handler Tests", () => {
     const identifier = "0x00000000000000000000000000000000005945535f4f525f4e4f5f5155455259"; // YES_OR_NO_QUERY
     const currency = "0x9b4A302A548c7e313c2b74C461db7b84d3074A84";
     const bond = 1000000;
-    const ancillaryData = "0x5945535F4F525F4E4F5F5155455259";
+    const ancillaryData = "0x5945535f4f525f4e4f5f5155455259";
     const requester = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
     const customLiveness = 1757286231;
     const managedRequestId = "0x8aed060a05dfbb279705824d8b544fc58a63ebc4a1c26380cbd90297c0a7e33c";
@@ -91,7 +97,7 @@ describe("CustomBond Handler Tests", () => {
     const managedRequestId = "0x8aed060a05dfbb279705824d8b544fc58a63ebc4a1c26380cbd90297c0a7e33c";
     const requester = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
     const identifier = "0x00000000000000000000000000000000005945535f4f525f4e4f5f5155455259"; // YES_OR_NO_QUERY
-    const ancillaryData = "0x5945535F4F525F4E4F5F5155455259";
+    const ancillaryData = "0x5945535f4f525f4e4f5f5155455259";
     const currency = "0x9b4A302A548c7e313c2b74C461db7b84d3074A84";
     const customBond = 2000000;
 
@@ -154,7 +160,7 @@ describe("Comprehensive Custom Settings and RequestPrice Tests", () => {
     const timestamp = 1757284669;
     const identifier = "0x00000000000000000000000000000000005945535f4f525f4e4f5f5155455259"; // YES_OR_NO_QUERY
     const currency = "0x9b4A302A548c7e313c2b74C461db7b84d3074A84";
-    const ancillaryData = "0x5945535F4F525F4E4F5F5155455259";
+    const ancillaryData = "0x5945535f4f525f4e4f5f5155455259";
     const requester = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
     const customLiveness = 1757286231;
     const customBond = 2000000;
@@ -164,6 +170,7 @@ describe("Comprehensive Custom Settings and RequestPrice Tests", () => {
     // Calculate managedRequestId (same logic as in the handlers)
     const managedRequestId = "0x8aed060a05dfbb279705824d8b544fc58a63ebc4a1c26380cbd90297c0a7e33c";
 
+    mockGetState(requester, identifier, timestamp, ancillaryData, State.Requested);
     // Step 1: Set custom liveness
     const customLivenessEvent = createCustomLivenessSetEvent(
       managedRequestId,
@@ -198,12 +205,8 @@ describe("Comprehensive Custom Settings and RequestPrice Tests", () => {
     handleOptimisticRequestPrice(requestPriceEvent);
 
     // Step 4: Verify that the RequestPrice entity has the custom values applied
-    const requestId = identifier
-      .replace("0x", "")
-      .concat("-")
-      .concat(timestamp.toString())
-      .concat("-")
-      .concat(ancillaryData);
+    // The mapping code uses event.params.identifier.toString() which returns "YES_OR_NO_QUERY"
+    const requestId = "YES_OR_NO_QUERY".concat("-").concat(timestamp.toString()).concat("-").concat(ancillaryData);
 
     const priceRequestEntity = OptimisticPriceRequest.load(requestId);
 

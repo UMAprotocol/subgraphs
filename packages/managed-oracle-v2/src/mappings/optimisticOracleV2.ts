@@ -48,6 +48,10 @@ function getState(
   ];
   let oov2 = ManagedOracleV2.bind(ooAddress);
   let state = oov2.try_getState(requester, identifier, timestamp, ancillaryData);
+  if (state.reverted) {
+    log.warning("getState call reverted, returning Invalid state", []);
+    return states[0]; // Return "Invalid" if the call fails
+  }
   return states[state.value];
 }
 

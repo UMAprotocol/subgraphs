@@ -1,6 +1,8 @@
-import { newMockEvent } from "matchstick-as";
+import { createMockedFunction, newMockEvent } from "matchstick-as";
 import { ethereum, BigInt, Address, Bytes } from "@graphprotocol/graph-ts";
 import { CustomBondSet, CustomLivenessSet, RequestPrice } from "../../generated/ManagedOracleV2/ManagedOracleV2";
+
+export const contractAddress = Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"); // Default test contract address
 
 export function createCustomLivenessSetEvent(
   managedRequestId: string, // Bytes,
@@ -85,6 +87,7 @@ export function createRequestPriceEvent(
   finalFee: i32 // BigInt
 ): RequestPrice {
   let requestPriceEvent = changetype<RequestPrice>(newMockEvent());
+  requestPriceEvent.address = contractAddress;
 
   requestPriceEvent.parameters = new Array();
   // requester
@@ -117,4 +120,32 @@ export function createRequestPriceEvent(
   );
 
   return requestPriceEvent;
+}
+
+// https://github.com/UMAprotocol/protocol/blob/99b96247d27ec8a5ea9dbf3eef1dcd71beb0dc41/packages/core/contracts/optimistic-oracle-v2/interfaces/OptimisticOracleV2Interface.sol#L51
+export namespace State {
+  export const Invalid = 0; // Never requested
+  export const Requested = 1; // Requested, no other actions taken
+  export const Proposed = 2; // Proposed, but not expired or disputed yet
+  export const Expired = 3; // Proposed, not disputed, past liveness
+  export const Disputed = 4; // Disputed, but no DVM price returned yet
+  export const Resolved = 5; // Disputed and DVM price is available
+  export const Settled = 6; // Final price has been set in the contract (can get here from Expired or Resolved).
+}
+
+export function mockGetState(
+  requester: string, // Address,
+  identifier: string, // Bytes,
+  timestamp: i32, // ethereum.Value,
+  ancillaryData: string, // Bytes
+  expectedState: i32 // i32 => State
+): void {
+  createMockedFunction(contractAddress, "getState", "getState(address,bytes32,uint256,bytes):(uint8)")
+    .withArgs([
+      ethereum.Value.fromAddress(Address.fromString(requester)),
+      ethereum.Value.fromFixedBytes(Bytes.fromHexString(identifier)),
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(timestamp)),
+      ethereum.Value.fromBytes(Bytes.fromHexString(ancillaryData)),
+    ])
+    .returns([ethereum.Value.fromI32(expectedState)]);
 }
