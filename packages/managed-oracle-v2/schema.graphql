@@ -85,6 +85,8 @@ type CustomBond @entity {
   "ID is managedRequestId, ie. the hash of requester, identifier, ancillaryData"
   id: ID!
 
+  currency: Bytes!
+
   requester: Bytes!
 
   identifier: String!

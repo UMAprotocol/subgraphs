@@ -8,13 +8,15 @@
     "build": "graph build",
     "remove-call-handlers": "node ./scripts/remove-call-handlers.js",
     "prepare:polygon": "scripts/build-manifest.sh polygon && yarn remove-call-handlers && yarn codegen && yarn build",
+    "prepare-ci": "scripts/build-manifest.sh polygon && yarn remove-call-handlers && yarn codegen && yarn build",
     "prepare:amoy": "scripts/build-manifest.sh amoy && yarn remove-call-handlers && yarn codegen && yarn build",
     "deploy:polygon": "env STAGING=true scripts/deploy.sh polygon",
     "deploy-prod:polygon": "env STUDIO=true scripts/deploy.sh polygon",
     "deploy:amoy": "env STAGING=true scripts/deploy.sh amoy",
     "deploy-prod:amoy": "env STUDIO=true scripts/deploy.sh amoy",
     "deploy:goldsky:amoy": "env GOLDSKY=true scripts/deploy.sh amoy",
-    "deploy-prod:goldsky:polygon": "env GOLDSKY=true scripts/deploy.sh polygon"
+    "deploy-prod:goldsky:polygon": "env GOLDSKY=true scripts/deploy.sh polygon",
+    "test": "graph test"
   },
   "repository": {
     "type": "git",
@@ -32,5 +34,8 @@
     "@graphprotocol/graph-ts": "^0.32.0",
     "mustache": "^4.2.0",
     "yaml": "^2.2.1"
+  },
+  "devDependencies": {
+    "matchstick-as": "0.6.0"
   }
 }

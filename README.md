@@ -4,6 +4,40 @@
 
 `yarn`
 
+## Running Tests
+
+This repository uses [Matchstick](https://github.com/LimeChain/matchstick) for subgraph testing.
+
+### Prerequisites
+
+- **PostgreSQL 14** must be installed and running on your machine. Matchstick requires this for its testing environment.
+
+### Running the tests
+
+Tests are available for select packages and can be run using the following commands:
+
+```bash
+# Run tests for all packages with test suites
+yarn test
+
+# Run tests in parallel (faster)
+yarn test:parallel
+
+# Run full CI pipeline (prepare and test)
+yarn ci
+```
+
+The `yarn test` command runs tests for the following packages (when available):
+
+- `managed-optimistic-oracle-v2-subgraph`
+- `optimistic-oracle-subgraph`
+- `optimistic-oracle-v2-subgraph`
+- `optimistic-oracle-v3-subgraph`
+- `skinny-optimistic-oracle-subgraph`
+- `votingV2-subgraph`
+
+To run tests for a specific package, navigate to the package directory and run `yarn test` or `graph test` directly.
+
 ## Voting V1 Events
 
 This subgraph indexes events emitted by the core Oracle contracts. The code can be found in `packages/voting`

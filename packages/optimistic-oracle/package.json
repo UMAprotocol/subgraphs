@@ -8,6 +8,7 @@
     "build": "graph build",
     "remove-call-handlers": "node ./scripts/remove-call-handlers.js",
     "prepare:mainnet": "scripts/build-manifest.sh mainnet && yarn codegen && yarn build",
+    "prepare-ci": "scripts/build-manifest.sh mainnet && yarn codegen && yarn build",
     "prepare:goerli": "scripts/build-manifest.sh goerli && yarn codegen && yarn build",
     "prepare:polygon": "scripts/build-manifest.sh polygon && yarn remove-call-handlers && yarn codegen && yarn build",
     "prepare:optimism": "scripts/build-manifest.sh optimism && yarn remove-call-handlers && yarn codegen && yarn build",
