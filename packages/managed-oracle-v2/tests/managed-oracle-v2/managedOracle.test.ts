@@ -1,9 +1,10 @@
 import { describe, test, clearStore, afterAll, assert, log, afterEach } from "matchstick-as/assembly/index";
 import { handleCustomLivenessSet, handleCustomBondSet } from "../../src/mappings/managedOracleV2";
-import { handleOptimisticRequestPrice } from "../../src/mappings/optimisticOracleV2";
+import { handleOptimisticProposePrice, handleOptimisticRequestPrice } from "../../src/mappings/optimisticOracleV2";
 import {
   createCustomLivenessSetEvent,
   createCustomBondSetEvent,
+  createProposePriceEvent,
   createRequestPriceEvent,
   mockGetState,
   State,
@@ -26,6 +27,7 @@ namespace Constants {
   export const reward = 1000000;
   export const finalFee = 500000;
   export const timestamp = 1757284669;
+  export const customLiveness_2 = 123456;
 }
 
 describe("Managed OOv2", () => {
@@ -120,7 +122,7 @@ describe("Managed OOv2", () => {
     log.info("Custom Bond: {}", [customBondEntity.customBond.toString()]);
   });
 
-  test("Custom bond and liveness are applied to RequestPrice entity", () => {
+  test("Custom bond and liveness are applied to RequestPrice entity at REQUEST time", () => {
     mockGetState(
       Constants.requester,
       Constants.identifierHex,
@@ -210,6 +212,83 @@ describe("Managed OOv2", () => {
     log.info("Created OptimisticPriceRequest entity: {}", [priceRequestEntity.id]);
     log.info("Custom Liveness: {}", [priceRequestEntity.customLiveness!.toString()]);
     log.info("Custom Bond: {}", [priceRequestEntity.bond!.toString()]);
+    log.info("State: {}", [priceRequestEntity.state!]);
+  });
+
+  test("Custom bond and liveness are applied to RequestPrice entity at PROPOSE time", () => {
+    mockGetState(
+      Constants.requester,
+      Constants.identifierHex,
+      Constants.timestamp,
+      Constants.ancillaryData,
+      State.Requested
+    );
+    // Step 1: Create RequestPrice event
+    const requestPriceEvent = createRequestPriceEvent(
+      Constants.requester,
+      Constants.identifierHex,
+      Constants.timestamp,
+      Constants.ancillaryData,
+      Constants.currency,
+      Constants.reward,
+      Constants.finalFee
+    );
+    handleOptimisticRequestPrice(requestPriceEvent);
+
+    // Step 2: Set custom liveness
+    const customLivenessEvent = createCustomLivenessSetEvent(
+      Constants.managedRequestId,
+      Constants.requester,
+      Constants.identifierHex,
+      Constants.ancillaryData,
+      Constants.customLiveness
+    );
+    handleCustomLivenessSet(customLivenessEvent);
+
+    mockGetState(
+      Constants.requester,
+      Constants.identifierHex,
+      Constants.timestamp,
+      Constants.ancillaryData,
+      State.Proposed
+    );
+
+    // Step 3: Create ProposePrice event
+    const proposePriceEvent = createProposePriceEvent(
+      Constants.requester,
+      Constants.requester,
+      Constants.identifierHex,
+      Constants.timestamp,
+      Constants.ancillaryData,
+      1,
+      Constants.timestamp + 3600,
+      Constants.currency
+    );
+    handleOptimisticProposePrice(proposePriceEvent);
+
+    const requestId = Constants.identifierString
+      .concat("-")
+      .concat(Constants.timestamp.toString())
+      .concat("-")
+      .concat(Constants.ancillaryData);
+
+    const priceRequestEntity = OptimisticPriceRequest.load(requestId);
+
+    assert.assertTrue(priceRequestEntity !== null, "OptimisticPriceRequest entity should be created");
+
+    if (priceRequestEntity === null) {
+      return;
+    }
+
+    // Assert custom liveness is applied
+    assert.bigIntEquals(
+      priceRequestEntity.customLiveness!,
+      BigInt.fromI32(Constants.customLiveness),
+      "Custom liveness should be applied to RequestPrice"
+    );
+
+    log.info("Created OptimisticPriceRequest entity: {}", [priceRequestEntity.id]);
+    log.info("Custom Liveness: {}", [priceRequestEntity.customLiveness!.toString()]);
     log.info("State: {}", [priceRequestEntity.state!]);
   });
 });
