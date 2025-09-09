@@ -1,12 +1,13 @@
 {
-  "name": "optimistic-oracle-subgraph",
+  "name": "skinny-optimistic-oracle-subgraph",
   "version": "0.1.0",
-  "description": "Optimistic Oracle Contract Events Subgraph",
+  "description": "Skinny Optimistic Oracle Contract Events Subgraph",
   "scripts": {
     "ganache": "ganache-cli -h 0.0.0.0",
     "codegen": "graph codegen",
     "build": "graph build",
     "prepare:mainnet": "scripts/build-manifest.sh mainnet && yarn codegen && yarn build",
+    "prepare-ci": "scripts/build-manifest.sh mainnet && yarn codegen && yarn build",
     "prepare:goerli": "scripts/build-manifest.sh goerli && yarn codegen && yarn build",
     "prepare:kovan": "scripts/build-manifest.sh kovan && yarn codegen && yarn build",
     "prepare:polygon": "scripts/build-manifest.sh polygon && yarn codegen && yarn build",

@@ -1,0 +1,10 @@
+{
+    "network": "polygon-amoy",
+    "OptimisticOracleV2DataSources": [
+      {
+        "name": "ManagedOptimisticOracleV2",
+        "address": "0xa3dE5F042EFD4C732498883100A2d319BbB3c1A1",
+        "startBlock": 24737019
+      }
+    ]
+  }

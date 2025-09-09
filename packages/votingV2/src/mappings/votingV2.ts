@@ -1,4 +1,4 @@
-import { PriceRequestRound, RevealedVote } from "../../generated/schema";
+import { CommittedVote, PriceRequestRound, RevealedVote } from "../../generated/schema";
 import {
   ExecutedUnstake,
   RequestAdded,
@@ -187,7 +187,8 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   let votingContract = VotingV2.bind(event.address);
   const voterStakeData = votingContract.try_voterStakes(event.params.voter);
 
-  // get voter's stake at time of commit
+  // Query the Voting contract for the stake snapshot recorded at commit time. If the call reverts (e.g. the voter wasn’t
+  // staked yet), fall back to 0.
   const voterTokensCommitted = voterStakeData.reverted
     ? BigInt.fromString("0")
     : voterStakeData.value.value0;
@@ -209,13 +210,16 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   vote.identifier = event.params.identifier.toString();
   vote.time = event.params.time;
   vote.round = requestRound.id;
-  vote.numTokens = voterTokensCommitted;
+  vote.numTokens = voterTokensCommitted; // this is an estimate until reveal phase
 
   requestRound.request = requestId;
   requestRound.identifier = event.params.identifier.toString();
   requestRound.time = event.params.time;
   requestRound.roundId = event.params.roundId;
-  // if user has voted previously, remove previous token amount, add new
+  // Update the round’s total committed tokens: first undo the voter’s **previous** commit (if any), then add the 
+  // **new** stake snapshot.
+  // Remember this value is still **only an estimate** until the reveal phase, because the voter could increase their 
+  // stake by claiming rewards before commit phase ends. This is why we need to update the value on reveal.
   requestRound.totalTokensCommitted = requestRound.totalTokensCommitted.minus(toDecimal(_previousNumTokens)).plus(toDecimal(voterTokensCommitted));
 
   requestRound.save();
@@ -244,6 +248,9 @@ export function handleVoteRevealed(event: VoteRevealed): void {
     event.params.roundId.toString()
   );
   let vote = getOrCreateRevealedVote(voteId);
+
+  let committedVote = CommittedVote.load(voteId);
+
   let voter = getOrCreateUser(event.params.voter);
   let requestId = getPriceRequestId(
     event.params.identifier.toString(),
@@ -261,6 +268,13 @@ export function handleVoteRevealed(event: VoteRevealed): void {
     : toDecimal(roundInfo.value.value3);
 
   request.latestRound = requestRound.id;
+
+  // Amount of tokens estimated at commit time
+  const _previousCommittedTokens = committedVote != null ? committedVote.numTokens : event.params.numTokens;
+  if (committedVote != null) {
+    committedVote.numTokens = event.params.numTokens;
+    committedVote.save();
+  }
 
   vote.voter = voter.id;
   vote.round = requestRound.id;
@@ -282,6 +296,9 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   requestRound.identifier = event.params.identifier.toString();
   requestRound.time = event.params.time;
   requestRound.roundId = event.params.roundId;
+  // The amount stored at commit time was just an estimate—voters can still claim their rewards before the commit phase
+  // ends. On reveal we finally know the exact `numTokens`, so we replace the previous estimate with this precise value.
+  requestRound.totalTokensCommitted = requestRound.totalTokensCommitted.minus(toDecimal(_previousCommittedTokens)).plus(toDecimal(vote.numTokens));
   requestRound.totalVotesRevealed = requestRound.totalVotesRevealed.plus(toDecimal(vote.numTokens));
   requestRound.votersAmount = requestRound.votersAmount.plus(BIGDECIMAL_ONE);
   requestRound.lastRevealTime = event.block.timestamp;
@@ -471,9 +488,9 @@ export function handleVoterSlashed(event: VoterSlashed): void {
 
   let votedCorrectly = false;
   let revealedVote = RevealedVote.load(revealVoteId);
-  if ( revealedVote != null) {
+  if (revealedVote != null) {
     votedCorrectly = revealedVote.price.equals(request.price!);
-  }else{
+  } else {
     user.countNoVotes = user.countNoVotes.plus(BigInt.fromI32(1));
     global.countNoVotes = global.countNoVotes.plus(BigInt.fromI32(1));
   }
@@ -484,7 +501,7 @@ export function handleVoterSlashed(event: VoterSlashed): void {
   );
 
   // The non-null assertion operator '!' is safe here because the request has been resolved.
-  if ( revealedVote != null && votedCorrectly) {
+  if (revealedVote != null && votedCorrectly) {
     // User has voted correctly
     voteSlashed.correctness = true;
     user.countCorrectVotes = user.countCorrectVotes.plus(BigInt.fromI32(1));
@@ -493,7 +510,7 @@ export function handleVoterSlashed(event: VoterSlashed): void {
       voteSlashed.slashAmount
     );
     global.countCorrectVotes = global.countCorrectVotes.plus(BigInt.fromI32(1));
-  } else if ( revealedVote != null && !votedCorrectly) {
+  } else if (revealedVote != null && !votedCorrectly) {
     // User has voted incorrectly
     voteSlashed.correctness = false;
     // Only if not a governance vote we update the wrong votes counter

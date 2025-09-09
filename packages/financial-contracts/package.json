@@ -6,6 +6,7 @@
     "codegen": "graph codegen",
     "build": "graph build",
     "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml && yarn codegen && yarn build",
+    "prepare-ci": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml && yarn codegen && yarn build",
     "prepare:kovan": "mustache config/kovan.json subgraph.template.yaml > subgraph.yaml && yarn codegen && yarn build",
     "deploy:kovan": "env STAGING=true scripts/deploy.sh kovan",
     "deploy:mainnet": "env STAGING=true scripts/deploy.sh mainnet",

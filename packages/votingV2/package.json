@@ -9,6 +9,7 @@
     "importAbi": "scripts/copy-contracts-abis.sh",
     "prepare:goerli": "scripts/build-manifest.sh goerli && yarn codegen && yarn build",
     "prepare:mainnet": "scripts/build-manifest.sh mainnet && yarn codegen && yarn build",
+    "prepare-ci": "scripts/build-manifest.sh mainnet && yarn codegen && yarn build",
     "prepare:kovan": "npm run importAbi && scripts/build-manifest.sh kovan && yarn codegen && yarn build",
     "prepare:polygon": "npm run importAbi && scripts/build-manifest.sh polygon && yarn codegen && yarn build",
     "prepare:sepolia": "scripts/build-manifest.sh sepolia && yarn codegen && yarn build",
@@ -21,7 +22,8 @@
     "deploy-prod:kovan": "scripts/deploy.sh kovan",
     "deploy-prod:mainnet": "env STUDIO=true scripts/deploy.sh mainnet",
     "deploy-prod:polygon": "scripts/deploy.sh polygon",
-    "deploy-prod:goldsky:mainnet": "env GOLDSKY=true scripts/deploy.sh mainnet"
+    "deploy-prod:goldsky:mainnet": "env GOLDSKY=true scripts/deploy.sh mainnet",
+    "deploy-prod:goldsky:sepolia": "env GOLDSKY=true scripts/deploy.sh sepolia"
   },
   "repository": {
     "type": "git",

@@ -2,3 +2,10 @@ node_modules
 build
 generated
 .env
+.DS_Store
+tests/.*
+matchstick
+
+# Matchstick test runner generated files
+**/tests/.*
+**/matchstick/*

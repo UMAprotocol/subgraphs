@@ -1,0 +1,41 @@
+{
+  "name": "managed-optimistic-oracle-v2-subgraph",
+  "version": "0.1.0",
+  "description": "Managed Optimistic Oracle V2 Contract Events Subgraph",
+  "scripts": {
+    "ganache": "ganache-cli -h 0.0.0.0",
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "remove-call-handlers": "node ./scripts/remove-call-handlers.js",
+    "prepare:polygon": "scripts/build-manifest.sh polygon && yarn remove-call-handlers && yarn codegen && yarn build",
+    "prepare-ci": "scripts/build-manifest.sh polygon && yarn remove-call-handlers && yarn codegen && yarn build",
+    "prepare:amoy": "scripts/build-manifest.sh amoy && yarn remove-call-handlers && yarn codegen && yarn build",
+    "deploy:polygon": "env STAGING=true scripts/deploy.sh polygon",
+    "deploy-prod:polygon": "env STUDIO=true scripts/deploy.sh polygon",
+    "deploy:amoy": "env STAGING=true scripts/deploy.sh amoy",
+    "deploy-prod:amoy": "env STUDIO=true scripts/deploy.sh amoy",
+    "deploy:goldsky:amoy": "env GOLDSKY=true scripts/deploy.sh amoy",
+    "deploy-prod:goldsky:polygon": "env GOLDSKY=true scripts/deploy.sh polygon",
+    "test": "graph test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UMAprotocol/subgraphs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/UMAprotocol/subgraphs/issues"
+  },
+  "homepage": "https://github.com/UMAprotocol/subgraphs#readme",
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.67.3",
+    "@graphprotocol/graph-ts": "^0.32.0",
+    "mustache": "^4.2.0",
+    "yaml": "^2.2.1"
+  },
+  "devDependencies": {
+    "matchstick-as": "0.6.0"
+  }
+}

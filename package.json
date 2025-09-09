@@ -11,23 +11,27 @@
   },
   "scripts": {
     "lint": "prettier ./**",
-    "lint-fix": "prettier ./** --write"
+    "lint-fix": "prettier ./** --write",
+    "codegen": "lerna run codegen ",
+    "build": "lerna run build --scope='managed-optimistic-oracle-v2-subgraph' --scope='optimistic-oracle-subgraph' --scope='optimistic-oracle-v2-subgraph' --scope='optimistic-oracle-v3-subgraph' --scope='skinny-optimistic-oracle-subgraph' --scope='votingV2-subgraph'",
+    "test": "lerna run test --scope='managed-optimistic-oracle-v2-subgraph' --scope='optimistic-oracle-subgraph' --scope='optimistic-oracle-v2-subgraph' --scope='optimistic-oracle-v3-subgraph' --scope='skinny-optimistic-oracle-subgraph' --scope='votingV2-subgraph'",
+    "test:parallel": "lerna run test --parallel --scope='managed-optimistic-oracle-v2-subgraph' --scope='optimistic-oracle-subgraph' --scope='optimistic-oracle-v2-subgraph' --scope='optimistic-oracle-v3-subgraph' --scope='skinny-optimistic-oracle-subgraph' --scope='votingV2-subgraph'",
+    "prepare-ci": "lerna run --parallel prepare-ci --scope='managed-optimistic-oracle-v2-subgraph' --scope='optimistic-oracle-subgraph' --scope='optimistic-oracle-v2-subgraph' --scope='optimistic-oracle-v3-subgraph' --scope='skinny-optimistic-oracle-subgraph' --scope='votingV2-subgraph'",
+    "ci": "yarn prepare-ci && yarn test"
   },
   "bugs": {
     "url": "https://github.com/UMAprotocol/subgraphs/issues"
   },
   "workspaces": {
     "packages": [
-      "packages/financial-contracts/**",
-      "packages/long-short-pair/**",
-      "packages/token/**",
-      "packages/voting/**"
+      "packages/*"
     ],
     "nohoist": [
       "packages/votingV2/**",
       "packages/optimistic-oracle/**",
       "packages/optimistic-oracle-v3/**",
-      "packages/optimistic-governor/**"
+      "packages/optimistic-governor/**",
+      "packages/managed-oracle-v2/**"
     ]
   },
   "devDependencies": {
