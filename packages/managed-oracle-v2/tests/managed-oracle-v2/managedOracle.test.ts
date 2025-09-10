@@ -28,6 +28,8 @@ namespace Constants {
   export const finalFee = 500000;
   export const timestamp = 1757284669;
   export const customLiveness_2 = 123456;
+  export const customBond_2 = 3000000;
+  export const currency_2 = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
 }
 
 describe("Managed OOv2", () => {
@@ -212,6 +214,7 @@ describe("Managed OOv2", () => {
     log.info("Created OptimisticPriceRequest entity: {}", [priceRequestEntity.id]);
     log.info("Custom Liveness: {}", [priceRequestEntity.customLiveness!.toString()]);
     log.info("Custom Bond: {}", [priceRequestEntity.bond!.toString()]);
+    log.info("Custom Bond Currency: {}", [priceRequestEntity.currency!.toHexString()]);
     log.info("State: {}", [priceRequestEntity.state!]);
   });
 
@@ -244,6 +247,16 @@ describe("Managed OOv2", () => {
       Constants.customLiveness
     );
     handleCustomLivenessSet(customLivenessEvent);
+    // Step 3: Set custom bond
+    const customBondEvent = createCustomBondSetEvent(
+      Constants.managedRequestId,
+      Constants.requester,
+      Constants.identifierHex,
+      Constants.ancillaryData,
+      Constants.currency_2,
+      Constants.customBond_2
+    );
+    handleCustomBondSet(customBondEvent);
 
     mockGetState(
       Constants.requester,
@@ -253,7 +266,7 @@ describe("Managed OOv2", () => {
       State.Proposed
     );
 
-    // Step 3: Create ProposePrice event
+    // Step 4: Create ProposePrice event
     const proposePriceEvent = createProposePriceEvent(
       Constants.requester,
       Constants.requester,
@@ -280,7 +293,19 @@ describe("Managed OOv2", () => {
       return;
     }
 
-    // Assert custom liveness is applied
+    // Assert custom values are applied
+    assert.addressEquals(
+      Address.fromBytes(priceRequestEntity.currency),
+      Address.fromString(Constants.currency_2),
+      "Currency should match"
+    );
+
+    assert.bigIntEquals(
+      priceRequestEntity.bond!,
+      BigInt.fromI32(Constants.customBond_2),
+      "Custom bond should be applied to RequestPrice"
+    );
+
     assert.bigIntEquals(
       priceRequestEntity.customLiveness!,
       BigInt.fromI32(Constants.customLiveness),
@@ -290,5 +315,7 @@ describe("Managed OOv2", () => {
     log.info("Created OptimisticPriceRequest entity: {}", [priceRequestEntity.id]);
     log.info("Custom Liveness: {}", [priceRequestEntity.customLiveness!.toString()]);
     log.info("State: {}", [priceRequestEntity.state!]);
+    log.info("Custom Bond: {}", [priceRequestEntity.bond!.toString()]);
+    log.info("Custom Bond Currency: {}", [priceRequestEntity.currency!.toHexString()]);
   });
 });
