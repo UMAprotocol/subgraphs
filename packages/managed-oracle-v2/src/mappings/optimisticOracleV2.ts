@@ -186,6 +186,27 @@ export function handleOptimisticProposePrice(event: ProposePrice): void {
     event.params.ancillaryData
   );
 
+  // Look up custom bond and liveness values that may have been set before the request
+  let customBond = getCustomBond(event.params.requester, event.params.identifier, event.params.ancillaryData);
+  if (customBond !== null) {
+    const bond = customBond.customBond;
+    const currency = customBond.currency;
+    log.debug("custom bond of {} of currency {} was set for request Id: {}", [
+      bond.toString(),
+      currency.toHexString(),
+      requestId,
+    ]);
+    request.bond = bond;
+    request.currency = currency;
+  }
+
+  let customLiveness = getCustomLiveness(event.params.requester, event.params.identifier, event.params.ancillaryData);
+  if (customLiveness !== null) {
+    const liveness = customLiveness.customLiveness;
+    log.debug("custom liveness of {} was set for request Id: {}", [liveness.toString(), requestId]);
+    request.customLiveness = customLiveness.customLiveness;
+  }
+
   request.save();
 }
 

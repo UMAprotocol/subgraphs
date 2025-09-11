@@ -1,6 +1,11 @@
 import { createMockedFunction, newMockEvent } from "matchstick-as";
 import { ethereum, BigInt, Address, Bytes } from "@graphprotocol/graph-ts";
-import { CustomBondSet, CustomLivenessSet, RequestPrice } from "../../generated/ManagedOracleV2/ManagedOracleV2";
+import {
+  CustomBondSet,
+  CustomLivenessSet,
+  ProposePrice,
+  RequestPrice,
+} from "../../generated/ManagedOracleV2/ManagedOracleV2";
 
 export const contractAddress = Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"); // Default test contract address
 
@@ -120,6 +125,59 @@ export function createRequestPriceEvent(
   );
 
   return requestPriceEvent;
+}
+
+export function createProposePriceEvent(
+  requester: string, // Address,
+  proposer: string, // Address,
+  identifier: string, // Bytes,
+  timestamp: i32, // BigInt,
+  ancillaryData: string, // Bytes,
+  proposedPrice: i32, // BigInt,
+  expirationTimestamp: i32, // BigInt,
+  currency: string // Address
+): ProposePrice {
+  let proposePriceEvent = changetype<ProposePrice>(newMockEvent());
+  proposePriceEvent.address = contractAddress;
+  proposePriceEvent.parameters = new Array();
+
+  // requester
+  proposePriceEvent.parameters.push(
+    new ethereum.EventParam("requester", ethereum.Value.fromAddress(Address.fromString(requester)))
+  );
+  // proposer
+  proposePriceEvent.parameters.push(
+    new ethereum.EventParam("proposer", ethereum.Value.fromAddress(Address.fromString(proposer)))
+  );
+  // identifier
+  proposePriceEvent.parameters.push(
+    new ethereum.EventParam("identifier", ethereum.Value.fromBytes(Bytes.fromHexString(identifier)))
+  );
+  // timestamp
+  proposePriceEvent.parameters.push(
+    new ethereum.EventParam("timestamp", ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(timestamp)))
+  );
+  // ancillaryData
+  proposePriceEvent.parameters.push(
+    new ethereum.EventParam("ancillaryData", ethereum.Value.fromBytes(Bytes.fromHexString(ancillaryData)))
+  );
+  // proposedPrice
+  proposePriceEvent.parameters.push(
+    new ethereum.EventParam("proposedPrice", ethereum.Value.fromSignedBigInt(BigInt.fromI32(proposedPrice)))
+  );
+  // expirationTimestamp
+  proposePriceEvent.parameters.push(
+    new ethereum.EventParam(
+      "expirationTimestamp",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(expirationTimestamp))
+    )
+  );
+  // currency
+  proposePriceEvent.parameters.push(
+    new ethereum.EventParam("currency", ethereum.Value.fromAddress(Address.fromString(currency)))
+  );
+
+  return proposePriceEvent;
 }
 
 // https://github.com/UMAprotocol/protocol/blob/99b96247d27ec8a5ea9dbf3eef1dcd71beb0dc41/packages/core/contracts/optimistic-oracle-v2/interfaces/OptimisticOracleV2Interface.sol#L51
