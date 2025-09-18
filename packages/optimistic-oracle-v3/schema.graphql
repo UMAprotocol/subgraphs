@@ -55,4 +55,6 @@ type Assertion @entity {
   settlementHash: Bytes
 
   settlementLogIndex: BigInt
+
+  lastUpdated: BigInt
 }
