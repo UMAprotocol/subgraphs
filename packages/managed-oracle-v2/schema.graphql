@@ -82,8 +82,10 @@ type OptimisticPriceRequest @entity {
 }
 
 type CustomBond @entity {
-  "ID is managedRequestId, ie. the hash of requester, identifier, ancillaryData"
+  "ID is the hash of requester, identifier, ancillaryData, currency"
   id: ID!
+
+  managedRequestId: String!
 
   currency: Bytes!
 
@@ -99,6 +101,8 @@ type CustomBond @entity {
 type CustomLiveness @entity {
   "ID is managedRequestId, ie. the hash of requester, identifier, ancillaryData"
   id: ID!
+
+  managedRequestId: String!
 
   requester: Bytes!
 
