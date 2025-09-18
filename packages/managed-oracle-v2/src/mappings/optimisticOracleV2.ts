@@ -12,15 +12,21 @@ import { getManagedRequestId, getOrCreateOptimisticPriceRequest } from "../utils
 import { CustomBond, CustomLiveness } from "../../generated/schema";
 
 import { Address, BigInt, Bytes, dataSource, log } from "@graphprotocol/graph-ts";
+import { createCustomBondId } from "../utils/helpers/managedOracleV2";
 
 let network = dataSource.network();
 
 let isMainnet = network == "mainnet";
 let isGoerli = network == "goerli";
 
-function getCustomBond(requester: Address, identifier: Bytes, ancillaryData: Bytes): CustomBond | null {
-  const managedRequestId = getManagedRequestId(requester, identifier, ancillaryData).toHexString();
-  let customBondEntity = CustomBond.load(managedRequestId);
+function getCustomBond(
+  requester: Address,
+  identifier: Bytes,
+  ancillaryData: Bytes,
+  currency: Bytes
+): CustomBond | null {
+  const id = createCustomBondId(requester, identifier, ancillaryData, currency);
+  let customBondEntity = CustomBond.load(id);
   return customBondEntity ? customBondEntity : null;
 }
 
@@ -118,7 +124,12 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
   }
 
   // Look up custom bond and liveness values that may have been set before the request
-  let customBond = getCustomBond(event.params.requester, event.params.identifier, event.params.ancillaryData);
+  let customBond = getCustomBond(
+    event.params.requester,
+    event.params.identifier,
+    event.params.ancillaryData,
+    event.params.currency
+  );
   if (customBond !== null) {
     const bond = customBond.customBond;
     const currency = customBond.currency;
@@ -128,7 +139,6 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
       requestId,
     ]);
     request.bond = bond;
-    request.currency = currency;
   }
 
   let customLiveness = getCustomLiveness(event.params.requester, event.params.identifier, event.params.ancillaryData);
@@ -187,7 +197,12 @@ export function handleOptimisticProposePrice(event: ProposePrice): void {
   );
 
   // Look up custom bond and liveness values that may have been set before the request
-  let customBond = getCustomBond(event.params.requester, event.params.identifier, event.params.ancillaryData);
+  let customBond = getCustomBond(
+    event.params.requester,
+    event.params.identifier,
+    event.params.ancillaryData,
+    event.params.currency
+  );
   if (customBond !== null) {
     const bond = customBond.customBond;
     const currency = customBond.currency;
@@ -197,7 +212,6 @@ export function handleOptimisticProposePrice(event: ProposePrice): void {
       requestId,
     ]);
     request.bond = bond;
-    request.currency = currency;
   }
 
   let customLiveness = getCustomLiveness(event.params.requester, event.params.identifier, event.params.ancillaryData);
