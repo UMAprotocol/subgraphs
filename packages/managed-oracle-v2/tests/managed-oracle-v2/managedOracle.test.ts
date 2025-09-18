@@ -229,7 +229,7 @@ describe("Managed OOv2", () => {
     log.info("State: {}", [priceRequestEntity.state!]);
   });
 
-  test("Custom bond and liveness are applied to RequestPrice entity at PROPOSE time", () => {
+  test("Custom bond currency mismatch - bond not applied when currencies don't match", () => {
     // Test variables
     const managedRequestId = "0x8aed060a05dfbb279705824d8b544fc58a63ebc4a1c26380cbd90297c0a7e33c";
     const requester = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
@@ -290,7 +290,7 @@ describe("Managed OOv2", () => {
       ancillaryData,
       1,
       timestamp + 3600,
-      currency_2 // Use currency_2 to match the custom bond currency
+      currency // Use same currency as original request
     );
     handleOptimisticProposePrice(proposePriceEvent);
 
@@ -307,19 +307,16 @@ describe("Managed OOv2", () => {
     // Assert custom values are applied
     assert.addressEquals(
       Address.fromBytes(priceRequestEntity.currency),
-      Address.fromString(currency_2),
-      "Currency should match"
+      Address.fromString(currency),
+      "Currency should match original request currency"
     );
 
-    // Check if bond is set
-    assert.assertTrue(priceRequestEntity.bond !== null, "Bond should not be null - custom bond should be applied");
-    if (priceRequestEntity.bond !== null) {
-      assert.bigIntEquals(
-        priceRequestEntity.bond!,
-        BigInt.fromI32(customBond_2),
-        "Custom bond should be applied to RequestPrice"
-      );
-    }
+    // Check if bond is set - since custom bond was set for different currency,
+    // it should NOT be applied (currency mismatch)
+    assert.assertTrue(
+      priceRequestEntity.bond === null,
+      "Bond should be null - custom bond should NOT be applied due to currency mismatch"
+    );
 
     assert.bigIntEquals(
       priceRequestEntity.customLiveness!,
