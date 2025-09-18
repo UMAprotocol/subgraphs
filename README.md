@@ -146,10 +146,10 @@ This subgraph indexes events and function calls by the "Managed Optimistic Oracl
 
 - Amoy
   - TheGraph:
-  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/amoy-managed-optimistic-oracle-v2/1.0.5/gn>
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/amoy-managed-optimistic-oracle-v2/1.0.6/gn>
 - Polygon
   - TheGraph:
-  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/polygon-managed-optimistic-oracle-v2/1.0.2/gn>
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/polygon-managed-optimistic-oracle-v2/1.0.3/gn>
 
 ## Financial Contract Events
 
