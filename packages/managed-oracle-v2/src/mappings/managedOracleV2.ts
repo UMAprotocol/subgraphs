@@ -40,7 +40,6 @@ export function handleCustomLivenessSet(event: CustomLivenessSet): void {
 
   if (entity == null) {
     entity = new CustomLiveness(managedRequestId);
-    entity.managedRequestId = managedRequestId;
     entity.requester = event.params.requester;
     entity.identifier = event.params.identifier.toString();
     entity.ancillaryData = event.params.ancillaryData.toHex();

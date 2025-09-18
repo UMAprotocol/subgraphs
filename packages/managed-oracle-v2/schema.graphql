@@ -102,8 +102,6 @@ type CustomLiveness @entity {
   "ID is managedRequestId, ie. the hash of requester, identifier, ancillaryData"
   id: ID!
 
-  managedRequestId: String!
-
   requester: Bytes!
 
   identifier: String!
