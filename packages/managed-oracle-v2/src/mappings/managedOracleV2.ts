@@ -12,7 +12,7 @@ export function handleCustomBondSet(event: CustomBondSet): void {
   let entity = CustomBond.load(id);
 
   if (entity == null) {
-    entity = new CustomBond(managedRequestId);
+    entity = new CustomBond(id);
     entity.managedRequestId = managedRequestId;
     entity.requester = event.params.requester;
     entity.identifier = event.params.identifier.toString();
