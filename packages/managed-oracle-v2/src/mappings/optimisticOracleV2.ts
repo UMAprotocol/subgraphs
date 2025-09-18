@@ -12,15 +12,31 @@ import { getManagedRequestId, getOrCreateOptimisticPriceRequest } from "../utils
 import { CustomBond, CustomLiveness } from "../../generated/schema";
 
 import { Address, BigInt, Bytes, dataSource, log } from "@graphprotocol/graph-ts";
+import { createCustomBondId } from "../utils/helpers/managedOracleV2";
 
 let network = dataSource.network();
 
 let isMainnet = network == "mainnet";
 let isGoerli = network == "goerli";
 
-function getCustomBond(requester: Address, identifier: Bytes, ancillaryData: Bytes): CustomBond | null {
-  const managedRequestId = getManagedRequestId(requester, identifier, ancillaryData).toHexString();
-  let customBondEntity = CustomBond.load(managedRequestId);
+/**
+ * Retrieves a custom bond entity if one exists for the given parameters.
+ *
+ * IMPORTANT: Custom bonds are stored with a unique ID that includes the currency.
+ * This means we can only find custom bonds that match the EXACT currency used in the request.
+ * If a custom bond was set for a different currency, it will NOT be found here.
+ *
+ * This ensures that custom bonds are only applied when the currency matches,
+ * preventing incorrect bond amounts from being applied to requests with different currencies.
+ */
+function getCustomBond(
+  requester: Address,
+  identifier: Bytes,
+  ancillaryData: Bytes,
+  currency: Bytes
+): CustomBond | null {
+  const id = createCustomBondId(requester, identifier, ancillaryData, currency);
+  let customBondEntity = CustomBond.load(id);
   return customBondEntity ? customBondEntity : null;
 }
 
@@ -118,7 +134,14 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
   }
 
   // Look up custom bond and liveness values that may have been set before the request
-  let customBond = getCustomBond(event.params.requester, event.params.identifier, event.params.ancillaryData);
+  // Custom bonds are stored with a unique ID that includes the currency, so we only find
+  // custom bonds that match the exact currency used in this request
+  let customBond = getCustomBond(
+    event.params.requester,
+    event.params.identifier,
+    event.params.ancillaryData,
+    event.params.currency
+  );
   if (customBond !== null) {
     const bond = customBond.customBond;
     const currency = customBond.currency;
@@ -127,8 +150,9 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
       currency.toHexString(),
       requestId,
     ]);
+    // Apply the custom bond amount - the currency is guaranteed to match since
+    // the custom bond ID includes the currency and we looked it up using the request's currency
     request.bond = bond;
-    request.currency = currency;
   }
 
   let customLiveness = getCustomLiveness(event.params.requester, event.params.identifier, event.params.ancillaryData);
@@ -187,7 +211,14 @@ export function handleOptimisticProposePrice(event: ProposePrice): void {
   );
 
   // Look up custom bond and liveness values that may have been set before the request
-  let customBond = getCustomBond(event.params.requester, event.params.identifier, event.params.ancillaryData);
+  // Custom bonds are stored with a unique ID that includes the currency, so we only find
+  // custom bonds that match the exact currency used in this request
+  let customBond = getCustomBond(
+    event.params.requester,
+    event.params.identifier,
+    event.params.ancillaryData,
+    event.params.currency
+  );
   if (customBond !== null) {
     const bond = customBond.customBond;
     const currency = customBond.currency;
@@ -196,8 +227,9 @@ export function handleOptimisticProposePrice(event: ProposePrice): void {
       currency.toHexString(),
       requestId,
     ]);
+    // Apply the custom bond amount - the currency is guaranteed to match since
+    // the custom bond ID includes the currency and we looked it up using the request's currency
     request.bond = bond;
-    request.currency = currency;
   }
 
   let customLiveness = getCustomLiveness(event.params.requester, event.params.identifier, event.params.ancillaryData);
