@@ -65,7 +65,7 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
   ]);
   let requestId = createOptimisticPriceRequestId(
     event.params.identifier,
-    BigInt.fromI32(event.params.timestamp),
+    event.params.timestamp,
     event.params.ancillaryData
   );
 
@@ -113,7 +113,7 @@ export function handleOptimisticProposePrice(event: ProposePrice): void {
   ]);
   let requestId = createOptimisticPriceRequestId(
     event.params.identifier,
-    BigInt.fromI32(event.params.timestamp),
+    event.params.timestamp,
     event.params.ancillaryData
   );
 
@@ -156,7 +156,7 @@ export function handleOptimisticDisputePrice(event: DisputePrice): void {
   ]);
   let requestId = createOptimisticPriceRequestId(
     event.params.identifier,
-    BigInt.fromI32(event.params.timestamp),
+    event.params.timestamp,
     event.params.ancillaryData
   );
 
@@ -197,7 +197,7 @@ export function handleOptimisticSettle(event: Settle): void {
   ]);
   let requestId = createOptimisticPriceRequestId(
     event.params.identifier,
-    BigInt.fromI32(event.params.timestamp),
+    event.params.timestamp,
     event.params.ancillaryData
   );
 
