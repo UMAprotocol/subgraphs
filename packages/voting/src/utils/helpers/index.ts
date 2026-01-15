@@ -7,6 +7,8 @@ export {
   getOrCreateRevealedVote,
   getOrCreateRewardsClaimed,
   getOrCreateVoterGroup,
+  createPriceRequestRoundId,
+  createVoteId,
 } from "./voting";
 
 export { getOrCreatePriceIdentifier } from "./identifierWhitelist";

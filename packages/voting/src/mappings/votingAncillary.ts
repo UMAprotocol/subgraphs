@@ -16,6 +16,8 @@ import {
   getOrCreatePriceRequestRound,
   getTokenContract,
   getOrCreateVoterGroup,
+  createPriceRequestRoundId,
+  createVoteId,
 } from "../utils/helpers";
 import { toDecimal } from "../utils/decimals";
 import { BIGDECIMAL_HUNDRED, BIGDECIMAL_ONE, BIGDECIMAL_ZERO, BIGINT_ZERO, BIGINT_ONE } from "../utils/constants";
@@ -48,7 +50,7 @@ export function handlePriceResolved(event: PriceResolved): void {
   let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
   let request = getOrCreatePriceRequest(requestId);
   let requestRound = getOrCreatePriceRequestRound(
-    requestId.concat("-").concat(event.params.roundId.toString()).concat("-").concat(event.params.ancillaryData.toHex())
+    createPriceRequestRoundId(requestId, event.params.roundId, event.params.ancillaryData)
   );
   let groupId = requestRound.id.concat("-").concat(event.params.price.toString());
   let voterGroup = getOrCreateVoterGroup(groupId);
@@ -99,21 +101,18 @@ export function handlePriceResolved(event: PriceResolved): void {
 //  );
 
 export function handleRewardsRetrieved(event: RewardsRetrieved): void {
-  let rewardClaimedId = event.params.voter
-    .toHexString()
-    .concat("-")
-    .concat(event.params.identifier.toString())
-    .concat("-")
-    .concat(event.params.time.toString())
-    .concat("-")
-    .concat(event.params.roundId.toString())
-    .concat("-")
-    .concat(event.params.ancillaryData.toHex());
+  let rewardClaimedId = createVoteId(
+    event.params.voter.toHexString(),
+    event.params.identifier.toString(),
+    event.params.time,
+    event.params.roundId,
+    event.params.ancillaryData
+  );
   let rewardClaimed = getOrCreateRewardsClaimed(rewardClaimedId);
   let claimer = getOrCreateUser(event.params.voter);
   let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
   let requestRound = getOrCreatePriceRequestRound(
-    requestId.concat("-").concat(event.params.roundId.toString()).concat("-").concat(event.params.ancillaryData.toHex())
+    createPriceRequestRoundId(requestId, event.params.roundId, event.params.ancillaryData)
   );
   let winnerGroup: VoterGroup | null =
     requestRound.winnerGroup != null ? getOrCreateVoterGroup(requestRound.winnerGroup) : null;
@@ -173,21 +172,18 @@ export function handleVoteCommitted(event: VoteCommitted): void {
     event.params.ancillaryData.toHex(),
   ]);
 
-  let voteId = event.params.voter
-    .toHexString()
-    .concat("-")
-    .concat(event.params.identifier.toString())
-    .concat("-")
-    .concat(event.params.time.toString())
-    .concat("-")
-    .concat(event.params.roundId.toString())
-    .concat("-")
-    .concat(event.params.ancillaryData.toHex());
+  let voteId = createVoteId(
+    event.params.voter.toHexString(),
+    event.params.identifier.toString(),
+    event.params.time,
+    event.params.roundId,
+    event.params.ancillaryData
+  );
   let vote = getOrCreateCommittedVote(voteId);
   let voter = getOrCreateUser(event.params.voter);
   let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
   let requestRound = getOrCreatePriceRequestRound(
-    requestId.concat("-").concat(event.params.roundId.toString()).concat("-").concat(event.params.ancillaryData.toHex())
+    createPriceRequestRoundId(requestId, event.params.roundId, event.params.ancillaryData)
   );
 
   vote.voter = voter.id;
@@ -221,21 +217,18 @@ export function handleVoteCommitted(event: VoteCommitted): void {
 //  );
 
 export function handleVoteRevealed(event: VoteRevealed): void {
-  let voteId = event.params.voter
-    .toHexString()
-    .concat("-")
-    .concat(event.params.identifier.toString())
-    .concat("-")
-    .concat(event.params.time.toString())
-    .concat("-")
-    .concat(event.params.roundId.toString())
-    .concat("-")
-    .concat(event.params.ancillaryData.toHex());
+  let voteId = createVoteId(
+    event.params.voter.toHexString(),
+    event.params.identifier.toString(),
+    event.params.time,
+    event.params.roundId,
+    event.params.ancillaryData
+  );
   let vote = getOrCreateRevealedVote(voteId);
   let voter = getOrCreateUser(event.params.voter);
   let requestId = event.params.identifier.toString().concat("-").concat(event.params.time.toString());
   let requestRound = getOrCreatePriceRequestRound(
-    requestId.concat("-").concat(event.params.roundId.toString()).concat("-").concat(event.params.ancillaryData.toHex())
+    createPriceRequestRoundId(requestId, event.params.roundId, event.params.ancillaryData)
   );
   let groupId = requestRound.id.concat("-").concat(event.params.price.toString());
   let voterGroup = getOrCreateVoterGroup(groupId);

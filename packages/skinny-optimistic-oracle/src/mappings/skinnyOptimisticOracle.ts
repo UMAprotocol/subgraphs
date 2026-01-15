@@ -10,7 +10,7 @@ import {
   SkinnyOptimisticOracle,
   SkinnyOptimisticOracle__getStateInputRequestStruct,
 } from "../../generated/SkinnyOptimisticOracle/SkinnyOptimisticOracle";
-import { getOrCreateOptimisticPriceRequest } from "../utils/helpers";
+import { createOptimisticPriceRequestId, getOrCreateOptimisticPriceRequest } from "../utils/helpers";
 
 import { Address, BigInt, Bytes, ethereum, log } from "@graphprotocol/graph-ts";
 
@@ -63,12 +63,11 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
     event.params.identifier.toString(),
     event.params.ancillaryData.toHex(),
   ]);
-  let requestId = event.params.identifier
-    .toString()
-    .concat("-")
-    .concat(event.params.timestamp.toString())
-    .concat("-")
-    .concat(event.params.ancillaryData.toHex());
+  let requestId = createOptimisticPriceRequestId(
+    event.params.identifier,
+    BigInt.fromI32(event.params.timestamp),
+    event.params.ancillaryData
+  );
 
   let request = getOrCreateOptimisticPriceRequest(requestId);
 
@@ -112,12 +111,11 @@ export function handleOptimisticProposePrice(event: ProposePrice): void {
     event.params.identifier.toString(),
     event.params.ancillaryData.toHex(),
   ]);
-  let requestId = event.params.identifier
-    .toString()
-    .concat("-")
-    .concat(event.params.timestamp.toString())
-    .concat("-")
-    .concat(event.params.ancillaryData.toHex());
+  let requestId = createOptimisticPriceRequestId(
+    event.params.identifier,
+    BigInt.fromI32(event.params.timestamp),
+    event.params.ancillaryData
+  );
 
   let request = getOrCreateOptimisticPriceRequest(requestId);
 
@@ -156,12 +154,11 @@ export function handleOptimisticDisputePrice(event: DisputePrice): void {
     event.params.identifier.toString(),
     event.params.ancillaryData.toHex(),
   ]);
-  let requestId = event.params.identifier
-    .toString()
-    .concat("-")
-    .concat(event.params.timestamp.toString())
-    .concat("-")
-    .concat(event.params.ancillaryData.toHex());
+  let requestId = createOptimisticPriceRequestId(
+    event.params.identifier,
+    BigInt.fromI32(event.params.timestamp),
+    event.params.ancillaryData
+  );
 
   let request = getOrCreateOptimisticPriceRequest(requestId);
 
@@ -198,12 +195,11 @@ export function handleOptimisticSettle(event: Settle): void {
     event.params.identifier.toString(),
     event.params.ancillaryData.toHex(),
   ]);
-  let requestId = event.params.identifier
-    .toString()
-    .concat("-")
-    .concat(event.params.timestamp.toString())
-    .concat("-")
-    .concat(event.params.ancillaryData.toHex());
+  let requestId = createOptimisticPriceRequestId(
+    event.params.identifier,
+    BigInt.fromI32(event.params.timestamp),
+    event.params.ancillaryData
+  );
 
   let request = getOrCreateOptimisticPriceRequest(requestId);
 
