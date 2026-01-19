@@ -6,7 +6,7 @@ import {
   SetBondCall,
   Settle,
 } from "../../generated/OptimisticOracle/OptimisticOracle";
-import { getOrCreateOptimisticPriceRequest } from "../utils/helpers";
+import { createOptimisticPriceRequestId, getOrCreateOptimisticPriceRequest } from "../utils/helpers";
 
 import { Address, BigInt, Bytes, log, dataSource } from "@graphprotocol/graph-ts";
 
@@ -54,12 +54,11 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
     event.params.identifier.toString(),
     event.params.ancillaryData.toHex(),
   ]);
-  let requestId = event.params.identifier
-    .toString()
-    .concat("-")
-    .concat(event.params.timestamp.toString())
-    .concat("-")
-    .concat(event.params.ancillaryData.toHex());
+  let requestId = createOptimisticPriceRequestId(
+    event.params.identifier,
+    event.params.timestamp,
+    event.params.ancillaryData
+  );
 
   let request = getOrCreateOptimisticPriceRequest(requestId);
 
@@ -117,12 +116,11 @@ export function handleOptimisticProposePrice(event: ProposePrice): void {
     event.params.identifier.toString(),
     event.params.ancillaryData.toHex(),
   ]);
-  let requestId = event.params.identifier
-    .toString()
-    .concat("-")
-    .concat(event.params.timestamp.toString())
-    .concat("-")
-    .concat(event.params.ancillaryData.toHex());
+  let requestId = createOptimisticPriceRequestId(
+    event.params.identifier,
+    event.params.timestamp,
+    event.params.ancillaryData
+  );
 
   let request = getOrCreateOptimisticPriceRequest(requestId);
 
@@ -164,12 +162,11 @@ export function handleOptimisticDisputePrice(event: DisputePrice): void {
     event.params.identifier.toString(),
     event.params.ancillaryData.toHex(),
   ]);
-  let requestId = event.params.identifier
-    .toString()
-    .concat("-")
-    .concat(event.params.timestamp.toString())
-    .concat("-")
-    .concat(event.params.ancillaryData.toHex());
+  let requestId = createOptimisticPriceRequestId(
+    event.params.identifier,
+    event.params.timestamp,
+    event.params.ancillaryData
+  );
 
   let request = getOrCreateOptimisticPriceRequest(requestId);
 
@@ -210,12 +207,11 @@ export function handleOptimisticSettle(event: Settle): void {
     event.params.identifier.toString(),
     event.params.ancillaryData.toHex(),
   ]);
-  let requestId = event.params.identifier
-    .toString()
-    .concat("-")
-    .concat(event.params.timestamp.toString())
-    .concat("-")
-    .concat(event.params.ancillaryData.toHex());
+  let requestId = createOptimisticPriceRequestId(
+    event.params.identifier,
+    event.params.timestamp,
+    event.params.ancillaryData
+  );
 
   let request = getOrCreateOptimisticPriceRequest(requestId);
 
@@ -251,12 +247,11 @@ export function handleSetBond(call: SetBondCall): void {
     call.inputs.ancillaryData.toHex(),
     call.inputs.bond.toString(),
   ]);
-  let requestId = call.inputs.identifier
-    .toString()
-    .concat("-")
-    .concat(call.inputs.timestamp.toString())
-    .concat("-")
-    .concat(call.inputs.ancillaryData.toHex());
+  let requestId = createOptimisticPriceRequestId(
+    call.inputs.identifier,
+    call.inputs.timestamp,
+    call.inputs.ancillaryData
+  );
 
   let request = getOrCreateOptimisticPriceRequest(requestId);
   request.finalFee = call.outputs.totalBond;

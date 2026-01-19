@@ -1,1 +1,1 @@
-export { getOrCreateOptimisticPriceRequest } from "./optimisticOracle";
+export { getOrCreateOptimisticPriceRequest, createOptimisticPriceRequestId } from "./optimisticOracle";

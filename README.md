@@ -53,10 +53,10 @@ This subgraph indexes events emitted by the "Skinny Optimistic Oracle" contracts
 
 - Mainnet
   - TheGraph: <https://thegraph.com/studio/subgraph/mainnet-skinny-oo>
-  - Goldsky:
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/mainnet-skinny-optimistic-oracle/1.1.0/gn>
 - (testnet) Sepolia
   - TheGraph: <https://thegraph.com/studio/subgraph/sepolia-skinny-oo>
-  - Goldsky:
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/sepolia-skinny-optimistic-oracle/1.1.0/gn>
 
 ## Optimistic Oracle Events
 
@@ -107,16 +107,16 @@ This subgraph indexes events and function calls by the "Optimistic Oracle V2" co
 
 - Mainnet
   - TheGraph: <https://thegraph.com/studio/subgraph/mainnet-optimistic-oracle-v2>
-  - Goldsky: <>
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/mainnet-optimistic-oracle-v2/latest/gn>
 - Polygon
   - TheGraph: <https://thegraph.com/studio/subgraph/polygon-optimistic-oracle-v2>
-  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/polygon-optimistic-oracle-v2/latest/gn>
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/polygon-optimistic-oracle-v2/1.1.0/gn>
 - Arbitrum
   - TheGraph: <https://thegraph.com/studio/subgraph/arbitrum-optimistic-oracle-v2>
-  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/arbitrum-optimistic-oracle-v2/latest/gn>
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/arbitrum-optimistic-oracle-v2/1.1.0/gn>
 - Optimism
   - TheGraph: <https://thegraph.com/studio/subgraph/optimism-optimistic-oracle-v2>
-  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/optimism-optimistic-oracle-v2/latest/gn>
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/optimism-optimistic-oracle-v2/1.1.0/gn>
 - Boba
   - TheGraph: <https://thegraph.com/studio/subgraph/boba-optimistic-oracle-v2>
   - Goldsky:
@@ -126,19 +126,19 @@ This subgraph indexes events and function calls by the "Optimistic Oracle V2" co
   - TheGraph: <https://thegraph.coredao.org/subgraphs/name/umaprotocol/core-optimistic-oracle-v2>
 - (testnet) Sepolia
   - TheGraph: <https://thegraph.com/studio/subgraph/sepolia-optimistic-oracle-v2/>
-  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/sepolia-optimistic-oracle-v2/1.0.0/gn>
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/sepolia-optimistic-oracle-v2/1.1.0/gn>
 - Base
   - TheGraph: <https://thegraph.com/studio/subgraph/base-optimistic-oracle-v2>
-  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/base-optimistic-oracle-v2/latest/gn>
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/base-optimistic-oracle-v2/1.1.0/gn>
 - (staging) Base Sepolia
   - TheGraph: <https://thegraph.com/studio/subgraph/base-sepolia-oo-v2>
-  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/base-optimistic-oracle-v2/latest/gn>
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/base-sepolia-optimistic-oracle-v2/1.1.0/gn>
 - Blast
   - TheGraph: <https://thegraph.com/studio/subgraph/blast-optimistic-oracle-v2>
-  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/blast-optimistic-oracle-v2/1.0.0/gn>
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/blast-optimistic-oracle-v2/1.1.0/gn>
 - Story
   - TheGraph:
-  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/story-optimistic-oracle-v2/0.0.1/gn>
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/story-optimistic-oracle-v2/1.1.0/gn>
 
 ## Managed Optimistic Oracle V2 Events and Calls
 
@@ -146,10 +146,10 @@ This subgraph indexes events and function calls by the "Managed Optimistic Oracl
 
 - Amoy
   - TheGraph:
-  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/amoy-managed-optimistic-oracle-v2/1.0.6/gn>
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/amoy-managed-optimistic-oracle-v2/1.1.0/gn>
 - Polygon
   - TheGraph:
-  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/polygon-managed-optimistic-oracle-v2/1.0.3/gn>
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/polygon-managed-optimistic-oracle-v2/1.0.4/gn>
 
 ## Financial Contract Events
 
@@ -179,7 +179,7 @@ This subgraph indexes events emitted by the core Oracle contracts. The code can 
 
 - Mainnet
   - TheGraph: <https://thegraph.com/studio/subgraph/mainnet-voting-v2>
-  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/mainnet-voting-v2/0.1.0/gn>
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/mainnet-voting-v2/0.1.1/gn>
 - (testnet) Sepolia
   - TheGraph: <https://thegraph.com/studio/subgraph/sepolia-voting-v2/>
   - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/sepolia-voting-v2/1.0.0/gn>

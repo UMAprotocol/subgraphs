@@ -55,7 +55,7 @@ export function handlePriceRequestAdded(event: RequestAdded): void {
   let requestId = getPriceRequestId(
     event.params.identifier.toString(),
     event.params.time.toString(),
-    event.params.ancillaryData.toHexString()
+    event.params.ancillaryData
   );
   let request = getOrCreatePriceRequest(requestId);
   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
@@ -107,7 +107,7 @@ export function handlePriceResolved(event: RequestResolved): void {
   let requestId = getPriceRequestId(
     event.params.identifier.toString(),
     event.params.time.toString(),
-    event.params.ancillaryData.toHexString()
+    event.params.ancillaryData
   );
   let request = getOrCreatePriceRequest(requestId);
 
@@ -179,7 +179,7 @@ export function handleVoteCommitted(event: VoteCommitted): void {
     event.params.voter.toHexString(),
     event.params.identifier.toString(),
     event.params.time.toString(),
-    event.params.ancillaryData.toHexString(),
+    event.params.ancillaryData,
     event.params.roundId.toString()
   );
   let vote = getOrCreateCommittedVote(voteId);
@@ -196,7 +196,7 @@ export function handleVoteCommitted(event: VoteCommitted): void {
   let requestId = getPriceRequestId(
     event.params.identifier.toString(),
     event.params.time.toString(),
-    event.params.ancillaryData.toHexString()
+    event.params.ancillaryData
   );
   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
 
@@ -244,7 +244,7 @@ export function handleVoteRevealed(event: VoteRevealed): void {
     event.params.voter.toHexString(),
     event.params.identifier.toString(),
     event.params.time.toString(),
-    event.params.ancillaryData.toHexString(),
+    event.params.ancillaryData,
     event.params.roundId.toString()
   );
   let vote = getOrCreateRevealedVote(voteId);
@@ -255,7 +255,7 @@ export function handleVoteRevealed(event: VoteRevealed): void {
   let requestId = getPriceRequestId(
     event.params.identifier.toString(),
     event.params.time.toString(),
-    event.params.ancillaryData.toHexString()
+    event.params.ancillaryData
   );
   let request = getOrCreatePriceRequest(requestId);
   let requestRound = getOrCreatePriceRequestRound(requestId.concat("-").concat(event.params.roundId.toString()));
@@ -318,7 +318,7 @@ export function handleVoteRevealed(event: VoteRevealed): void {
     event.params.voter.toHexString(),
     event.params.identifier.toString(),
     event.params.time.toString(),
-    event.params.ancillaryData.toHexString()
+    event.params.ancillaryData
   );
 
   let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, voter.id);
@@ -459,7 +459,7 @@ export function handleVoterSlashed(event: VoterSlashed): void {
   let requestId = getPriceRequestId(
     priceRequest.value.getIdentifier().toString(),
     priceRequest.value.getTime().toString(),
-    priceRequest.value.getAncillaryData().toHexString()
+    priceRequest.value.getAncillaryData()
   );
   let request = getOrCreatePriceRequest(requestId);
 
@@ -468,7 +468,7 @@ export function handleVoterSlashed(event: VoterSlashed): void {
     event.params.voter.toHexString(),
     priceRequest.value.getIdentifier().toString(),
     priceRequest.value.getTime().toString(),
-    priceRequest.value.getAncillaryData().toHexString()
+    priceRequest.value.getAncillaryData()
   );
   let voteSlashed = getOrCreateSlashedVote(voteSlashedId, requestId, user.id);
   voteSlashed.isGovernance = request.isGovernance;
@@ -482,7 +482,7 @@ export function handleVoterSlashed(event: VoterSlashed): void {
     event.params.voter.toHexString(),
     priceRequest.value.getIdentifier().toString(),
     priceRequest.value.getTime().toString(),
-    priceRequest.value.getAncillaryData().toHexString(),
+    priceRequest.value.getAncillaryData(),
     slashingTracker.lastVotingRound.toString()
   );
 
@@ -550,7 +550,7 @@ export function handleRequestDeleted(event: RequestDeleted): void {
   let requestId = getPriceRequestId(
     event.params.identifier.toString(),
     event.params.time.toString(),
-    event.params.ancillaryData.toHexString()
+    event.params.ancillaryData
   );
   let request = getOrCreatePriceRequest(requestId);
 
@@ -564,7 +564,7 @@ export function handleRequestRolled(event: RequestRolled): void {
   let requestId = getPriceRequestId(
     event.params.identifier.toString(),
     event.params.time.toString(),
-    event.params.ancillaryData.toHexString()
+    event.params.ancillaryData
   );
   let request = getOrCreatePriceRequest(requestId);
 

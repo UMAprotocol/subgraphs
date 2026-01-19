@@ -1,3 +1,4 @@
+import { Bytes, crypto } from "@graphprotocol/graph-ts";
 import {
   CommittedVote,
   Global,
@@ -10,6 +11,11 @@ import {
 } from "../../../generated/schema";
 import { BIGDECIMAL_ZERO, BIGINT_ZERO } from "../constants";
 export const GLOBAL = "global";
+
+// Helper function to hash ancillaryData
+function hashAncillaryData(ancillaryData: Bytes): string {
+  return crypto.keccak256(ancillaryData).toHexString();
+}
 
 export function getOrCreateGlobals(): Global {
   let request = Global.load(GLOBAL);
@@ -150,7 +156,7 @@ export function getVoteId(
   voter: string,
   identifier: string,
   time: string,
-  ancillaryData: string,
+  ancillaryData: Bytes,
   roundId: string
 ): string {
   return voter
@@ -159,17 +165,17 @@ export function getVoteId(
     .concat("-")
     .concat(time)
     .concat("-")
-    .concat(ancillaryData)
+    .concat(hashAncillaryData(ancillaryData))
     .concat("-")
     .concat(roundId);
 }
 
-export function getVoteIdNoRoundId(voter: string, identifier: string, time: string, ancillaryData: string): string {
-  return voter.concat("-").concat(identifier).concat("-").concat(time).concat("-").concat(ancillaryData);
+export function getVoteIdNoRoundId(voter: string, identifier: string, time: string, ancillaryData: Bytes): string {
+  return voter.concat("-").concat(identifier).concat("-").concat(time).concat("-").concat(hashAncillaryData(ancillaryData));
 }
 
-export function getPriceRequestId(identifier: string, time: string, ancillaryData: string): string {
-  return identifier.concat("-").concat(time).concat("-").concat(ancillaryData);
+export function getPriceRequestId(identifier: string, time: string, ancillaryData: Bytes): string {
+  return identifier.concat("-").concat(time).concat("-").concat(hashAncillaryData(ancillaryData));
 }
 
 export function getSlashingTransactionId(transactionHash: string, voter: string): string {

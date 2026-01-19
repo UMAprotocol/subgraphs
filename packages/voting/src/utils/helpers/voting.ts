@@ -1,3 +1,4 @@
+import { BigInt, Bytes, crypto } from "@graphprotocol/graph-ts";
 import {
   PriceRequest,
   PriceRequestRound,
@@ -7,6 +8,43 @@ import {
   VoterGroup,
 } from "../../../generated/schema";
 import { BIGDECIMAL_ZERO } from "../constants";
+
+// Helper function to hash ancillaryData
+function hashAncillaryData(ancillaryData: Bytes): string {
+  return crypto.keccak256(ancillaryData).toHexString();
+}
+
+// Creates ID for PriceRequestRound: requestId-roundId-hash(ancillaryData)
+export function createPriceRequestRoundId(
+  requestId: string,
+  roundId: BigInt,
+  ancillaryData: Bytes
+): string {
+  return requestId
+    .concat("-")
+    .concat(roundId.toString())
+    .concat("-")
+    .concat(hashAncillaryData(ancillaryData));
+}
+
+// Creates ID for vote entities: voter-identifier-time-roundId-hash(ancillaryData)
+export function createVoteId(
+  voter: string,
+  identifier: string,
+  time: BigInt,
+  roundId: BigInt,
+  ancillaryData: Bytes
+): string {
+  return voter
+    .concat("-")
+    .concat(identifier)
+    .concat("-")
+    .concat(time.toString())
+    .concat("-")
+    .concat(roundId.toString())
+    .concat("-")
+    .concat(hashAncillaryData(ancillaryData));
+}
 
 export function getOrCreatePriceRequest(id: String, createIfNotFound: boolean = true): PriceRequest {
   let request = PriceRequest.load(id);

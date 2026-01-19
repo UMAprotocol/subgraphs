@@ -2,6 +2,7 @@ import { describe, test, clearStore, assert, log, afterEach } from "matchstick-a
 import { handleCustomLivenessSet, handleCustomBondSet } from "../../src/mappings/managedOracleV2";
 import { handleOptimisticProposePrice, handleOptimisticRequestPrice } from "../../src/mappings/optimisticOracleV2";
 import { createCustomBondIdFromEvent } from "../../src/utils/helpers/managedOracleV2";
+import { createOptimisticPriceRequestId } from "../../src/utils/helpers/optimisticOracle";
 import {
   createCustomLivenessSetEvent,
   createCustomBondSetEvent,
@@ -173,7 +174,11 @@ describe("Managed OOv2", () => {
     );
     handleOptimisticRequestPrice(requestPriceEvent);
 
-    const requestId = identifierString.concat("-").concat(timestamp.toString()).concat("-").concat(ancillaryData);
+    const requestId = createOptimisticPriceRequestId(
+      Bytes.fromHexString(identifierHex) as Bytes,
+      BigInt.fromI32(timestamp),
+      Bytes.fromHexString(ancillaryData) as Bytes
+    );
 
     const priceRequestEntity = OptimisticPriceRequest.load(requestId);
 
@@ -294,7 +299,11 @@ describe("Managed OOv2", () => {
     );
     handleOptimisticProposePrice(proposePriceEvent);
 
-    const requestId = identifierString.concat("-").concat(timestamp.toString()).concat("-").concat(ancillaryData);
+    const requestId = createOptimisticPriceRequestId(
+      Bytes.fromHexString(identifierHex) as Bytes,
+      BigInt.fromI32(timestamp),
+      Bytes.fromHexString(ancillaryData) as Bytes
+    );
 
     const priceRequestEntity = OptimisticPriceRequest.load(requestId);
 
@@ -389,7 +398,11 @@ describe("Managed OOv2", () => {
     );
     handleOptimisticRequestPrice(requestPriceEvent);
 
-    const requestId = identifierString.concat("-").concat(timestamp.toString()).concat("-").concat(ancillaryData);
+    const requestId = createOptimisticPriceRequestId(
+      Bytes.fromHexString(identifierHex) as Bytes,
+      BigInt.fromI32(timestamp),
+      Bytes.fromHexString(ancillaryData) as Bytes
+    );
 
     const priceRequestEntity = OptimisticPriceRequest.load(requestId);
 
