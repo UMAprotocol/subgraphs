@@ -1,7 +1,10 @@
-import { log } from "@graphprotocol/graph-ts";
-import { CustomBond, CustomLiveness } from "../../generated/schema";
-import { CustomBondSet, CustomLivenessSet } from "../../generated/ManagedOracleV2/ManagedOracleV2";
+import { log, Bytes, crypto } from "@graphprotocol/graph-ts";
+import { CustomBond, CustomLiveness, Resolver, ResolverHistory } from "../../generated/schema";
+import { CustomBondSet, CustomLivenessSet, RoleGranted, RoleRevoked } from "../../generated/ManagedOracleV2/ManagedOracleV2";
 import { createCustomBondIdFromEvent } from "../utils/helpers/managedOracleV2";
+
+// RESOLVER_ROLE = keccak256("RESOLVER_ROLE")
+const RESOLVER_ROLE = Bytes.fromHexString("0x92a19c77d2ea87c7f81d50c74403cb2f401780f3ad919571121efe2bdb427eb1");
 
 /**
  * Handles CustomBondSet events from the ManagedOracleV2 contract.
@@ -47,4 +50,59 @@ export function handleCustomLivenessSet(event: CustomLivenessSet): void {
 
   entity.customLiveness = event.params.customLiveness;
   entity.save();
+}
+
+export function handleRoleGranted(event: RoleGranted): void {
+  if (event.params.role != RESOLVER_ROLE) return;
+
+  const id = event.params.account.toHexString();
+  let resolver = Resolver.load(id);
+
+  if (resolver == null) {
+    resolver = new Resolver(id);
+    resolver.address = event.params.account;
+  }
+
+  resolver.isActive = true;
+  resolver.addedAt = event.block.timestamp;
+  resolver.addedTx = event.transaction.hash;
+  resolver.save();
+
+  // Create history entry
+  const historyId = event.transaction.hash.toHexString() + "-" + event.logIndex.toString();
+  let history = new ResolverHistory(historyId);
+  history.resolver = event.params.account;
+  history.action = "added";
+  history.timestamp = event.block.timestamp;
+  history.blockNumber = event.block.number;
+  history.transactionHash = event.transaction.hash;
+  history.save();
+
+  log.info("Resolver added: {}", [id]);
+}
+
+export function handleRoleRevoked(event: RoleRevoked): void {
+  if (event.params.role != RESOLVER_ROLE) return;
+
+  const id = event.params.account.toHexString();
+  let resolver = Resolver.load(id);
+
+  if (resolver != null) {
+    resolver.isActive = false;
+    resolver.removedAt = event.block.timestamp;
+    resolver.removedTx = event.transaction.hash;
+    resolver.save();
+  }
+
+  // Create history entry
+  const historyId = event.transaction.hash.toHexString() + "-" + event.logIndex.toString();
+  let history = new ResolverHistory(historyId);
+  history.resolver = event.params.account;
+  history.action = "removed";
+  history.timestamp = event.block.timestamp;
+  history.blockNumber = event.block.number;
+  history.transactionHash = event.transaction.hash;
+  history.save();
+
+  log.info("Resolver removed: {}", [id]);
 }
