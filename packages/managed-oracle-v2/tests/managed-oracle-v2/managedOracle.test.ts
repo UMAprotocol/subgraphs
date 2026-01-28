@@ -1,5 +1,5 @@
 import { describe, test, clearStore, assert, log, afterEach } from "matchstick-as/assembly/index";
-import { handleCustomLivenessSet, handleCustomBondSet } from "../../src/mappings/managedOracleV2";
+import { handleCustomLivenessSet, handleCustomBondSet, handleRoleGranted, handleRoleRevoked } from "../../src/mappings/managedOracleV2";
 import { handleOptimisticProposePrice, handleOptimisticRequestPrice } from "../../src/mappings/optimisticOracleV2";
 import { createCustomBondIdFromEvent } from "../../src/utils/helpers/managedOracleV2";
 import { createOptimisticPriceRequestId } from "../../src/utils/helpers/optimisticOracle";
@@ -8,10 +8,13 @@ import {
   createCustomBondSetEvent,
   createProposePriceEvent,
   createRequestPriceEvent,
+  createRoleGrantedEvent,
+  createRoleRevokedEvent,
   mockGetState,
   State,
+  RESOLVER_ROLE,
 } from "./utils";
-import { CustomLiveness, CustomBond, OptimisticPriceRequest } from "../../generated/schema";
+import { CustomLiveness, CustomBond, OptimisticPriceRequest, Resolver, ResolverHistory } from "../../generated/schema";
 import { BigInt, Bytes, Address } from "@graphprotocol/graph-ts";
 
 // Tests structure (matchstick-as >=0.5.0)
@@ -460,5 +463,137 @@ describe("Managed OOv2", () => {
     }
     log.info("Currency: {} (should be Token B)", [priceRequestEntity.currency!.toHexString()]);
     log.info("State: {}", [priceRequestEntity.state!]);
+  });
+});
+
+describe("Resolver Tracking", () => {
+  afterEach(() => {
+    clearStore();
+  });
+
+  test("handleRoleGranted creates Resolver entity when RESOLVER_ROLE is granted", () => {
+    const resolverAddress = "0x1234567890123456789012345678901234567890";
+    const sender = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
+
+    const roleGrantedEvent = createRoleGrantedEvent(RESOLVER_ROLE, resolverAddress, sender);
+    handleRoleGranted(roleGrantedEvent);
+
+    const resolver = Resolver.load(resolverAddress.toLowerCase());
+
+    assert.assertTrue(resolver !== null, "Resolver entity should be created");
+
+    if (resolver === null) {
+      return;
+    }
+
+    assert.assertTrue(resolver.isActive, "Resolver should be active");
+    assert.bytesEquals(
+      resolver.address,
+      Address.fromString(resolverAddress),
+      "Resolver address should match"
+    );
+    assert.assertTrue(resolver.addedAt !== null, "addedAt should be set");
+    assert.assertTrue(resolver.addedTx !== null, "addedTx should be set");
+
+    log.info("Created Resolver entity: {}", [resolver.id]);
+    log.info("isActive: {}", [resolver.isActive.toString()]);
+  });
+
+  test("handleRoleGranted creates ResolverHistory entry", () => {
+    const resolverAddress = "0x1234567890123456789012345678901234567890";
+    const sender = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
+
+    const roleGrantedEvent = createRoleGrantedEvent(RESOLVER_ROLE, resolverAddress, sender);
+    handleRoleGranted(roleGrantedEvent);
+
+    const historyId = roleGrantedEvent.transaction.hash.toHexString() + "-" + roleGrantedEvent.logIndex.toString();
+    const history = ResolverHistory.load(historyId);
+
+    assert.assertTrue(history !== null, "ResolverHistory entity should be created");
+
+    if (history === null) {
+      return;
+    }
+
+    assert.stringEquals(history.action, "added", "Action should be 'added'");
+    assert.bytesEquals(
+      history.resolver,
+      Address.fromString(resolverAddress),
+      "Resolver address should match"
+    );
+
+    log.info("Created ResolverHistory entity: {}", [history.id]);
+    log.info("action: {}", [history.action]);
+  });
+
+  test("handleRoleRevoked updates Resolver entity to inactive", () => {
+    const resolverAddress = "0x1234567890123456789012345678901234567890";
+    const sender = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
+
+    // First grant the role
+    const roleGrantedEvent = createRoleGrantedEvent(RESOLVER_ROLE, resolverAddress, sender);
+    handleRoleGranted(roleGrantedEvent);
+
+    // Then revoke the role
+    const roleRevokedEvent = createRoleRevokedEvent(RESOLVER_ROLE, resolverAddress, sender);
+    handleRoleRevoked(roleRevokedEvent);
+
+    const resolver = Resolver.load(resolverAddress.toLowerCase());
+
+    assert.assertTrue(resolver !== null, "Resolver entity should exist");
+
+    if (resolver === null) {
+      return;
+    }
+
+    assert.assertTrue(!resolver.isActive, "Resolver should be inactive after revocation");
+    assert.assertTrue(resolver.removedAt !== null, "removedAt should be set");
+    assert.assertTrue(resolver.removedTx !== null, "removedTx should be set");
+
+    log.info("Updated Resolver entity: {}", [resolver.id]);
+    log.info("isActive: {}", [resolver.isActive.toString()]);
+  });
+
+  test("handleRoleGranted ignores non-RESOLVER_ROLE events", () => {
+    const resolverAddress = "0x1234567890123456789012345678901234567890";
+    const sender = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
+    // Some other role hash (not RESOLVER_ROLE)
+    const otherRole = Bytes.fromHexString("0x0000000000000000000000000000000000000000000000000000000000000001");
+
+    const roleGrantedEvent = createRoleGrantedEvent(otherRole, resolverAddress, sender);
+    handleRoleGranted(roleGrantedEvent);
+
+    const resolver = Resolver.load(resolverAddress.toLowerCase());
+
+    assert.assertTrue(resolver === null, "Resolver entity should NOT be created for non-RESOLVER_ROLE");
+
+    log.info("Correctly ignored non-RESOLVER_ROLE event", []);
+  });
+
+  test("handleRoleRevoked creates ResolverHistory entry", () => {
+    const resolverAddress = "0x1234567890123456789012345678901234567890";
+    const sender = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
+
+    // First grant the role
+    const roleGrantedEvent = createRoleGrantedEvent(RESOLVER_ROLE, resolverAddress, sender);
+    handleRoleGranted(roleGrantedEvent);
+
+    // Then revoke the role
+    const roleRevokedEvent = createRoleRevokedEvent(RESOLVER_ROLE, resolverAddress, sender);
+    handleRoleRevoked(roleRevokedEvent);
+
+    const historyId = roleRevokedEvent.transaction.hash.toHexString() + "-" + roleRevokedEvent.logIndex.toString();
+    const history = ResolverHistory.load(historyId);
+
+    assert.assertTrue(history !== null, "ResolverHistory entity should be created for revocation");
+
+    if (history === null) {
+      return;
+    }
+
+    assert.stringEquals(history.action, "removed", "Action should be 'removed'");
+
+    log.info("Created ResolverHistory entity for revocation: {}", [history.id]);
+    log.info("action: {}", [history.action]);
   });
 });

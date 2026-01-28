@@ -5,7 +5,12 @@ import {
   CustomLivenessSet,
   ProposePrice,
   RequestPrice,
+  RoleGranted,
+  RoleRevoked,
 } from "../../generated/ManagedOracleV2/ManagedOracleV2";
+
+// RESOLVER_ROLE = keccak256("RESOLVER_ROLE")
+export const RESOLVER_ROLE = Bytes.fromHexString("0x92a19c77d2ea87c7f81d50c74403cb2f401780f3ad919571121efe2bdb427eb1");
 
 export const contractAddress = Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"); // Default test contract address
 
@@ -206,4 +211,54 @@ export function mockGetState(
       ethereum.Value.fromBytes(Bytes.fromHexString(ancillaryData)),
     ])
     .returns([ethereum.Value.fromI32(expectedState)]);
+}
+
+export function createRoleGrantedEvent(
+  role: Bytes,
+  account: string,
+  sender: string
+): RoleGranted {
+  let roleGrantedEvent = changetype<RoleGranted>(newMockEvent());
+  roleGrantedEvent.address = contractAddress;
+  roleGrantedEvent.parameters = new Array();
+
+  // role
+  roleGrantedEvent.parameters.push(
+    new ethereum.EventParam("role", ethereum.Value.fromFixedBytes(role))
+  );
+  // account
+  roleGrantedEvent.parameters.push(
+    new ethereum.EventParam("account", ethereum.Value.fromAddress(Address.fromString(account)))
+  );
+  // sender
+  roleGrantedEvent.parameters.push(
+    new ethereum.EventParam("sender", ethereum.Value.fromAddress(Address.fromString(sender)))
+  );
+
+  return roleGrantedEvent;
+}
+
+export function createRoleRevokedEvent(
+  role: Bytes,
+  account: string,
+  sender: string
+): RoleRevoked {
+  let roleRevokedEvent = changetype<RoleRevoked>(newMockEvent());
+  roleRevokedEvent.address = contractAddress;
+  roleRevokedEvent.parameters = new Array();
+
+  // role
+  roleRevokedEvent.parameters.push(
+    new ethereum.EventParam("role", ethereum.Value.fromFixedBytes(role))
+  );
+  // account
+  roleRevokedEvent.parameters.push(
+    new ethereum.EventParam("account", ethereum.Value.fromAddress(Address.fromString(account)))
+  );
+  // sender
+  roleRevokedEvent.parameters.push(
+    new ethereum.EventParam("sender", ethereum.Value.fromAddress(Address.fromString(sender)))
+  );
+
+  return roleRevokedEvent;
 }
