@@ -1,0 +1,10 @@
+{
+  "network": "matic",
+  "ManagedOracleV2DataSources": [
+    {
+      "name": "ManagedOracleV2",
+      "address": "0x0a50b5028fef3f504115b282eef22e9cbef3d9bc",
+      "startBlock": 82287894
+    }
+  ]
+}
