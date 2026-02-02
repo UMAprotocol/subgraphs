@@ -151,6 +151,14 @@ This subgraph indexes events and function calls by the "Managed Optimistic Oracl
   - TheGraph:
   - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/polygon-managed-optimistic-oracle-v2/1.0.4/gn>
 
+## Mirror of Managed Optimistic Oracle V2 Events and Calls
+
+This subgraph indexes events and function calls by the "Managed Optimistic Oracle V2" contracts that mirror requests and proposals on production instance. We reuse the code from `packages/managed-oracle-v2` because the events emitted are the same.
+
+- Polygon
+  - TheGraph:
+  - Goldsky: <https://api.goldsky.com/api/public/project_clus2fndawbcc01w31192938i/subgraphs/polygon-mirror-managed-optimistic-oracle-v2/1.0.1/gn>
+
 ## Financial Contract Events
 
 This subgraph indexes events emitted by the ExpiringMultiParty and Perpetual contracts. The code can be found in `packages/financial-contracts`

@@ -1,0 +1,2 @@
+testsFolder: tests
+libsFolder: ../../node_modules # binaries istalled in root of monorepo
