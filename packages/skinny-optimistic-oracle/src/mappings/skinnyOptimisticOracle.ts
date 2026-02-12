@@ -84,6 +84,7 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
   request.requestHash = event.transaction.hash;
   request.bond = event.params.request.bond;
   request.customLiveness = event.params.request.customLiveness;
+  request.lastUpdated = event.block.timestamp;
 
   request.state = getState<RequestPriceRequestStruct>(
     event.address,
@@ -127,6 +128,7 @@ export function handleOptimisticProposePrice(event: ProposePrice): void {
   request.proposalBlockNumber = event.block.number;
   request.proposalLogIndex = event.logIndex;
   request.proposalHash = event.transaction.hash;
+  request.lastUpdated = event.block.timestamp;
 
   request.state = getState<ProposePriceRequestStruct>(
     event.address,
@@ -168,6 +170,7 @@ export function handleOptimisticDisputePrice(event: DisputePrice): void {
   request.disputeBlockNumber = event.block.number;
   request.disputeLogIndex = event.logIndex;
   request.disputeHash = event.transaction.hash;
+  request.lastUpdated = event.block.timestamp;
 
   request.state = getState<DisputePriceRequestStruct>(
     event.address,
@@ -218,6 +221,7 @@ export function handleOptimisticSettle(event: Settle): void {
   request.settlementBlockNumber = event.block.number;
   request.settlementLogIndex = event.logIndex;
   request.settlementHash = event.transaction.hash;
+  request.lastUpdated = event.block.timestamp;
 
   request.state = getState<SettleRequestStruct>(
     event.address,

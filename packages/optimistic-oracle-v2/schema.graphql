@@ -79,4 +79,6 @@ type OptimisticPriceRequest @entity {
   bond: BigInt
 
   eventBased: Boolean
+
+  lastUpdated: BigInt
 }
