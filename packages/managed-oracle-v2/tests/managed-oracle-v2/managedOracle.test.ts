@@ -1,4 +1,4 @@
-import { describe, test, clearStore, assert, log, afterEach } from "matchstick-as/assembly/index";
+import { describe, test, clearStore, assert, log, afterEach, beforeEach, dataSourceMock } from "matchstick-as/assembly/index";
 import { handleCustomLivenessSet, handleCustomBondSet, handleRoleGranted, handleRoleRevoked } from "../../src/mappings/managedOracleV2";
 import { handleOptimisticProposePrice, handleOptimisticRequestPrice } from "../../src/mappings/optimisticOracleV2";
 import { createCustomBondIdFromEvent } from "../../src/utils/helpers/managedOracleV2";
@@ -11,6 +11,10 @@ import {
   createRoleGrantedEvent,
   createRoleRevokedEvent,
   mockGetState,
+  mockGetRequestNewABI,
+  mockGetRequestNewABIReverts,
+  mockGetRequestLegacyABI,
+  mockGetRequestLegacyABIReverts,
   State,
   RESOLVER_ROLE,
 } from "./utils";
@@ -595,5 +599,205 @@ describe("Resolver Tracking", () => {
 
     log.info("Created ResolverHistory entity for revocation: {}", [history.id]);
     log.info("action: {}", [history.action]);
+  });
+});
+
+describe("Dual-ABI getRequest fallback (L2 chains)", () => {
+  // Common test variables
+  const requester = "0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D";
+  const identifierHex = "0x00000000000000000000000000000000005945535f4f525f4e4f5f5155455259";
+  const ancillaryData = "0x5945535f4f525f4e4f5f5155455259";
+  const currency = "0x9b4A302A548c7e313c2b74C461db7b84d3074A84";
+  const reward = 1000000;
+  const finalFee = 500000;
+  const timestamp = 1757284669;
+  const mockBond = 5000000;
+  const mockCustomLiveness = 7200;
+
+  beforeEach(() => {
+    // Set network to matic (Polygon) so the getRequest branch is exercised
+    dataSourceMock.setNetwork("matic");
+  });
+
+  afterEach(() => {
+    clearStore();
+    dataSourceMock.resetValues();
+  });
+
+  test("New ABI getRequest succeeds - populates bond, eventBased, customLiveness from contract", () => {
+    mockGetState(requester, identifierHex, timestamp, ancillaryData, State.Requested);
+    mockGetRequestNewABI(requester, identifierHex, timestamp, ancillaryData, mockBond, true, mockCustomLiveness);
+
+    const requestPriceEvent = createRequestPriceEvent(
+      requester,
+      identifierHex,
+      timestamp,
+      ancillaryData,
+      currency,
+      reward,
+      finalFee
+    );
+    handleOptimisticRequestPrice(requestPriceEvent);
+
+    const requestId = createOptimisticPriceRequestId(
+      Bytes.fromHexString(identifierHex) as Bytes,
+      BigInt.fromI32(timestamp),
+      Bytes.fromHexString(ancillaryData) as Bytes
+    );
+
+    const entity = OptimisticPriceRequest.load(requestId);
+    assert.assertTrue(entity !== null, "Entity should be created");
+    if (entity === null) return;
+
+    assert.bigIntEquals(entity.bond!, BigInt.fromI32(mockBond), "Bond should be populated from new ABI getRequest");
+    assert.assertTrue(entity.eventBased!, "eventBased should be true from new ABI getRequest");
+    assert.bigIntEquals(
+      entity.customLiveness!,
+      BigInt.fromI32(mockCustomLiveness),
+      "customLiveness should be populated from new ABI getRequest"
+    );
+  });
+
+  test("Legacy ABI fallback when new ABI reverts - populates bond, eventBased, customLiveness", () => {
+    mockGetState(requester, identifierHex, timestamp, ancillaryData, State.Requested);
+    // New ABI reverts (e.g. contract from opt-in-early-resolution without proposalTime)
+    mockGetRequestNewABIReverts(requester, identifierHex, timestamp, ancillaryData);
+    // Legacy ABI succeeds
+    mockGetRequestLegacyABI(requester, identifierHex, timestamp, ancillaryData, mockBond, true, mockCustomLiveness);
+
+    const requestPriceEvent = createRequestPriceEvent(
+      requester,
+      identifierHex,
+      timestamp,
+      ancillaryData,
+      currency,
+      reward,
+      finalFee
+    );
+    handleOptimisticRequestPrice(requestPriceEvent);
+
+    const requestId = createOptimisticPriceRequestId(
+      Bytes.fromHexString(identifierHex) as Bytes,
+      BigInt.fromI32(timestamp),
+      Bytes.fromHexString(ancillaryData) as Bytes
+    );
+
+    const entity = OptimisticPriceRequest.load(requestId);
+    assert.assertTrue(entity !== null, "Entity should be created");
+    if (entity === null) return;
+
+    assert.bigIntEquals(entity.bond!, BigInt.fromI32(mockBond), "Bond should be populated from legacy ABI fallback");
+    assert.assertTrue(entity.eventBased!, "eventBased should be true from legacy ABI fallback");
+    assert.bigIntEquals(
+      entity.customLiveness!,
+      BigInt.fromI32(mockCustomLiveness),
+      "customLiveness should be populated from legacy ABI fallback"
+    );
+  });
+
+  test("Both ABIs fail - request created without contract-derived settings", () => {
+    mockGetState(requester, identifierHex, timestamp, ancillaryData, State.Requested);
+    // Both ABIs revert
+    mockGetRequestNewABIReverts(requester, identifierHex, timestamp, ancillaryData);
+    mockGetRequestLegacyABIReverts(requester, identifierHex, timestamp, ancillaryData);
+
+    const requestPriceEvent = createRequestPriceEvent(
+      requester,
+      identifierHex,
+      timestamp,
+      ancillaryData,
+      currency,
+      reward,
+      finalFee
+    );
+    handleOptimisticRequestPrice(requestPriceEvent);
+
+    const requestId = createOptimisticPriceRequestId(
+      Bytes.fromHexString(identifierHex) as Bytes,
+      BigInt.fromI32(timestamp),
+      Bytes.fromHexString(ancillaryData) as Bytes
+    );
+
+    const entity = OptimisticPriceRequest.load(requestId);
+    assert.assertTrue(entity !== null, "Entity should still be created even when both ABIs fail");
+    if (entity === null) return;
+
+    // Basic event data should still be populated
+    assert.addressEquals(
+      Address.fromBytes(entity.requester),
+      Address.fromString(requester),
+      "Requester should still be set from event params"
+    );
+    assert.bigIntEquals(entity.reward, BigInt.fromI32(reward), "Reward should still be set from event params");
+
+    // Contract-derived settings should be null (not populated)
+    assert.assertTrue(entity.bond === null, "Bond should be null when both ABIs fail");
+    assert.assertTrue(entity.eventBased === null, "eventBased should be null when both ABIs fail");
+    assert.assertTrue(entity.customLiveness === null, "customLiveness should be null when both ABIs fail");
+  });
+
+  test("Custom bond/liveness entities override contract getRequest values", () => {
+    const managedRequestId = "0x8aed060a05dfbb279705824d8b544fc58a63ebc4a1c26380cbd90297c0a7e33c";
+    const customBondAmount = 9999999;
+    const customLivenessAmount = 86400;
+
+    mockGetState(requester, identifierHex, timestamp, ancillaryData, State.Requested);
+    // Contract returns some values via getRequest
+    mockGetRequestNewABI(requester, identifierHex, timestamp, ancillaryData, mockBond, false, mockCustomLiveness);
+
+    // Set custom bond and liveness entities BEFORE the request
+    const customBondEvent = createCustomBondSetEvent(
+      managedRequestId,
+      requester,
+      identifierHex,
+      ancillaryData,
+      currency,
+      customBondAmount
+    );
+    handleCustomBondSet(customBondEvent);
+
+    const customLivenessEvent = createCustomLivenessSetEvent(
+      managedRequestId,
+      requester,
+      identifierHex,
+      ancillaryData,
+      customLivenessAmount
+    );
+    handleCustomLivenessSet(customLivenessEvent);
+
+    // Now fire the RequestPrice event
+    const requestPriceEvent = createRequestPriceEvent(
+      requester,
+      identifierHex,
+      timestamp,
+      ancillaryData,
+      currency,
+      reward,
+      finalFee
+    );
+    handleOptimisticRequestPrice(requestPriceEvent);
+
+    const requestId = createOptimisticPriceRequestId(
+      Bytes.fromHexString(identifierHex) as Bytes,
+      BigInt.fromI32(timestamp),
+      Bytes.fromHexString(ancillaryData) as Bytes
+    );
+
+    const entity = OptimisticPriceRequest.load(requestId);
+    assert.assertTrue(entity !== null, "Entity should be created");
+    if (entity === null) return;
+
+    // Custom bond entity should override the getRequest value
+    assert.bigIntEquals(
+      entity.bond!,
+      BigInt.fromI32(customBondAmount),
+      "Custom bond entity should override contract getRequest bond"
+    );
+    // Custom liveness entity should override the getRequest value
+    assert.bigIntEquals(
+      entity.customLiveness!,
+      BigInt.fromI32(customLivenessAmount),
+      "Custom liveness entity should override contract getRequest customLiveness"
+    );
   });
 });

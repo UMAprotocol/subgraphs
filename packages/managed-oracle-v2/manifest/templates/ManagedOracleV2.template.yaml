@@ -20,6 +20,8 @@
     abis:
       - name: ManagedOracleV2
         file: ./abis/ManagedOracleV2.json
+      - name: ManagedOracleV2Legacy
+        file: ./abis/ManagedOracleV2Legacy.json
     eventHandlers:
       - event: RequestPrice(indexed address,bytes32,uint256,bytes,address,uint256,uint256)
         handler: handleOptimisticRequestPrice

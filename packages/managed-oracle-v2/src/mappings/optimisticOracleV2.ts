@@ -8,16 +8,12 @@ import {
   SetEventBasedCall,
   Settle,
 } from "../../generated/ManagedOracleV2/ManagedOracleV2";
+import { ManagedOracleV2Legacy } from "../../generated/ManagedOracleV2/ManagedOracleV2Legacy";
 import { createOptimisticPriceRequestId, getManagedRequestId, getOrCreateOptimisticPriceRequest } from "../utils/helpers";
 import { CustomBond, CustomLiveness } from "../../generated/schema";
 
 import { Address, BigInt, Bytes, dataSource, log } from "@graphprotocol/graph-ts";
 import { createCustomBondId } from "../utils/helpers/managedOracleV2";
-
-let network = dataSource.network();
-
-let isMainnet = network == "mainnet";
-let isGoerli = network == "goerli";
 
 /**
  * Retrieves a custom bond entity if one exists for the given parameters.
@@ -84,6 +80,10 @@ function getState(
 //   );
 
 export function handleOptimisticRequestPrice(event: RequestPrice): void {
+  let network = dataSource.network();
+  let isMainnet = network == "mainnet";
+  let isGoerli = network == "goerli";
+
   log.warning(`(ancillary) OOV2 PriceRequest params: {},{},{}`, [
     event.params.timestamp.toString(),
     event.params.identifier.toString(),
@@ -121,15 +121,38 @@ export function handleOptimisticRequestPrice(event: RequestPrice): void {
   // see readme for more info
   if (!isMainnet && !isGoerli) {
     let oov2 = ManagedOracleV2.bind(event.address);
-    let requestSettings = oov2.try_getRequest(
+    let result = oov2.try_getRequest(
       event.params.requester,
       event.params.identifier,
       event.params.timestamp,
       event.params.ancillaryData
-    ).value.requestSettings;
-    request.bond = requestSettings.bond;
-    request.eventBased = requestSettings.eventBased;
-    request.customLiveness = requestSettings.customLiveness;
+    );
+
+    if (!result.reverted) {
+      // New ABI succeeded
+      let requestSettings = result.value.requestSettings;
+      request.bond = requestSettings.bond;
+      request.eventBased = requestSettings.eventBased;
+      request.customLiveness = requestSettings.customLiveness;
+    } else {
+      // Try legacy ABI (for contracts not yet upgraded)
+      let oov2Legacy = ManagedOracleV2Legacy.bind(event.address);
+      let legacyResult = oov2Legacy.try_getRequest(
+        event.params.requester,
+        event.params.identifier,
+        event.params.timestamp,
+        event.params.ancillaryData
+      );
+
+      if (!legacyResult.reverted) {
+        let requestSettings = legacyResult.value.requestSettings;
+        request.bond = requestSettings.bond;
+        request.eventBased = requestSettings.eventBased;
+        request.customLiveness = requestSettings.customLiveness;
+      } else {
+        log.warning("Both new and legacy getRequest calls failed for request {}", [requestId]);
+      }
+    }
   }
 
   // Look up custom bond and liveness values that may have been set before the request
