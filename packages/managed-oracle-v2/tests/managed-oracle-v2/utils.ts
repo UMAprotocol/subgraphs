@@ -5,7 +5,12 @@ import {
   CustomLivenessSet,
   ProposePrice,
   RequestPrice,
+  RoleGranted,
+  RoleRevoked,
 } from "../../generated/ManagedOracleV2/ManagedOracleV2";
+
+// RESOLVER_ROLE = keccak256("RESOLVER_ROLE")
+export const RESOLVER_ROLE = Bytes.fromHexString("0x92a19c77d2ea87c7f81d50c74403cb2f401780f3ad919571121efe2bdb427eb1");
 
 export const contractAddress = Address.fromString("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"); // Default test contract address
 
@@ -206,4 +211,178 @@ export function mockGetState(
       ethereum.Value.fromBytes(Bytes.fromHexString(ancillaryData)),
     ])
     .returns([ethereum.Value.fromI32(expectedState)]);
+}
+
+export function createRoleGrantedEvent(
+  role: Bytes,
+  account: string,
+  sender: string
+): RoleGranted {
+  let roleGrantedEvent = changetype<RoleGranted>(newMockEvent());
+  roleGrantedEvent.address = contractAddress;
+  roleGrantedEvent.parameters = new Array();
+
+  // role
+  roleGrantedEvent.parameters.push(
+    new ethereum.EventParam("role", ethereum.Value.fromFixedBytes(role))
+  );
+  // account
+  roleGrantedEvent.parameters.push(
+    new ethereum.EventParam("account", ethereum.Value.fromAddress(Address.fromString(account)))
+  );
+  // sender
+  roleGrantedEvent.parameters.push(
+    new ethereum.EventParam("sender", ethereum.Value.fromAddress(Address.fromString(sender)))
+  );
+
+  return roleGrantedEvent;
+}
+
+// Function signatures used by the generated ABI bindings
+const GET_REQUEST_NEW_SIG = "getRequest(address,bytes32,uint256,bytes):((address,address,address,bool,(bool,bool,bool,bool,bool,uint256,uint256),int256,int256,uint256,uint256,uint256,uint256))";
+const GET_REQUEST_LEGACY_SIG = "getRequest(address,bytes32,uint256,bytes):((address,address,address,bool,(bool,bool,bool,bool,bool,uint256,uint256),int256,int256,uint256,uint256,uint256))";
+
+function getRequestArgs(
+  requester: string,
+  identifier: string,
+  timestamp: i32,
+  ancillaryData: string
+): ethereum.Value[] {
+  return [
+    ethereum.Value.fromAddress(Address.fromString(requester)),
+    ethereum.Value.fromFixedBytes(Bytes.fromHexString(identifier)),
+    ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(timestamp)),
+    ethereum.Value.fromBytes(Bytes.fromHexString(ancillaryData)),
+  ];
+}
+
+function buildRequestSettingsTuple(
+  bond: i32,
+  eventBased: bool,
+  customLiveness: i32
+): ethereum.Tuple {
+  let settings = new ethereum.Tuple();
+  settings.push(ethereum.Value.fromBoolean(eventBased));
+  settings.push(ethereum.Value.fromBoolean(false)); // refundOnDispute
+  settings.push(ethereum.Value.fromBoolean(false)); // callbackOnPriceProposed
+  settings.push(ethereum.Value.fromBoolean(false)); // callbackOnPriceDisputed
+  settings.push(ethereum.Value.fromBoolean(false)); // callbackOnPriceSettled
+  settings.push(ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(bond)));
+  settings.push(ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(customLiveness)));
+  return settings;
+}
+
+/**
+ * Mocks getRequest with the new ABI (includes proposalTime field).
+ * Used when simulating a contract deployed from audit-permissioned-resolver.
+ */
+export function mockGetRequestNewABI(
+  requester: string,
+  identifier: string,
+  timestamp: i32,
+  ancillaryData: string,
+  bond: i32,
+  eventBased: bool,
+  customLiveness: i32
+): void {
+  let requestTuple = new ethereum.Tuple();
+  requestTuple.push(ethereum.Value.fromAddress(Address.zero())); // proposer
+  requestTuple.push(ethereum.Value.fromAddress(Address.zero())); // disputer
+  requestTuple.push(ethereum.Value.fromAddress(Address.zero())); // currency
+  requestTuple.push(ethereum.Value.fromBoolean(false)); // settled
+  requestTuple.push(ethereum.Value.fromTuple(buildRequestSettingsTuple(bond, eventBased, customLiveness)));
+  requestTuple.push(ethereum.Value.fromSignedBigInt(BigInt.zero())); // proposedPrice
+  requestTuple.push(ethereum.Value.fromSignedBigInt(BigInt.zero())); // resolvedPrice
+  requestTuple.push(ethereum.Value.fromUnsignedBigInt(BigInt.zero())); // expirationTime
+  requestTuple.push(ethereum.Value.fromUnsignedBigInt(BigInt.zero())); // reward
+  requestTuple.push(ethereum.Value.fromUnsignedBigInt(BigInt.zero())); // finalFee
+  requestTuple.push(ethereum.Value.fromUnsignedBigInt(BigInt.zero())); // proposalTime
+
+  createMockedFunction(contractAddress, "getRequest", GET_REQUEST_NEW_SIG)
+    .withArgs(getRequestArgs(requester, identifier, timestamp, ancillaryData))
+    .returns([ethereum.Value.fromTuple(requestTuple)]);
+}
+
+/**
+ * Mocks getRequest with the new ABI to revert.
+ * Simulates calling a contract that doesn't have the proposalTime field.
+ */
+export function mockGetRequestNewABIReverts(
+  requester: string,
+  identifier: string,
+  timestamp: i32,
+  ancillaryData: string
+): void {
+  createMockedFunction(contractAddress, "getRequest", GET_REQUEST_NEW_SIG)
+    .withArgs(getRequestArgs(requester, identifier, timestamp, ancillaryData))
+    .reverts();
+}
+
+/**
+ * Mocks getRequest with the legacy ABI (no proposalTime field).
+ * Used when simulating a pre-upgrade or opt-in-early-resolution contract.
+ */
+export function mockGetRequestLegacyABI(
+  requester: string,
+  identifier: string,
+  timestamp: i32,
+  ancillaryData: string,
+  bond: i32,
+  eventBased: bool,
+  customLiveness: i32
+): void {
+  let requestTuple = new ethereum.Tuple();
+  requestTuple.push(ethereum.Value.fromAddress(Address.zero())); // proposer
+  requestTuple.push(ethereum.Value.fromAddress(Address.zero())); // disputer
+  requestTuple.push(ethereum.Value.fromAddress(Address.zero())); // currency
+  requestTuple.push(ethereum.Value.fromBoolean(false)); // settled
+  requestTuple.push(ethereum.Value.fromTuple(buildRequestSettingsTuple(bond, eventBased, customLiveness)));
+  requestTuple.push(ethereum.Value.fromSignedBigInt(BigInt.zero())); // proposedPrice
+  requestTuple.push(ethereum.Value.fromSignedBigInt(BigInt.zero())); // resolvedPrice
+  requestTuple.push(ethereum.Value.fromUnsignedBigInt(BigInt.zero())); // expirationTime
+  requestTuple.push(ethereum.Value.fromUnsignedBigInt(BigInt.zero())); // reward
+  requestTuple.push(ethereum.Value.fromUnsignedBigInt(BigInt.zero())); // finalFee
+
+  createMockedFunction(contractAddress, "getRequest", GET_REQUEST_LEGACY_SIG)
+    .withArgs(getRequestArgs(requester, identifier, timestamp, ancillaryData))
+    .returns([ethereum.Value.fromTuple(requestTuple)]);
+}
+
+/**
+ * Mocks getRequest with the legacy ABI to revert.
+ */
+export function mockGetRequestLegacyABIReverts(
+  requester: string,
+  identifier: string,
+  timestamp: i32,
+  ancillaryData: string
+): void {
+  createMockedFunction(contractAddress, "getRequest", GET_REQUEST_LEGACY_SIG)
+    .withArgs(getRequestArgs(requester, identifier, timestamp, ancillaryData))
+    .reverts();
+}
+
+export function createRoleRevokedEvent(
+  role: Bytes,
+  account: string,
+  sender: string
+): RoleRevoked {
+  let roleRevokedEvent = changetype<RoleRevoked>(newMockEvent());
+  roleRevokedEvent.address = contractAddress;
+  roleRevokedEvent.parameters = new Array();
+
+  // role
+  roleRevokedEvent.parameters.push(
+    new ethereum.EventParam("role", ethereum.Value.fromFixedBytes(role))
+  );
+  // account
+  roleRevokedEvent.parameters.push(
+    new ethereum.EventParam("account", ethereum.Value.fromAddress(Address.fromString(account)))
+  );
+  // sender
+  roleRevokedEvent.parameters.push(
+    new ethereum.EventParam("sender", ethereum.Value.fromAddress(Address.fromString(sender)))
+  );
+
+  return roleRevokedEvent;
 }

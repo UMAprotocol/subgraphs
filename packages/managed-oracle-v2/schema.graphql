@@ -110,3 +110,35 @@ type CustomLiveness @entity {
 
   customLiveness: BigInt!
 }
+
+type Resolver @entity {
+  "ID is the resolver address"
+  id: ID!
+
+  address: Bytes!
+
+  isActive: Boolean!
+
+  addedAt: BigInt
+
+  addedTx: Bytes
+
+  removedAt: BigInt
+
+  removedTx: Bytes
+}
+
+type ResolverHistory @entity {
+  "ID is tx hash + log index"
+  id: ID!
+
+  resolver: Bytes!
+
+  action: String!
+
+  timestamp: BigInt!
+
+  blockNumber: BigInt!
+
+  transactionHash: Bytes!
+}

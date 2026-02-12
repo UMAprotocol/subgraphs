@@ -15,9 +15,13 @@
       - PriceIdentifier
       - CustomLiveness
       - CustomBond
+      - Resolver
+      - ResolverHistory
     abis:
       - name: ManagedOracleV2
         file: ./abis/ManagedOracleV2.json
+      - name: ManagedOracleV2Legacy
+        file: ./abis/ManagedOracleV2Legacy.json
     eventHandlers:
       - event: RequestPrice(indexed address,bytes32,uint256,bytes,address,uint256,uint256)
         handler: handleOptimisticRequestPrice
@@ -31,6 +35,10 @@
         handler: handleCustomLivenessSet
       - event: CustomBondSet(indexed bytes32,address,indexed bytes32,bytes,indexed address,uint256)
         handler: handleCustomBondSet
+      - event: RoleGranted(indexed bytes32,indexed address,indexed address)
+        handler: handleRoleGranted
+      - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
+        handler: handleRoleRevoked
     callHandlers:
       - function: setCustomLiveness(bytes32,uint256,bytes,uint256)
         handler: handleSetCustomLiveness
